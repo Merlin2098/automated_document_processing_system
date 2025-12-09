@@ -1,0 +1,38 @@
+{
+  "theme": "dark",
+  "last_modified": "2025-12-09T10:40:43.218300",
+  "preferences": {
+    "sounds": {
+      "enabled": true,
+      "sound_complete": true,
+      "sound_error": true,
+      "sound_warning": false
+    },
+    "performance": {
+      "workers": 4,
+      "console_interval": 4,
+      "batch_size": 100
+    },
+    "logs": {
+      "folder": "",
+      "auto_excel": true,
+      "open_report": false,
+      "keep_history_days": 30
+    },
+    "ui": {
+      "show_tooltips": true,
+      "confirm_actions": true,
+      "auto_clear_console": false
+    }
+  },
+  "recent_paths": {
+    "last_input_folder": "",
+    "last_output_folder": "",
+    "last_log_folder": ""
+  },
+  "window": {
+    "width": 1400,
+    "height": 900,
+    "maximized": false
+  }
+}

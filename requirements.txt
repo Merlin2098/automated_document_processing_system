@@ -20,5 +20,3 @@ pywin32-ctypes
 setuptools
 wheel
 PySide6
-PySide6-Addons
-tqdm
