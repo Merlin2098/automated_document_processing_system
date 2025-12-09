@@ -29,7 +29,7 @@ class MainWindow(QMainWindow):
         self.theme_manager = ThemeManager()
         
         # Configurar ventana
-        self.setWindowTitle("Matrix File Processor v3.0")
+        self.setWindowTitle("DocFlow Eventuales v4.0")
         self.setMinimumSize(1200, 800)
         self.resize(1400, 900)
         
@@ -69,11 +69,11 @@ class MainWindow(QMainWindow):
         main_layout.setContentsMargins(20, 20, 20, 20)
         main_layout.setSpacing(15)
         
-        # Header
+        # Header - altura fija
         header = self._create_header()
-        main_layout.addWidget(header)
+        main_layout.addWidget(header, 0)  # Stretch 0 = altura fija
         
-        # Tab Widget
+        # Tab Widget - DEBE EXPANDIRSE AL MÁXIMO
         self.tab_widget = QTabWidget()
         self.tab_widget.setTabPosition(QTabWidget.North)
         
@@ -89,19 +89,21 @@ class MainWindow(QMainWindow):
         self.tab_widget.addTab(self.tab_pipeline_sunat, "💼 Pipeline SUNAT")
         self.tab_widget.addTab(self.tab_settings, "⚙️ Configuración")
         
-        main_layout.addWidget(self.tab_widget)
+        main_layout.addWidget(self.tab_widget, 10)  # Stretch 10 = MÁXIMA EXPANSIÓN
         
-        # Panel de monitoreo
+        # Panel de monitoreo - altura fija compacta
         self.monitoring_panel = MonitoringPanel(self.theme_manager)
-        main_layout.addWidget(self.monitoring_panel)
+        self.monitoring_panel.setMaximumHeight(120)  # Limitar altura
+        main_layout.addWidget(self.monitoring_panel, 0)  # Stretch 0 = altura fija
         
-        # Consola
+        # Consola - OCULTA por defecto
         self.console_widget = ConsoleWidget(self.theme_manager)
-        main_layout.addWidget(self.console_widget)
+        self.console_widget.setVisible(False)  # Ocultar consola
+        main_layout.addWidget(self.console_widget, 0)  # Stretch 0 = altura fija
         
-        # Action bar
+        # Action bar - altura fija
         action_bar = self._create_action_bar()
-        main_layout.addWidget(action_bar)
+        main_layout.addWidget(action_bar, 0)  # Stretch 0 = altura fija
         
         # Conectar tabs con consola y monitoring
         self._connect_tabs()
@@ -113,10 +115,10 @@ class MainWindow(QMainWindow):
         header_layout.setContentsMargins(15, 15, 15, 15)
         
         # Título
-        title_label = QLabel("Diciembre 2025 - Desarrollado por Ricardo Uculmana Quispe")
+        title_label = QLabel("Pipeline de Procesamiento y Nomenclatura para Documentos de la División de Eventuales (Metso)")
         title_label.setProperty("labelStyle", "title")
         
-        version_label = QLabel("v3.0")
+        version_label = QLabel("v4.0")
         version_label.setProperty("labelStyle", "secondary")
         
         # Layout de título
@@ -139,11 +141,6 @@ class MainWindow(QMainWindow):
         layout.setContentsMargins(0, 10, 0, 0)
         layout.addStretch()
         
-        # Botón abrir carpeta
-        self.btn_open_folder = QPushButton("📂 Abrir Carpeta")
-        self.btn_open_folder.setProperty("buttonStyle", "secondary")
-        self.btn_open_folder.clicked.connect(self._on_open_folder)
-        
         # Botón limpiar
         self.btn_clear = QPushButton("🧹 Limpiar")
         self.btn_clear.setProperty("buttonStyle", "secondary")
@@ -154,7 +151,6 @@ class MainWindow(QMainWindow):
         self.btn_export_log.setProperty("buttonStyle", "secondary")
         self.btn_export_log.clicked.connect(self._on_export_log)
         
-        layout.addWidget(self.btn_open_folder)
         layout.addWidget(self.btn_clear)
         layout.addWidget(self.btn_export_log)
         
@@ -184,11 +180,6 @@ class MainWindow(QMainWindow):
         # Actualizar paleta si es necesario
         palette = self.theme_manager.get_palette()
         self.setPalette(palette)
-    
-    def _on_open_folder(self):
-        """Handler para abrir carpeta"""
-        # TODO: Implementar apertura de carpeta de salida
-        self.console_widget.append_log("info", "Función 'Abrir Carpeta' pendiente de implementar")
     
     def _on_clear(self):
         """Handler para limpiar"""

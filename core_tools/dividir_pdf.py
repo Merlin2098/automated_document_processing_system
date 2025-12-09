@@ -72,8 +72,20 @@ def validar_division(ruta_pdf: str, hojas_por_pdf: int):
         return None
 
 # --- 3. Dividir y Guardar el PDF ---
-def dividir_pdf(ruta_pdf: str, hojas_por_pdf: int, num_pdfs_a_generar: int):
-    # 📍 Crear la carpeta dentro de la misma ubicación del PDF original
+def dividir_pdf(ruta_pdf: str, hojas_por_pdf: int, num_pdfs_a_generar: int, progress_callback=None):
+    """
+    Divide el PDF en múltiples archivos
+    
+    Args:
+        ruta_pdf: Ruta del archivo PDF a dividir
+        hojas_por_pdf: Número de páginas por archivo generado
+        num_pdfs_a_generar: Cantidad de archivos PDF a generar
+        progress_callback: Función opcional para reportar progreso (current, total)
+        
+    Returns:
+        dict: Diccionario con resultado del proceso
+    """
+    # 📁 Crear la carpeta dentro de la misma ubicación del PDF original
     directorio_pdf = os.path.dirname(ruta_pdf)
     BASE_DIR_SALIDA = os.path.join(directorio_pdf, "Archivos_Divididos")
     DIR_SALIDA = BASE_DIR_SALIDA
@@ -86,39 +98,64 @@ def dividir_pdf(ruta_pdf: str, hojas_por_pdf: int, num_pdfs_a_generar: int):
 
     os.makedirs(DIR_SALIDA, exist_ok=True)
     pdfs_generados = 0
+    errores = 0
 
     try:
         with open(ruta_pdf, 'rb') as archivo_pdf:
             reader = PdfReader(archivo_pdf)
 
             for i in range(num_pdfs_a_generar):
-                writer = PdfWriter()
-                inicio_pagina = i * hojas_por_pdf
-                fin_pagina = inicio_pagina + hojas_por_pdf
+                try:
+                    writer = PdfWriter()
+                    inicio_pagina = i * hojas_por_pdf
+                    fin_pagina = inicio_pagina + hojas_por_pdf
 
-                for j in range(inicio_pagina, fin_pagina):
-                    writer.add_page(reader.pages[j])
+                    for j in range(inicio_pagina, fin_pagina):
+                        writer.add_page(reader.pages[j])
 
-                nombre_archivo = f"Output_{i + 1}.pdf"
-                ruta_salida = os.path.join(DIR_SALIDA, nombre_archivo)
+                    nombre_archivo = f"Output_{i + 1}.pdf"
+                    ruta_salida = os.path.join(DIR_SALIDA, nombre_archivo)
 
-                with open(ruta_salida, 'wb') as output_file:
-                    writer.write(output_file)
+                    with open(ruta_salida, 'wb') as output_file:
+                        writer.write(output_file)
 
-                pdfs_generados += 1
+                    pdfs_generados += 1
+                    
+                    # Llamar callback de progreso si existe
+                    if progress_callback:
+                        progress_callback(pdfs_generados, num_pdfs_a_generar)
+                        
+                except Exception as e:
+                    print(f"⚠️ Error generando {nombre_archivo}: {e}")
+                    errores += 1
 
-        return pdfs_generados, DIR_SALIDA
+        return {
+            'success': True,
+            'pdfs_generados': pdfs_generados,
+            'carpeta_salida': DIR_SALIDA,
+            'errores': errores
+        }
 
     except Exception as e:
         print(f"❌ Error durante el proceso de división: {e}")
-        return pdfs_generados, DIR_SALIDA
+        return {
+            'success': False,
+            'pdfs_generados': pdfs_generados,
+            'carpeta_salida': DIR_SALIDA,
+            'errores': errores + 1,
+            'error_message': str(e)
+        }
 
 # --- 4. Función Principal ---
-def procesar_pdfs(ruta_pdf=None, hojas_por_pdf=None):
+def procesar_pdfs(ruta_pdf=None, hojas_por_pdf=None, progress_callback=None):
     """
     Procesa la división de un PDF.
     - Si se pasan ruta_pdf y/o hojas_por_pdf, los usa.
     - Si no se pasan, funciona en modo consola interactivo.
+    - progress_callback: función opcional para reportar progreso
+    
+    Returns:
+        dict: Resultado del procesamiento (para uso desde GUI)
     """
     print("=========================================")
     print("🚀 Divisor de PDFs")
@@ -128,21 +165,31 @@ def procesar_pdfs(ruta_pdf=None, hojas_por_pdf=None):
     # validar retorno
     if not ruta or not hojas:
         print("\n❌ Proceso abortado (parámetros inválidos o no proporcionados).")
-        return
+        return {
+            'success': False,
+            'error_message': 'Parámetros inválidos'
+        }
 
     num_pdfs = validar_division(ruta, hojas)
 
     if num_pdfs is not None:
-        pdfs_generados, nombre_carpeta_salida = dividir_pdf(ruta, hojas, num_pdfs)
+        resultado = dividir_pdf(ruta, hojas, num_pdfs, progress_callback)
 
         print("\n=========================================")
         print("🎉 ¡PROCESO COMPLETADO!")
         print("=========================================")
-        print(f"Cantidad de PDFs Generados: {pdfs_generados}")
-        print(f"Archivos guardados en la carpeta: ✨ {nombre_carpeta_salida} ✨")
+        print(f"Cantidad de PDFs Generados: {resultado['pdfs_generados']}")
+        print(f"Errores: {resultado['errores']}")
+        print(f"Archivos guardados en la carpeta: ✨ {resultado['carpeta_salida']} ✨")
         print("=========================================")
+        
+        return resultado
     else:
         print("\n❌ Proceso abortado.")
+        return {
+            'success': False,
+            'error_message': 'Validación fallida'
+        }
 
 # --- Ejecución del Programa ---
 if __name__ == "__main__":

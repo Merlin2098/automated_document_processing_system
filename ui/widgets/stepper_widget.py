@@ -3,24 +3,33 @@ Stepper Widget - Widget visual de pasos con estado
 """
 from PySide6.QtWidgets import QWidget, QHBoxLayout, QVBoxLayout, QLabel
 from PySide6.QtCore import Qt, Signal
-from PySide6.QtGui import QPainter, QColor, QPen
+from PySide6.QtGui import QPainter, QColor, QPen, QCursor
 
 
 class StepCircle(QWidget):
     """Círculo individual de un paso"""
     
-    def __init__(self, number: int, theme_manager, parent=None):
+    clicked = Signal(int)  # Emite el índice del paso cuando se hace clic
+    
+    def __init__(self, number: int, index: int, theme_manager, parent=None):
         super().__init__(parent)
         self.number = number
+        self.index = index
         self.theme_manager = theme_manager
         self.state = "pending"  # pending, active, completed
         
         self.setFixedSize(40, 40)
+        self.setCursor(QCursor(Qt.PointingHandCursor))  # Cursor de manita
     
     def set_state(self, state: str):
         """Establece el estado del círculo"""
         self.state = state
         self.update()
+    
+    def mousePressEvent(self, event):
+        """Maneja el clic en el círculo"""
+        if event.button() == Qt.LeftButton:
+            self.clicked.emit(self.index)
     
     def paintEvent(self, event):
         """Dibuja el círculo"""
@@ -65,7 +74,7 @@ class StepCircle(QWidget):
 class StepperWidget(QWidget):
     """Widget de stepper completo"""
     
-    step_clicked = Signal(int)
+    step_clicked = Signal(int)  # Emite el índice del paso clickeado
     
     def __init__(self, steps: list, theme_manager, parent=None):
         super().__init__(parent)
@@ -93,7 +102,8 @@ class StepperWidget(QWidget):
             step_layout.setSpacing(8)
             
             # Círculo
-            circle = StepCircle(i + 1, self.theme_manager)
+            circle = StepCircle(i + 1, i, self.theme_manager)
+            circle.clicked.connect(self._on_step_circle_clicked)  # Conectar señal del círculo
             self.step_circles.append(circle)
             step_layout.addWidget(circle, alignment=Qt.AlignCenter)
             
@@ -113,6 +123,10 @@ class StepperWidget(QWidget):
                 steps_layout.addStretch(1)
         
         main_layout.addLayout(steps_layout)
+    
+    def _on_step_circle_clicked(self, step_index: int):
+        """Maneja el clic en un círculo de paso"""
+        self.step_clicked.emit(step_index)
     
     def set_active_step(self, step_index: int):
         """Establece el paso activo"""

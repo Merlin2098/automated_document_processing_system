@@ -3,7 +3,7 @@ Console Widget - Widget de consola para logs
 """
 from PySide6.QtWidgets import QTextEdit, QWidget, QVBoxLayout
 from PySide6.QtCore import Qt, Signal, Slot
-from PySide6.QtGui import QTextCharFormat, QColor, QFont
+from PySide6.QtGui import QTextCharFormat, QColor, QFont, QTextCursor
 from datetime import datetime
 
 
@@ -84,7 +84,7 @@ class ConsoleWidget(QWidget):
         
         # Obtener cursor
         cursor = self.text_edit.textCursor()
-        cursor.movePosition(cursor.End)
+        cursor.movePosition(QTextCursor.MoveOperation.End)
         
         # Insertar timestamp
         cursor.insertText(f"[{timestamp}] ", self.timestamp_format)

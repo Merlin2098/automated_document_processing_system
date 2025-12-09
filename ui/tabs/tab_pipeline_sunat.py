@@ -22,26 +22,22 @@ class TabPipelineSunat(QWidget):
     def __init__(self, theme_manager, parent=None):
         super().__init__(parent)
         self.theme_manager = theme_manager
+        self.current_step = 0
         
         self._init_ui()
     
     def _init_ui(self):
         """Inicializa la interfaz"""
-        # Layout principal con scroll
+        # Layout principal del tab
         main_layout = QVBoxLayout(self)
         main_layout.setContentsMargins(0, 0, 0, 0)
         main_layout.setSpacing(0)
         
-        # Área de scroll para el contenido
-        scroll = QScrollArea()
-        scroll.setWidgetResizable(True)
-        scroll.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
-        
-        # Widget contenedor del contenido
+        # Crear widget contenedor para el contenido scrolleable
         content_widget = QWidget()
-        layout = QVBoxLayout(content_widget)
-        layout.setContentsMargins(20, 20, 20, 20)
-        layout.setSpacing(20)
+        content_layout = QVBoxLayout(content_widget)
+        content_layout.setContentsMargins(20, 20, 20, 20)
+        content_layout.setSpacing(15)
         
         # Stepper
         self.stepper = StepperWidget(
@@ -52,49 +48,63 @@ class TabPipelineSunat(QWidget):
             ],
             theme_manager=self.theme_manager
         )
-        layout.addWidget(self.stepper)
         
-        # Espaciado adicional después del stepper
-        layout.addSpacing(10)
+        # Conectar señal de clic en paso del stepper
+        self.stepper.step_clicked.connect(self._go_to_step)
         
-        # Cards para cada paso (todos visibles)
-        step1_card = self._create_step1_card()
-        layout.addWidget(step1_card)
+        content_layout.addWidget(self.stepper)
         
-        step2_card = self._create_step2_card()
-        layout.addWidget(step2_card)
+        # Contenedor de pasos (stack)
+        self.step_widgets = []
         
-        step3_card = self._create_step3_card()
-        layout.addWidget(step3_card)
+        # Crear widgets para cada paso
+        self.step_widgets.append(self._create_step1())
+        self.step_widgets.append(self._create_step2())
+        self.step_widgets.append(self._create_step3())
         
-        # Spacer
-        layout.addStretch()
+        # Agregar todos los widgets (solo uno visible a la vez)
+        for widget in self.step_widgets:
+            content_layout.addWidget(widget)
+            widget.hide()
         
-        # Establecer el widget de contenido en el scroll
-        scroll.setWidget(content_widget)
-        main_layout.addWidget(scroll)
+        # Mostrar primer paso
+        self.step_widgets[0].show()
+        self.stepper.set_active_step(0)
+        
+        # Crear el scroll area
+        scroll_area = QScrollArea()
+        scroll_area.setWidget(content_widget)
+        scroll_area.setWidgetResizable(True)
+        scroll_area.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
+        scroll_area.setVerticalScrollBarPolicy(Qt.ScrollBarAsNeeded)
+        scroll_area.setFrameShape(QScrollArea.NoFrame)
+        
+        # Agregar scroll area al layout principal
+        main_layout.addWidget(scroll_area)
     
-    def _create_step1_card(self) -> QGroupBox:
+    def _create_step1(self) -> QWidget:
         """Paso 1: Generar Diagnóstico SUNAT"""
+        widget = QWidget()
+        layout = QVBoxLayout(widget)
+        
         group = QGroupBox("1️⃣ Generar Diagnóstico SUNAT")
-        layout = QVBoxLayout(group)
-        layout.setSpacing(12)
+        group_layout = QVBoxLayout(group)
         
         # Selector de carpeta
         label = QLabel("📂 Carpeta con PDFs SUNAT")
         label.setProperty("labelStyle", "header")
-        layout.addWidget(label)
+        group_layout.addWidget(label)
         
         self.step1_folder = FileSelector(
             mode="folder",
             placeholder="Seleccionar carpeta con documentos CIR..."
         )
-        layout.addWidget(self.step1_folder)
+        group_layout.addWidget(self.step1_folder)
         
         # Workers paralelos
         workers_label = QLabel("⚡ Procesamiento paralelo")
         workers_label.setProperty("labelStyle", "header")
-        layout.addWidget(workers_label)
+        group_layout.addWidget(workers_label)
         
         self.workers_combo = QComboBox()
         self.workers_combo.addItems([
@@ -102,83 +112,84 @@ class TabPipelineSunat(QWidget):
             "2 Workers",
             "8 Workers"
         ])
-        layout.addWidget(self.workers_combo)
+        group_layout.addWidget(self.workers_combo)
         
         # Info
         info = QLabel("""
 Se generará un archivo Excel con:
-- Datos extraídos (Nombre, DNI, Fecha)
-- Clasificación: ALTA/BAJA/OTROS
-- Detección de errores y archivos sin datos
+• Datos extraídos (Nombre, DNI, Fecha)
+• Clasificación: ALTA/BAJA/OTROS
+• Detección de errores y archivos sin datos
         """)
         info.setProperty("labelStyle", "secondary")
-        layout.addWidget(info)
+        group_layout.addWidget(info)
         
-        # Botón
-        btn_layout = QHBoxLayout()
-        btn_layout.addStretch()
-        self.btn_step1 = QPushButton("▶️ Generar Diagnóstico")
-        self.btn_step1.clicked.connect(self._execute_step1)
-        btn_layout.addWidget(self.btn_step1)
-        btn_layout.addStretch()
-        layout.addLayout(btn_layout)
+        # Botones
+        btn_layout = self._create_step_buttons(0)
+        group_layout.addLayout(btn_layout)
         
-        return group
+        layout.addWidget(group)
+        layout.addStretch()
+        
+        return widget
     
-    def _create_step2_card(self) -> QGroupBox:
+    def _create_step2(self) -> QWidget:
         """Paso 2: Renombrar Documentos SUNAT"""
+        widget = QWidget()
+        layout = QVBoxLayout(widget)
+        
         group = QGroupBox("2️⃣ Renombrar Documentos SUNAT")
-        layout = QVBoxLayout(group)
-        layout.setSpacing(12)
+        group_layout = QVBoxLayout(group)
         
         # Selector de carpeta
         label = QLabel("📂 Carpeta con PDFs y JSON de renombrado")
         label.setProperty("labelStyle", "header")
-        layout.addWidget(label)
+        group_layout.addWidget(label)
         
         self.step2_folder = FileSelector(
             mode="folder",
             placeholder="Carpeta con PDFs y archivo JSON..."
         )
-        layout.addWidget(self.step2_folder)
+        group_layout.addWidget(self.step2_folder)
         
         # Info
         info = QLabel("""
+<b>Instrucciones:</b><br>
 El sistema buscará automáticamente el archivo JSON que contenga <b>"rename"</b> 
 en su nombre. Los archivos se renombrarán al formato: <b>NUMERO NOMBRE.pdf</b>
         """)
         info.setProperty("labelStyle", "secondary")
         info.setWordWrap(True)
         info.setTextFormat(Qt.RichText)
-        layout.addWidget(info)
+        group_layout.addWidget(info)
         
-        # Botón
-        btn_layout = QHBoxLayout()
-        btn_layout.addStretch()
-        self.btn_step2 = QPushButton("▶️ Renombrar Documentos")
-        self.btn_step2.clicked.connect(self._execute_step2)
-        btn_layout.addWidget(self.btn_step2)
-        btn_layout.addStretch()
-        layout.addLayout(btn_layout)
+        # Botones
+        btn_layout = self._create_step_buttons(1)
+        group_layout.addLayout(btn_layout)
         
-        return group
+        layout.addWidget(group)
+        layout.addStretch()
+        
+        return widget
     
-    def _create_step3_card(self) -> QGroupBox:
+    def _create_step3(self) -> QWidget:
         """Paso 3: Limpiar Duplicados"""
+        widget = QWidget()
+        layout = QVBoxLayout(widget)
+        
         group = QGroupBox("3️⃣ Limpiar Duplicados por Contrato")
-        layout = QVBoxLayout(group)
-        layout.setSpacing(12)
+        group_layout = QVBoxLayout(group)
         
         # Selector de carpeta
         label = QLabel("📂 Carpeta con archivos renombrados")
         label.setProperty("labelStyle", "header")
-        layout.addWidget(label)
+        group_layout.addWidget(label)
         
         self.step3_folder = FileSelector(
             mode="folder",
             placeholder="Carpeta con PDFs renombrados..."
         )
-        layout.addWidget(self.step3_folder)
+        group_layout.addWidget(self.step3_folder)
         
         # Warning info
         warning_layout = QHBoxLayout()
@@ -194,27 +205,79 @@ en su nombre. Los archivos se renombrarán al formato: <b>NUMERO NOMBRE.pdf</b>
         
         warning_layout.addWidget(warning_icon)
         warning_layout.addWidget(warning_text, 1)
-        layout.addLayout(warning_layout)
+        group_layout.addLayout(warning_layout)
         
-        # Botones
-        btn_layout = QHBoxLayout()
-        btn_layout.addStretch()
+        # Botones principales
+        btn_layout = self._create_step_buttons(2)
+        group_layout.addLayout(btn_layout)
         
-        self.btn_preview = QPushButton("👁️ Vista Previa")
+        # Botón de vista previa adicional (centrado debajo)
+        preview_layout = QHBoxLayout()
+        preview_layout.addStretch()
+        self.btn_preview = QPushButton("👁️ Vista Previa de Duplicados")
         self.btn_preview.setProperty("buttonStyle", "secondary")
         self.btn_preview.clicked.connect(self._preview_duplicates)
-        btn_layout.addWidget(self.btn_preview)
+        preview_layout.addWidget(self.btn_preview)
+        preview_layout.addStretch()
+        group_layout.addLayout(preview_layout)
         
-        self.btn_step3 = QPushButton("▶️ Limpiar Duplicados")
-        self.btn_step3.clicked.connect(self._execute_step3)
-        btn_layout.addWidget(self.btn_step3)
+        layout.addWidget(group)
+        layout.addStretch()
         
-        btn_layout.addStretch()
-        layout.addLayout(btn_layout)
-        
-        return group
+        return widget
     
-    @Slot()
+    def _create_step_buttons(self, step_index: int) -> QHBoxLayout:
+        """Crea los botones de navegación para un paso"""
+        layout = QHBoxLayout()
+        
+        # Botón anterior (si no es el primer paso)
+        if step_index > 0:
+            btn_prev = QPushButton("⬅️ Paso Anterior")
+            btn_prev.setProperty("buttonStyle", "secondary")
+            btn_prev.clicked.connect(lambda: self._go_to_step(step_index - 1))
+            layout.addWidget(btn_prev)
+        else:
+            layout.addStretch()
+        
+        # Botón ejecutar
+        btn_execute = QPushButton(f"▶️ Ejecutar Paso {step_index + 1}")
+        btn_execute.clicked.connect(lambda: self._execute_step(step_index))
+        layout.addWidget(btn_execute)
+        
+        # Botón siguiente (si no es el último paso)
+        if step_index < 2:
+            btn_next = QPushButton("Siguiente Paso ➡️")
+            btn_next.setProperty("buttonStyle", "secondary")
+            btn_next.clicked.connect(lambda: self._go_to_step(step_index + 1))
+            layout.addWidget(btn_next)
+        else:
+            layout.addStretch()
+        
+        return layout
+    
+    def _go_to_step(self, step_index: int):
+        """Navega a un paso específico"""
+        # Ocultar paso actual
+        self.step_widgets[self.current_step].hide()
+        
+        # Mostrar nuevo paso
+        self.current_step = step_index
+        self.step_widgets[self.current_step].show()
+        
+        # Actualizar stepper
+        self.stepper.set_active_step(step_index)
+        
+        self.log_message.emit("info", f"📋 Navegando al Paso {step_index + 1}")
+    
+    def _execute_step(self, step_index: int):
+        """Ejecuta el paso actual"""
+        if step_index == 0:
+            self._execute_step1()
+        elif step_index == 1:
+            self._execute_step2()
+        elif step_index == 2:
+            self._execute_step3()
+    
     def _execute_step1(self):
         """Ejecuta el paso 1: Generar diagnóstico"""
         folder = self.step1_folder.get_path()
@@ -222,14 +285,15 @@ en su nombre. Los archivos se renombrarán al formato: <b>NUMERO NOMBRE.pdf</b>
             self.log_message.emit("warning", "⚠️ Debe seleccionar una carpeta")
             return
         
-        self.log_message.emit("info", "🚀 Generando diagnóstico SUNAT...")
+        workers_text = self.workers_combo.currentText()
+        workers = int(workers_text.split()[0])
+        
+        self.log_message.emit("info", f"🚀 Generando diagnóstico SUNAT con {workers} workers...")
         self.log_message.emit("warning", "⚠️ Funcionalidad en desarrollo")
         
         # TODO: Implementar lógica
         self.stepper.mark_step_completed(0)
-        self.stepper.set_active_step(1)
     
-    @Slot()
     def _execute_step2(self):
         """Ejecuta el paso 2: Renombrar"""
         folder = self.step2_folder.get_path()
@@ -242,9 +306,7 @@ en su nombre. Los archivos se renombrarán al formato: <b>NUMERO NOMBRE.pdf</b>
         
         # TODO: Implementar lógica
         self.stepper.mark_step_completed(1)
-        self.stepper.set_active_step(2)
     
-    @Slot()
     def _preview_duplicates(self):
         """Muestra vista previa de duplicados"""
         folder = self.step3_folder.get_path()
@@ -257,7 +319,6 @@ en su nombre. Los archivos se renombrarán al formato: <b>NUMERO NOMBRE.pdf</b>
         
         # TODO: Implementar lógica
     
-    @Slot()
     def _execute_step3(self):
         """Ejecuta el paso 3: Limpiar duplicados"""
         folder = self.step3_folder.get_path()

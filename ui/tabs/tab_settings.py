@@ -214,10 +214,11 @@ class TabSettings(QWidget):
         layout.setSpacing(8)
         
         info = QLabel("""
-<b style="font-size: 16px; color: #2196F3;">Matrix File Processor v3.0</b><br>
+<b style="font-size: 16px; color: #2196F3;">DocFlow Eventuales v4.0</b><br>
 Desarrollado para procesamiento empresarial de documentos<br>
 Framework: PySide6 | Python 3.11+<br><br>
-© 2024 RichiDev
+© Diciembre 2025 Ricardo Fabian Uculmana Quispe<br>
+Todos los derechos reservados.
         """)
         info.setTextFormat(Qt.RichText)
         info.setWordWrap(True)

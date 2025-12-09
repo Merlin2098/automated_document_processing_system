@@ -19,9 +19,9 @@ def main():
     
     # Crear aplicación
     app = QApplication(sys.argv)
-    app.setApplicationName("Matrix File Processor")
-    app.setApplicationVersion("3.0")
-    app.setOrganizationName("RichiDev")
+    app.setApplicationName("DocFlow Eventuales")
+    app.setApplicationVersion("4.0")
+    app.setOrganizationName("Ricardo Fabian Uculmana Quispe")
     
     # Crear y mostrar ventana principal
     window = MainWindow()

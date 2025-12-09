@@ -3,7 +3,7 @@ Tab Pipeline Core - Pipeline de procesamiento completo (5 pasos)
 """
 from PySide6.QtWidgets import (
     QWidget, QVBoxLayout, QHBoxLayout, QLabel, 
-    QPushButton, QGroupBox, QListWidget
+    QPushButton, QGroupBox, QListWidget, QScrollArea
 )
 from PySide6.QtCore import Signal, Slot, Qt
 
@@ -28,9 +28,16 @@ class TabPipelineCore(QWidget):
     
     def _init_ui(self):
         """Inicializa la interfaz"""
-        layout = QVBoxLayout(self)
-        layout.setContentsMargins(20, 20, 20, 20)
-        layout.setSpacing(15)
+        # Layout principal del tab
+        main_layout = QVBoxLayout(self)
+        main_layout.setContentsMargins(0, 0, 0, 0)
+        main_layout.setSpacing(0)
+        
+        # Crear widget contenedor para el contenido scrolleable
+        content_widget = QWidget()
+        content_layout = QVBoxLayout(content_widget)
+        content_layout.setContentsMargins(20, 20, 20, 20)
+        content_layout.setSpacing(15)
         
         # Stepper
         self.stepper = StepperWidget(
@@ -43,7 +50,11 @@ class TabPipelineCore(QWidget):
             ],
             theme_manager=self.theme_manager
         )
-        layout.addWidget(self.stepper)
+        
+        # Conectar señal de clic en paso del stepper
+        self.stepper.step_clicked.connect(self._go_to_step)
+        
+        content_layout.addWidget(self.stepper)
         
         # Contenedor de pasos (stack)
         self.step_widgets = []
@@ -57,12 +68,23 @@ class TabPipelineCore(QWidget):
         
         # Agregar todos los widgets (solo uno visible a la vez)
         for widget in self.step_widgets:
-            layout.addWidget(widget)
+            content_layout.addWidget(widget)
             widget.hide()
         
         # Mostrar primer paso
         self.step_widgets[0].show()
         self.stepper.set_active_step(0)
+        
+        # Crear el scroll area
+        scroll_area = QScrollArea()
+        scroll_area.setWidget(content_widget)
+        scroll_area.setWidgetResizable(True)
+        scroll_area.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
+        scroll_area.setVerticalScrollBarPolicy(Qt.ScrollBarAsNeeded)
+        scroll_area.setFrameShape(QScrollArea.NoFrame)
+        
+        # Agregar scroll area al layout principal
+        main_layout.addWidget(scroll_area)
     
     def _create_step1(self) -> QWidget:
         """Paso 1: Generar Estructura"""
@@ -83,11 +105,11 @@ class TabPipelineCore(QWidget):
         # Info
         info = QLabel("""
 Se crearán las siguientes subcarpetas:
-• 1_Boletas
-• 2_Afp
-• 3_5ta
-• 4_Convocatoria
-• 5_CertificadosTrabajo
+- 1_Boletas
+- 2_Afp
+- 3_5ta
+- 4_Convocatoria
+- 5_CertificadosTrabajo
         """)
         info.setProperty("labelStyle", "secondary")
         group_layout.addWidget(info)
@@ -157,9 +179,9 @@ y los dividirá en páginas individuales dentro de las subcarpetas correspondien
         # Info
         info = QLabel("""
 Se generará un archivo Excel con múltiples hojas conteniendo:
-• Datos extraídos de cada PDF (Nombre, DNI, Fecha)
-• Estado de extracción (éxito/error)
-• Observaciones y errores encontrados
+- Datos extraídos de cada PDF (Nombre, DNI, Fecha)
+- Estado de extracción (éxito/error)
+- Observaciones y errores encontrados
         """)
         info.setProperty("labelStyle", "secondary")
         group_layout.addWidget(info)
