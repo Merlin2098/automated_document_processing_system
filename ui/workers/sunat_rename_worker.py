@@ -1,0 +1,233 @@
+"""
+Worker para renombrar documentos SUNAT (Paso 2)
+Ejecuta el proceso en segundo plano sin congelar la UI
+"""
+from PySide6.QtCore import QThread, Signal
+import os
+import sys
+
+# Agregar rutas para imports
+current_dir = os.path.dirname(os.path.abspath(__file__))
+parent_dir = os.path.dirname(os.path.dirname(current_dir))
+if parent_dir not in sys.path:
+    sys.path.insert(0, parent_dir)
+
+from core_sunat.sunat_rename import SUNATRenameOrchestrator, FolderScanner
+
+
+class SunatRenameWorker(QThread):
+    """Worker para renombrar documentos SUNAT en segundo plano"""
+    
+    # Señales
+    progress_signal = Signal(int, int)  # (current, total)
+    log_signal = Signal(str, str)  # (type, message)
+    stats_signal = Signal(dict)  # estadísticas
+    finished_signal = Signal(dict)  # stats
+    error_signal = Signal(str)  # mensaje de error
+    
+    def __init__(self, folder_path: str):
+        super().__init__()
+        self.folder_path = folder_path
+        self.orchestrator = None
+    
+    def run(self):
+        """Ejecuta el proceso de renombrado"""
+        try:
+            self.log_signal.emit("info", "🚀 Iniciando renombrado SUNAT")
+            self.log_signal.emit("info", f"📂 Carpeta: {self.folder_path}")
+            
+            # Validar carpeta
+            if not os.path.isdir(self.folder_path):
+                self.error_signal.emit(f"La carpeta no existe: {self.folder_path}")
+                return
+            
+            # Verificar existencia de JSON
+            scanner = FolderScanner()
+            json_path = scanner.find_json_file(self.folder_path)
+            
+            if not json_path:
+                self.error_signal.emit(
+                    "No se encontró archivo JSON de renombrado.\n"
+                    "El archivo debe contener 'rename' en su nombre."
+                )
+                return
+            
+            self.log_signal.emit("success", f"✅ JSON encontrado: {os.path.basename(json_path)}")
+            
+            # Verificar PDFs
+            pdf_files = scanner.get_pdf_files(self.folder_path)
+            if not pdf_files:
+                self.error_signal.emit("No se encontraron archivos PDF en la carpeta")
+                return
+            
+            self.log_signal.emit("success", f"✅ Encontrados {len(pdf_files)} archivos PDF")
+            
+            # Crear orquestador con callbacks
+            self.orchestrator = SUNATRenameOrchestratorWithCallbacks(
+                self.folder_path,
+                progress_callback=self._on_progress,
+                log_callback=self._on_log
+            )
+            
+            # Ejecutar proceso
+            stats = self.orchestrator.run()
+            
+            if stats:
+                self.log_signal.emit("success", "✅ Renombrado completado exitosamente")
+                self.finished_signal.emit(stats)
+            else:
+                self.error_signal.emit("El proceso de renombrado no se completó correctamente")
+            
+        except Exception as e:
+            error_msg = f"Error durante el renombrado: {str(e)}"
+            self.log_signal.emit("error", error_msg)
+            self.error_signal.emit(error_msg)
+    
+    def _on_progress(self, current: int, total: int):
+        """Callback para actualizar progreso"""
+        self.progress_signal.emit(current, total)
+    
+    def _on_log(self, log_type: str, message: str):
+        """Callback para logs"""
+        self.log_signal.emit(log_type, message)
+
+
+class SUNATRenameOrchestratorWithCallbacks(SUNATRenameOrchestrator):
+    """Extensión del orquestador con callbacks para la UI"""
+    
+    def __init__(self, folder_path, progress_callback=None, log_callback=None):
+        super().__init__(folder_path)
+        self.progress_callback = progress_callback
+        self.log_callback = log_callback
+    
+    def _locate_json(self):
+        """Override para emitir logs"""
+        if self.log_callback:
+            self.log_callback("info", "🔍 Buscando archivo JSON...")
+        
+        json_path = self.scanner.find_json_file(self.folder_path)
+        
+        if not json_path:
+            if self.log_callback:
+                self.log_callback("error", "❌ No se encontró JSON de renombrado")
+            return None
+        
+        if self.log_callback:
+            self.log_callback("success", f"✅ JSON: {os.path.basename(json_path)}")
+        
+        return json_path
+    
+    def _read_json_data(self, json_path):
+        """Override para emitir logs"""
+        if self.log_callback:
+            self.log_callback("info", "📖 Leyendo datos del JSON...")
+        
+        try:
+            rename_data = self.reader.read_rename_json(json_path)
+            if self.log_callback:
+                self.log_callback("success", f"✅ {len(rename_data)} registros cargados")
+            return rename_data
+        except Exception as e:
+            if self.log_callback:
+                self.log_callback("error", f"❌ Error: {str(e)}")
+            return None
+    
+    def _get_pdf_files(self):
+        """Override para emitir logs"""
+        if self.log_callback:
+            self.log_callback("info", "📄 Escaneando PDFs...")
+        
+        pdf_files = self.scanner.get_pdf_files(self.folder_path)
+        
+        if not pdf_files:
+            if self.log_callback:
+                self.log_callback("warning", "⚠️ No se encontraron PDFs")
+            return None
+        
+        if self.log_callback:
+            self.log_callback("success", f"✅ {len(pdf_files)} archivos encontrados")
+        
+        self.renamer.stats['total_files'] = len(pdf_files)
+        return pdf_files
+    
+    def _execute_rename(self, pdf_files, rename_data):
+        """Override para emitir progreso y logs"""
+        if self.log_callback:
+            self.log_callback("info", "🔄 Iniciando renombrado...")
+        
+        total = len(pdf_files)
+        
+        for idx, pdf_file in enumerate(pdf_files, 1):
+            # Actualizar progreso
+            if self.progress_callback:
+                self.progress_callback(idx, total)
+            
+            # Verificar si está en JSON
+            if pdf_file not in rename_data:
+                if self.log_callback:
+                    self.log_callback("warning", f"⏭️ Omitido: {pdf_file}")
+                self.renamer.stats['skipped'] += 1
+                continue
+            
+            # Obtener nuevo nombre
+            new_filename = rename_data[pdf_file]
+            old_path = os.path.join(self.folder_path, pdf_file)
+            
+            # Ejecutar renombrado
+            message, success = self.renamer.rename_file(old_path, new_filename)
+            
+            if self.log_callback:
+                if success:
+                    self.log_callback("success", message)
+                else:
+                    self.log_callback("error", message)
+            
+            if success:
+                self.renamer.stats['renamed'] += 1
+            else:
+                self.renamer.stats['errors'] += 1
+    
+    def _print_summary(self, elapsed_time):
+        """Override para emitir resumen"""
+        if not self.log_callback:
+            return
+        
+        stats = self.renamer.stats
+        
+        self.log_callback("info", "=" * 50)
+        self.log_callback("info", "📊 RESUMEN DEL RENOMBRADO")
+        self.log_callback("info", f"📄 Total PDFs: {stats['total_files']}")
+        self.log_callback("success", f"✅ Renombrados: {stats['renamed']}")
+        self.log_callback("warning", f"⏭️ Omitidos: {stats['skipped']}")
+        self.log_callback("error", f"❌ Errores: {stats['errors']}")
+        self.log_callback("info", f"⏱️ Tiempo: {elapsed_time:.2f}s")
+        self.log_callback("info", "=" * 50)
+    
+    def run(self):
+        """Override sin print statements"""
+        import time
+        self.start_time = time.time()
+        
+        # Localizar JSON
+        json_path = self._locate_json()
+        if not json_path:
+            return None
+        
+        # Leer datos
+        rename_data = self._read_json_data(json_path)
+        if not rename_data:
+            return None
+        
+        # Obtener PDFs
+        pdf_files = self._get_pdf_files()
+        if not pdf_files:
+            return None
+        
+        # Ejecutar renombrado
+        self._execute_rename(pdf_files, rename_data)
+        
+        # Resumen
+        elapsed_time = time.time() - self.start_time
+        self._print_summary(elapsed_time)
+        
+        return self.renamer.stats

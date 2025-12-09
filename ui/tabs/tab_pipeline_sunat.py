@@ -3,12 +3,21 @@ Tab Pipeline SUNAT - Pipeline para documentos SUNAT (3 pasos)
 """
 from PySide6.QtWidgets import (
     QWidget, QVBoxLayout, QHBoxLayout, QLabel, 
-    QPushButton, QGroupBox, QComboBox, QScrollArea
+    QPushButton, QGroupBox, QComboBox, QScrollArea,
+    QMessageBox, QDialog, QTextEdit, QDialogButtonBox
 )
 from PySide6.QtCore import Signal, Slot, Qt
+from PySide6.QtGui import QCursor
 
 from ui.widgets.file_selector import FileSelector
 from ui.widgets.stepper_widget import StepperWidget
+from ui.workers.sunat_diagnostic_worker import SunatDiagnosticWorker
+from ui.workers.sunat_rename_worker import SunatRenameWorker
+from ui.workers.sunat_duplicates_worker import (
+    SunatDuplicatesWorker,
+    SunatDuplicatesPreviewWorker
+)
+import os
 
 
 class TabPipelineSunat(QWidget):
@@ -23,6 +32,13 @@ class TabPipelineSunat(QWidget):
         super().__init__(parent)
         self.theme_manager = theme_manager
         self.current_step = 0
+        
+        # Workers
+        self.current_worker = None
+        self.preview_worker = None
+        
+        # Estado de botones
+        self.execute_buttons = []
         
         self._init_ui()
     
@@ -242,6 +258,7 @@ en su nombre. Los archivos se renombrarán al formato: <b>NUMERO NOMBRE.pdf</b>
         # Botón ejecutar
         btn_execute = QPushButton(f"▶️ Ejecutar Paso {step_index + 1}")
         btn_execute.clicked.connect(lambda: self._execute_step(step_index))
+        self.execute_buttons.append(btn_execute)
         layout.addWidget(btn_execute)
         
         # Botón siguiente (si no es el último paso)
@@ -281,53 +298,319 @@ en su nombre. Los archivos se renombrarán al formato: <b>NUMERO NOMBRE.pdf</b>
     def _execute_step1(self):
         """Ejecuta el paso 1: Generar diagnóstico"""
         folder = self.step1_folder.get_path()
+        
+        # Validaciones
         if not folder:
-            self.log_message.emit("warning", "⚠️ Debe seleccionar una carpeta")
+            QMessageBox.warning(
+                self,
+                "Carpeta requerida",
+                "Por favor selecciona una carpeta con documentos SUNAT."
+            )
             return
         
+        if not os.path.isdir(folder):
+            QMessageBox.critical(
+                self,
+                "Carpeta inválida",
+                f"La carpeta seleccionada no existe:\n{folder}"
+            )
+            return
+        
+        # Verificar archivos PDF
+        pdf_files = [f for f in os.listdir(folder) if f.lower().endswith('.pdf')]
+        if not pdf_files:
+            QMessageBox.warning(
+                self,
+                "Sin archivos PDF",
+                "No se encontraron archivos PDF en la carpeta seleccionada."
+            )
+            return
+        
+        # Obtener número de workers
         workers_text = self.workers_combo.currentText()
         workers = int(workers_text.split()[0])
         
-        self.log_message.emit("info", f"🚀 Generando diagnóstico SUNAT con {workers} workers...")
-        self.log_message.emit("warning", "⚠️ Funcionalidad en desarrollo")
+        # Deshabilitar botones
+        self._set_buttons_enabled(False)
+        self.setCursor(QCursor(Qt.WaitCursor))
         
-        # TODO: Implementar lógica
-        self.stepper.mark_step_completed(0)
+        # Crear y configurar worker
+        self.current_worker = SunatDiagnosticWorker(folder, workers)
+        
+        # Conectar señales
+        self.current_worker.log_signal.connect(self.log_message.emit)
+        self.current_worker.progress_signal.connect(self.progress_updated.emit)
+        self.current_worker.stats_signal.connect(self.stats_updated.emit)
+        self.current_worker.finished_signal.connect(self._on_step1_finished)
+        self.current_worker.error_signal.connect(self._on_worker_error)
+        self.current_worker.finished.connect(self._on_worker_complete)
+        
+        # Iniciar worker
+        self.log_message.emit("info", "🚀 Iniciando generación de diagnóstico...")
+        self.current_worker.start()
     
     def _execute_step2(self):
         """Ejecuta el paso 2: Renombrar"""
         folder = self.step2_folder.get_path()
+        
+        # Validaciones
         if not folder:
-            self.log_message.emit("warning", "⚠️ Debe seleccionar una carpeta")
+            QMessageBox.warning(
+                self,
+                "Carpeta requerida",
+                "Por favor selecciona una carpeta con PDFs y JSON de renombrado."
+            )
             return
         
-        self.log_message.emit("info", "📄 Renombrando documentos SUNAT...")
-        self.log_message.emit("warning", "⚠️ Funcionalidad en desarrollo")
+        if not os.path.isdir(folder):
+            QMessageBox.critical(
+                self,
+                "Carpeta inválida",
+                f"La carpeta seleccionada no existe:\n{folder}"
+            )
+            return
         
-        # TODO: Implementar lógica
-        self.stepper.mark_step_completed(1)
+        # Deshabilitar botones
+        self._set_buttons_enabled(False)
+        self.setCursor(QCursor(Qt.WaitCursor))
+        
+        # Crear y configurar worker
+        self.current_worker = SunatRenameWorker(folder)
+        
+        # Conectar señales
+        self.current_worker.log_signal.connect(self.log_message.emit)
+        self.current_worker.progress_signal.connect(self.progress_updated.emit)
+        self.current_worker.stats_signal.connect(self.stats_updated.emit)
+        self.current_worker.finished_signal.connect(self._on_step2_finished)
+        self.current_worker.error_signal.connect(self._on_worker_error)
+        self.current_worker.finished.connect(self._on_worker_complete)
+        
+        # Iniciar worker
+        self.log_message.emit("info", "🔄 Iniciando renombrado de documentos...")
+        self.current_worker.start()
     
     def _preview_duplicates(self):
         """Muestra vista previa de duplicados"""
         folder = self.step3_folder.get_path()
+        
+        # Validaciones
         if not folder:
-            self.log_message.emit("warning", "⚠️ Debe seleccionar una carpeta")
+            QMessageBox.warning(
+                self,
+                "Carpeta requerida",
+                "Por favor selecciona una carpeta con archivos renombrados."
+            )
             return
         
-        self.log_message.emit("info", "👁️ Analizando duplicados...")
-        self.log_message.emit("warning", "⚠️ Funcionalidad en desarrollo")
+        if not os.path.isdir(folder):
+            QMessageBox.critical(
+                self,
+                "Carpeta inválida",
+                f"La carpeta seleccionada no existe:\n{folder}"
+            )
+            return
         
-        # TODO: Implementar lógica
+        # Deshabilitar botón de vista previa
+        self.btn_preview.setEnabled(False)
+        self.setCursor(QCursor(Qt.WaitCursor))
+        
+        # Crear worker de preview
+        self.preview_worker = SunatDuplicatesPreviewWorker(folder)
+        
+        # Conectar señales
+        self.preview_worker.log_signal.connect(self.log_message.emit)
+        self.preview_worker.preview_ready.connect(self._show_preview_dialog)
+        self.preview_worker.error_signal.connect(self._on_preview_error)
+        self.preview_worker.finished.connect(self._on_preview_complete)
+        
+        # Iniciar análisis
+        self.log_message.emit("info", "👁️ Analizando duplicados...")
+        self.preview_worker.start()
+    
+    def _show_preview_dialog(self, duplicados: dict, total_archivos: int):
+        """Muestra diálogo con vista previa de duplicados"""
+        if not duplicados:
+            QMessageBox.information(
+                self,
+                "Sin duplicados",
+                f"✅ No se encontraron archivos duplicados.\n"
+                f"Total de archivos únicos: {total_archivos}"
+            )
+            return
+        
+        # Crear diálogo
+        dialog = QDialog(self)
+        dialog.setWindowTitle("Vista Previa de Duplicados")
+        dialog.setMinimumSize(600, 400)
+        
+        layout = QVBoxLayout(dialog)
+        
+        # Info header
+        total_duplicados = sum(len(files) - 1 for files in duplicados.values())
+        info_label = QLabel(
+            f"<b>Contratos con duplicados:</b> {len(duplicados)}<br>"
+            f"<b>Archivos a eliminar:</b> {total_duplicados}<br>"
+            f"<b>Archivos totales:</b> {total_archivos}"
+        )
+        info_label.setTextFormat(Qt.RichText)
+        layout.addWidget(info_label)
+        
+        # Text edit con listado
+        text_edit = QTextEdit()
+        text_edit.setReadOnly(True)
+        
+        preview_text = ""
+        for contrato, archivos in duplicados.items():
+            preview_text += f"\n📋 Contrato: {contrato} ({len(archivos)} archivos)\n"
+            for idx, archivo in enumerate(archivos, 1):
+                marcador = "✅ CONSERVAR" if idx == 1 else "🗑️ ELIMINAR"
+                preview_text += f"   [{idx}] {marcador}\n"
+                preview_text += f"       {archivo}\n"
+        
+        text_edit.setPlainText(preview_text)
+        layout.addWidget(text_edit)
+        
+        # Botones
+        button_box = QDialogButtonBox(QDialogButtonBox.Ok)
+        button_box.accepted.connect(dialog.accept)
+        layout.addWidget(button_box)
+        
+        dialog.exec()
     
     def _execute_step3(self):
         """Ejecuta el paso 3: Limpiar duplicados"""
         folder = self.step3_folder.get_path()
+        
+        # Validaciones
         if not folder:
-            self.log_message.emit("warning", "⚠️ Debe seleccionar una carpeta")
+            QMessageBox.warning(
+                self,
+                "Carpeta requerida",
+                "Por favor selecciona una carpeta con archivos renombrados."
+            )
             return
         
-        self.log_message.emit("info", "🧹 Limpiando duplicados...")
-        self.log_message.emit("warning", "⚠️ Funcionalidad en desarrollo")
+        if not os.path.isdir(folder):
+            QMessageBox.critical(
+                self,
+                "Carpeta inválida",
+                f"La carpeta seleccionada no existe:\n{folder}"
+            )
+            return
         
-        # TODO: Implementar lógica
+        # Confirmación
+        reply = QMessageBox.question(
+            self,
+            "Confirmar eliminación",
+            "⚠️ Esta operación eliminará permanentemente los archivos duplicados.\n\n"
+            "¿Deseas continuar?",
+            QMessageBox.Yes | QMessageBox.No,
+            QMessageBox.No
+        )
+        
+        if reply == QMessageBox.No:
+            self.log_message.emit("warning", "⏹️ Operación cancelada por el usuario")
+            return
+        
+        # Deshabilitar botones
+        self._set_buttons_enabled(False)
+        self.btn_preview.setEnabled(False)
+        self.setCursor(QCursor(Qt.WaitCursor))
+        
+        # Crear y configurar worker
+        self.current_worker = SunatDuplicatesWorker(folder)
+        
+        # Conectar señales
+        self.current_worker.log_signal.connect(self.log_message.emit)
+        self.current_worker.progress_signal.connect(self.progress_updated.emit)
+        self.current_worker.stats_signal.connect(self.stats_updated.emit)
+        self.current_worker.finished_signal.connect(self._on_step3_finished)
+        self.current_worker.error_signal.connect(self._on_worker_error)
+        self.current_worker.finished.connect(self._on_worker_complete)
+        
+        # Iniciar worker
+        self.log_message.emit("info", "🗑️ Iniciando limpieza de duplicados...")
+        self.current_worker.start()
+    
+    @Slot(str, dict)
+    def _on_step1_finished(self, excel_path: str, stats: dict):
+        """Handler cuando termina el paso 1"""
+        self.stepper.mark_step_completed(0)
+        
+        QMessageBox.information(
+            self,
+            "Diagnóstico completado",
+            f"✅ Proceso completado exitosamente\n\n"
+            f"📄 Archivos procesados: {stats['processed']}\n"
+            f"⚠️ Sin datos: {stats['sin_datos']}\n"
+            f"❌ Errores: {stats['errors']}\n\n"
+            f"Excel generado:\n{os.path.basename(excel_path)}"
+        )
+    
+    @Slot(dict)
+    def _on_step2_finished(self, stats: dict):
+        """Handler cuando termina el paso 2"""
+        self.stepper.mark_step_completed(1)
+        
+        QMessageBox.information(
+            self,
+            "Renombrado completado",
+            f"✅ Proceso completado exitosamente\n\n"
+            f"📄 Total archivos: {stats['total_files']}\n"
+            f"✅ Renombrados: {stats['renamed']}\n"
+            f"⏭️ Omitidos: {stats['skipped']}\n"
+            f"❌ Errores: {stats['errors']}"
+        )
+    
+    @Slot(int, int, int, int)
+    def _on_step3_finished(self, total: int, duplicados: int, eliminados: int, errores: int):
+        """Handler cuando termina el paso 3"""
         self.stepper.mark_step_completed(2)
+        
+        QMessageBox.information(
+            self,
+            "Limpieza completada",
+            f"✅ Proceso completado exitosamente\n\n"
+            f"📂 Archivos iniciales: {total}\n"
+            f"🔍 Contratos duplicados: {duplicados}\n"
+            f"✅ Archivos eliminados: {eliminados}\n"
+            f"❌ Errores: {errores}\n"
+            f"📄 Archivos finales: {total - eliminados}"
+        )
+    
+    @Slot(str)
+    def _on_worker_error(self, error_msg: str):
+        """Handler para errores del worker"""
+        QMessageBox.critical(
+            self,
+            "Error en el proceso",
+            f"❌ {error_msg}"
+        )
+    
+    @Slot()
+    def _on_worker_complete(self):
+        """Handler cuando el worker termina (éxito o error)"""
+        self._set_buttons_enabled(True)
+        self.setCursor(QCursor(Qt.ArrowCursor))
+        self.current_worker = None
+    
+    @Slot(str)
+    def _on_preview_error(self, error_msg: str):
+        """Handler para errores del preview worker"""
+        QMessageBox.critical(
+            self,
+            "Error en análisis",
+            f"❌ {error_msg}"
+        )
+    
+    @Slot()
+    def _on_preview_complete(self):
+        """Handler cuando termina el preview"""
+        self.btn_preview.setEnabled(True)
+        self.setCursor(QCursor(Qt.ArrowCursor))
+        self.preview_worker = None
+    
+    def _set_buttons_enabled(self, enabled: bool):
+        """Habilita/deshabilita todos los botones de ejecución"""
+        for btn in self.execute_buttons:
+            btn.setEnabled(enabled)
