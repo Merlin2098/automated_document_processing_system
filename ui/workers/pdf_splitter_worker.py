@@ -1,14 +1,28 @@
 """
-PDF Splitter Worker - Worker thread para dividir PDFs sin bloquear la UI
+PDF Splitter Worker - WRAPPER PATTERN
+Usa directamente las funciones del módulo core sin reimplementar lógica
 """
 from PySide6.QtCore import QThread, Signal
 from utils.logger import Logger
 import os
+import sys
 from datetime import datetime
+
+# Agregar rutas para imports del core
+current_dir = os.path.dirname(os.path.abspath(__file__))
+parent_dir = os.path.dirname(os.path.dirname(current_dir))
+if parent_dir not in sys.path:
+    sys.path.insert(0, parent_dir)
+
+# Importar funciones PURAS del core (sin dependencias de UI)
+from core_tools.dividir_pdf import (
+    validar_division,
+    dividir_pdf
+)
 
 
 class PdfSplitterWorker(QThread):
-    """Worker para dividir PDFs en segundo plano"""
+    """Worker wrapper para dividir PDFs"""
     
     # Señales
     log_message = Signal(str, str)  # (tipo, mensaje)
@@ -21,127 +35,128 @@ class PdfSplitterWorker(QThread):
         self.pdf_path = pdf_path
         self.pages_per_file = pages_per_file
         self._is_running = True
-        self.logger = Logger("PdfSplitter")
+        self.logger = Logger("PdfSplitterWorker")
     
     def run(self):
-        """Ejecuta el proceso de división"""
+        """Ejecuta el proceso usando funciones del core"""
         start_time = datetime.now()
         
         try:
-            # Importar aquí para evitar problemas de importación circular
-            from PyPDF2 import PdfReader, PdfWriter
+            self.logger.info("🚀 Iniciando división de PDF")
+            self.log_message.emit("info", "🚀 Iniciando división de PDF")
+            self.logger.info(f"📂 Archivo: {os.path.basename(self.pdf_path)}")
+            self.log_message.emit("info", f"📂 Archivo: {os.path.basename(self.pdf_path)}")
             
-            self.logger.info("📄 Validando PDF...")
-            self.log_message.emit("info", "📄 Validando PDF...")
-            
-            # Validar archivo
+            # Validar que el archivo existe
             if not os.path.exists(self.pdf_path):
                 error_msg = f"El archivo no existe: {self.pdf_path}"
                 self.logger.error(error_msg)
                 self.error.emit(error_msg)
                 return
             
-            # Leer PDF y validar división
-            with open(self.pdf_path, 'rb') as archivo_pdf:
-                reader = PdfReader(archivo_pdf)
-                total_pages = len(reader.pages)
+            # Verificar PyPDF2
+            try:
+                from PyPDF2 import PdfReader, PdfWriter
+            except ImportError:
+                error_msg = "PyPDF2 no está instalado. Instale con: pip install PyPDF2"
+                self.logger.error(error_msg)
+                self.error.emit(error_msg)
+                return
             
-            msg = f"📄 Total de páginas: {total_pages}"
-            self.logger.info(msg)
-            self.log_message.emit("info", msg)
+            # ============================================================
+            # FASE 1: Validar división (USA EL CORE)
+            # ============================================================
+            self.log_message.emit("info", "")
+            self.log_message.emit("info", "📋 Validando división de PDF...")
+            self.logger.info("📋 Validando división de PDF...")
             
-            # Validar que sea divisible exactamente
-            if total_pages % self.pages_per_file != 0:
-                residuo = total_pages % self.pages_per_file
+            # Llamar a la función del core con manejo de prints
+            num_pdfs_to_generate = validar_division(self.pdf_path, self.pages_per_file)
+            
+            if num_pdfs_to_generate is None:
+                # La validación falló - el core ya logueo el error
                 error_msg = (
-                    f"El total de páginas ({total_pages}) no es divisible exactamente "
-                    f"por la cantidad deseada ({self.pages_per_file}). "
-                    f"Residuo: {residuo} páginas."
+                    f"Validación fallida: El PDF no es divisible exactamente por {self.pages_per_file} páginas. "
+                    f"Verifique que el total de páginas sea múltiplo de {self.pages_per_file}."
                 )
                 self.logger.error(error_msg)
                 self.error.emit(error_msg)
                 return
             
-            num_pdfs_to_generate = total_pages // self.pages_per_file
             msg = f"✅ Se generarán {num_pdfs_to_generate} archivos PDF"
             self.logger.info(msg)
             self.log_message.emit("success", msg)
             
-            # Crear carpeta de salida
-            directorio_pdf = os.path.dirname(self.pdf_path)
-            base_dir_salida = os.path.join(directorio_pdf, "Archivos_Divididos")
-            dir_salida = base_dir_salida
-            contador = 1
+            # ============================================================
+            # FASE 2: Dividir PDF (USA EL CORE)
+            # ============================================================
+            if not self._is_running:
+                self.logger.warning("Proceso cancelado por el usuario")
+                return
             
-            # Evitar sobrescribir carpetas previas
-            while os.path.exists(dir_salida):
-                dir_salida = f"{base_dir_salida}_{contador}"
-                contador += 1
+            self.log_message.emit("info", "")
+            self.log_message.emit("info", "📋 Dividiendo PDF...")
+            self.logger.info("📋 Dividiendo PDF...")
             
-            os.makedirs(dir_salida, exist_ok=True)
-            msg = f"📁 Carpeta de salida: {os.path.basename(dir_salida)}"
-            self.logger.info(msg)
-            self.log_message.emit("info", msg)
+            # Crear callback para el progreso
+            def progress_callback(current, total):
+                """Callback que el core llamará para reportar progreso"""
+                if self._is_running:
+                    self.progress_updated.emit(current, total)
+                    
+                    # Log cada 10 archivos
+                    if current % 10 == 0:
+                        msg = f"   Progreso: {current}/{total}"
+                        self.log_message.emit("info", msg)
             
-            # Procesar división
-            self.logger.info("📄 Iniciando división de PDF...")
-            self.log_message.emit("info", "📄 Iniciando división de PDF...")
-            pdfs_generados = 0
+            # Llamar a la función del core
+            resultado = dividir_pdf(
+                self.pdf_path,
+                self.pages_per_file,
+                num_pdfs_to_generate,
+                progress_callback=progress_callback
+            )
             
-            with open(self.pdf_path, 'rb') as archivo_pdf:
-                reader = PdfReader(archivo_pdf)
-                
-                for i in range(num_pdfs_to_generate):
-                    if not self._is_running:
-                        self.logger.warning("⚠️ Proceso cancelado por el usuario")
-                        self.log_message.emit("warning", "⚠️ Proceso cancelado por el usuario")
-                        return
-                    
-                    writer = PdfWriter()
-                    inicio_pagina = i * self.pages_per_file
-                    fin_pagina = inicio_pagina + self.pages_per_file
-                    
-                    # Añadir páginas al writer
-                    for j in range(inicio_pagina, fin_pagina):
-                        writer.add_page(reader.pages[j])
-                    
-                    # Guardar archivo
-                    nombre_archivo = f"Output_{i + 1}.pdf"
-                    ruta_salida = os.path.join(dir_salida, nombre_archivo)
-                    
-                    with open(ruta_salida, 'wb') as output_file:
-                        writer.write(output_file)
-                    
-                    pdfs_generados += 1
-                    
-                    # Emitir progreso
-                    self.progress_updated.emit(pdfs_generados, num_pdfs_to_generate)
-                    msg = f"✓ Generado: {nombre_archivo}"
-                    self.logger.info(msg)
-                    self.log_message.emit("info", msg)
+            # Verificar resultado
+            if not resultado['success']:
+                error_msg = resultado.get('error_message', 'Error desconocido durante la división')
+                self.logger.error(error_msg)
+                self.error.emit(error_msg)
+                return
             
-            # Calcular tiempo transcurrido
+            # ============================================================
+            # FASE 3: Resultado final
+            # ============================================================
             elapsed_time = (datetime.now() - start_time).total_seconds()
             
-            # Emitir resultado final
-            resultado = {
-                'success': True,
-                'pdfs_generados': pdfs_generados,
-                'carpeta_salida': dir_salida,
-                'tiempo_transcurrido': elapsed_time,
-                'errores': 0
-            }
+            # Añadir tiempo al resultado
+            resultado['tiempo_transcurrido'] = elapsed_time
             
+            self.log_message.emit("info", "")
+            self.log_message.emit("info", "=" * 50)
+            self.log_message.emit("success", "🎉 ¡Proceso completado exitosamente!")
+            self.log_message.emit("info", f"📊 Archivos generados: {resultado['pdfs_generados']}")
+            
+            if resultado.get('errores', 0) > 0:
+                self.log_message.emit("warning", f"⚠️ Errores: {resultado['errores']}")
+            
+            self.log_message.emit("info", f"📂 Ubicación: {os.path.basename(resultado['carpeta_salida'])}")
+            self.log_message.emit("info", f"⏱️ Tiempo: {elapsed_time:.2f}s")
+            self.log_message.emit("info", "=" * 50)
+            
+            # Log a archivo
+            self.logger.info("=" * 50)
             self.logger.info("🎉 ¡Proceso completado exitosamente!")
-            self.logger.info(f"📊 Total de archivos generados: {pdfs_generados}")
-            self.logger.info(f"⏱️ Tiempo transcurrido: {elapsed_time:.2f}s")
-            self.logger.info(f"📂 Ubicación: {dir_salida}")
+            self.logger.info(f"📊 Archivos generados: {resultado['pdfs_generados']}")
             
-            self.log_message.emit("success", f"🎉 ¡Proceso completado exitosamente!")
-            self.log_message.emit("info", f"📊 Total de archivos generados: {pdfs_generados}")
-            self.log_message.emit("info", f"⏱️ Tiempo transcurrido: {elapsed_time:.2f}s")
-            self.log_message.emit("info", f"📂 Ubicación: {dir_salida}")
+            if resultado.get('errores', 0) > 0:
+                self.logger.warning(f"⚠️ Errores: {resultado['errores']}")
             
+            self.logger.info(f"📂 Ubicación: {resultado['carpeta_salida']}")
+            self.logger.info(f"⏱️ Tiempo: {elapsed_time:.2f}s")
+            self.logger.info("=" * 50)
+            
+            # Emitir resultado final
             self.finished.emit(resultado)
             
         except Exception as e:
@@ -155,4 +170,4 @@ class PdfSplitterWorker(QThread):
     def stop(self):
         """Detiene el worker"""
         self._is_running = False
-        self.logger.warning("⏹️ Worker detenido por el usuario")
+        self.logger.warning("ℹ️ Worker detenido por el usuario")

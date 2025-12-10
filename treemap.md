@@ -1,12 +1,13 @@
 ## 🗂️ Treemap del Proyecto
 
 ```
+├── .gitignore
 ├── core_pipeline/
-│   ├── 1_generar.py
-│   ├── 2_mover.py
-│   ├── 3_generar_diagnostico.py
-│   ├── 4_rename.py
-│   └── 5_unir_final.py
+│   ├── step1_generar.py
+│   ├── step2_mover.py
+│   ├── step3_generar_diagnostico.py
+│   ├── step4_rename.py
+│   └── step5_unir_final.py
 ├── core_sunat/
 │   ├── sunat.py
 │   ├── sunat_duplicados.py
@@ -18,6 +19,7 @@
 │   ├── extractor_boleta.py
 │   ├── extractor_quinta.py
 │   └── extractor_sunat.py
+├── generar_onedir.py
 ├── main.py
 ├── resources/
 │   ├── app.ico
