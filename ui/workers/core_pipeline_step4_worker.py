@@ -1,16 +1,28 @@
 """
-Worker para renombrar archivos (Paso 4)
-Ejecuta el proceso en segundo plano sin congelar la UI
+Worker para renombrar archivos (Paso 4) - WRAPPER PATTERN
+Usa directamente las funciones del módulo core sin reimplementar lógica
 """
 from PySide6.QtCore import QThread, Signal
 from utils.logger import Logger
 import os
 import sys
-import time
+
+# Agregar rutas para imports del core
+current_dir = os.path.dirname(os.path.abspath(__file__))
+parent_dir = os.path.dirname(os.path.dirname(current_dir))
+if parent_dir not in sys.path:
+    sys.path.insert(0, parent_dir)
+
+# Importar funciones PURAS del core (sin dependencias de UI)
+from core_pipeline.step4_rename import (
+    cargar_json,
+    convertir_json_a_mapeo,
+    renombrar_archivos
+)
 
 
 class CorePipelineStep4Worker(QThread):
-    """Worker para renombrar archivos en segundo plano"""
+    """Worker wrapper para renombrar archivos"""
     
     # Señales
     progress_signal = Signal(int, int)  # (current, total)
@@ -23,24 +35,18 @@ class CorePipelineStep4Worker(QThread):
         super().__init__()
         self.folder_path = folder_path
         self._is_running = True
-        self.logger = Logger("CorePipelineStep4")
+        self.logger = Logger("CorePipelineStep4Worker")
         
-        # Configuración de carpetas
-        self.CARPETAS_CONFIG = {
-            "1_Boletas": "BOLETA",
-            "2_Afp": "AFP",
-            "3_5ta": "QUINTA"
-        }
+        # Carpetas a procesar (las 3 primeras)
+        self.carpetas_a_procesar = ['1_Boletas', '2_Afp', '3_5ta']
     
     def run(self):
-        """Ejecuta el proceso de renombrado"""
-        start_time = time.time()
-        
+        """Ejecuta el proceso usando funciones del core"""
         try:
             self.logger.info("🚀 Iniciando renombrado de archivos")
             self.log_signal.emit("info", "🚀 Iniciando renombrado de archivos")
-            self.logger.info(f"📂 Carpeta de trabajo: {self.folder_path}")
-            self.log_signal.emit("info", f"📂 Carpeta de trabajo: {self.folder_path}")
+            self.logger.info(f"📂 Carpeta madre: {self.folder_path}")
+            self.log_signal.emit("info", f"📂 Carpeta madre: {self.folder_path}")
             
             # Validar carpeta
             if not os.path.isdir(self.folder_path):
@@ -49,76 +55,119 @@ class CorePipelineStep4Worker(QThread):
                 self.error_signal.emit(error_msg)
                 return
             
-            # Procesar carpetas (cada una tiene su propio JSON)
-            stats_por_carpeta = {}
-            total_renombrados = 0
-            total_errores = 0
-            total_omitidos = 0
+            # ============================================================
+            # Procesar cada lote
+            # ============================================================
+            estadisticas = []
+            total_carpetas = len(self.carpetas_a_procesar)
             
-            total_carpetas = len(self.CARPETAS_CONFIG)
-            carpeta_actual = 0
-            
-            for nombre_carpeta, tipo_doc in self.CARPETAS_CONFIG.items():
+            for idx, nombre_carpeta in enumerate(self.carpetas_a_procesar, 1):
                 if not self._is_running:
-                    self.logger.warning("⚠️ Proceso cancelado por el usuario")
-                    self.log_signal.emit("warning", "⚠️ Proceso cancelado por el usuario")
+                    self.logger.warning("Proceso cancelado por el usuario")
                     return
                 
-                ruta_subcarpeta = os.path.join(self.folder_path, nombre_carpeta)
+                ruta_lote = os.path.join(self.folder_path, nombre_carpeta)
                 
-                if not os.path.isdir(ruta_subcarpeta):
-                    msg = f"⚠️ Carpeta '{nombre_carpeta}' no encontrada, omitiendo..."
-                    self.logger.warning(msg)
+                # Verificar que la carpeta existe
+                if not os.path.exists(ruta_lote):
+                    msg = f"⚠️ Carpeta '{nombre_carpeta}' no existe, omitiendo..."
                     self.log_signal.emit("warning", msg)
+                    self.logger.warning(msg)
+                    
+                    estadisticas.append({
+                        'lote': nombre_carpeta,
+                        'exitosos': 0,
+                        'fallidos': 0,
+                        'omitidos': 0,
+                        'total': 0,
+                        'estado': 'no_existe'
+                    })
+                    
+                    self.progress_signal.emit(idx, total_carpetas)
                     continue
                 
-                # Procesar la carpeta (busca su propio JSON)
-                stats = self._procesar_carpeta(ruta_subcarpeta, nombre_carpeta)
-                stats_por_carpeta[nombre_carpeta] = stats
+                if not os.path.isdir(ruta_lote):
+                    msg = f"⚠️ '{nombre_carpeta}' no es una carpeta, omitiendo..."
+                    self.log_signal.emit("warning", msg)
+                    self.logger.warning(msg)
+                    self.progress_signal.emit(idx, total_carpetas)
+                    continue
                 
-                total_renombrados += stats['renombrados']
-                total_errores += stats['errores']
-                total_omitidos += stats['omitidos']
+                # Procesar el lote
+                self.log_signal.emit("info", "")
+                self.log_signal.emit("info", f"📋 Procesando: {nombre_carpeta}")
+                self.logger.info(f"📋 Procesando: {nombre_carpeta}")
                 
-                carpeta_actual += 1
-                self.progress_signal.emit(carpeta_actual, total_carpetas)
+                resultado = self._procesar_lote(ruta_lote, nombre_carpeta)
+                estadisticas.append(resultado)
+                
+                # Mostrar resultado del lote
+                if resultado['estado'] == 'procesado':
+                    msg = f"   ✅ Renombrados: {resultado['exitosos']} | Omitidos: {resultado['omitidos']} | Errores: {resultado['fallidos']}"
+                    self.log_signal.emit("success", msg)
+                    self.logger.info(msg)
+                else:
+                    msg = f"   ⚠️ Estado: {resultado['estado']}"
+                    self.log_signal.emit("warning", msg)
+                    self.logger.warning(msg)
+                
+                self.progress_signal.emit(idx, total_carpetas)
             
-            # Calcular tiempo transcurrido
-            elapsed_time = time.time() - start_time
-            
-            # Mostrar resumen
-            self.logger.info("=" * 50)
-            self.logger.info("📊 RESUMEN DEL RENOMBRADO")
-            self.logger.info(f"✅ Archivos renombrados: {total_renombrados}")
-            self.logger.warning(f"⭕️ Archivos omitidos: {total_omitidos}")
-            self.logger.error(f"❌ Errores: {total_errores}")
-            self.logger.info(f"⏱️ Tiempo transcurrido: {elapsed_time:.2f}s")
-            self.logger.info("=" * 50)
+            # ============================================================
+            # Resumen final
+            # ============================================================
+            total_exitosos = sum(e['exitosos'] for e in estadisticas)
+            total_fallidos = sum(e['fallidos'] for e in estadisticas)
+            total_omitidos = sum(e['omitidos'] for e in estadisticas)
+            total_archivos = sum(e['total'] for e in estadisticas)
             
             self.log_signal.emit("info", "")
             self.log_signal.emit("info", "=" * 50)
-            self.log_signal.emit("info", "📊 RESUMEN DEL RENOMBRADO")
-            self.log_signal.emit("success", f"✅ Archivos renombrados: {total_renombrados}")
-            self.log_signal.emit("warning", f"⭕️ Archivos omitidos: {total_omitidos}")
-            self.log_signal.emit("error", f"❌ Errores: {total_errores}")
-            self.log_signal.emit("info", f"⏱️ Tiempo transcurrido: {elapsed_time:.2f}s")
+            self.log_signal.emit("info", "📊 RESUMEN FINAL")
+            self.log_signal.emit("info", f"📂 Lotes procesados: {len(estadisticas)}")
+            self.log_signal.emit("success", f"✅ Archivos renombrados: {total_exitosos}")
+            self.log_signal.emit("info", f"⊘ Archivos omitidos: {total_omitidos}")
+            
+            if total_fallidos > 0:
+                self.log_signal.emit("error", f"❌ Archivos con errores: {total_fallidos}")
+            
+            if total_archivos > 0:
+                porcentaje = (total_exitosos / total_archivos) * 100
+                self.log_signal.emit("info", f"📊 Tasa de éxito: {porcentaje:.1f}%")
+            
             self.log_signal.emit("info", "=" * 50)
+            
+            # Log a archivo
+            self.logger.info("=" * 50)
+            self.logger.info("📊 RESUMEN FINAL")
+            self.logger.info(f"📂 Lotes procesados: {len(estadisticas)}")
+            self.logger.info(f"✅ Archivos renombrados: {total_exitosos}")
+            self.logger.info(f"⊘ Archivos omitidos: {total_omitidos}")
+            
+            if total_fallidos > 0:
+                self.logger.error(f"❌ Archivos con errores: {total_fallidos}")
+            
+            if total_archivos > 0:
+                porcentaje = (total_exitosos / total_archivos) * 100
+                self.logger.info(f"📊 Tasa de éxito: {porcentaje:.1f}%")
+            
+            self.logger.info("=" * 50)
             
             # Emitir estadísticas
             stats = {
-                'renombrados': total_renombrados,
-                'omitidos': total_omitidos,
-                'errores': total_errores,
-                'time': elapsed_time,
-                'por_carpeta': stats_por_carpeta
+                'lotes_procesados': len(estadisticas),
+                'total_exitosos': total_exitosos,
+                'total_fallidos': total_fallidos,
+                'total_omitidos': total_omitidos,
+                'total_archivos': total_archivos,
+                'detalle_por_lote': estadisticas
             }
             self.stats_signal.emit(stats)
             
             # Emitir resultado final
             resultado = {
                 'success': True,
-                'stats': stats,
-                'tiempo_transcurrido': elapsed_time
+                'stats': stats
             }
             
             self.logger.info("🎉 ¡Renombrado completado exitosamente!")
@@ -126,215 +175,116 @@ class CorePipelineStep4Worker(QThread):
             self.finished_signal.emit(resultado)
             
         except Exception as e:
-            error_msg = f"Error durante el renombrado: {str(e)}"
+            error_msg = f"Error durante el proceso: {str(e)}"
             self.logger.error(error_msg)
             self.log_signal.emit("error", f"❌ {error_msg}")
             import traceback
             self.logger.error(traceback.format_exc())
             self.error_signal.emit(error_msg)
     
-    def _buscar_json_en_carpeta(self, ruta_carpeta):
+    def _procesar_lote(self, carpeta_lote: str, nombre_lote: str) -> dict:
         """
-        Busca el primer archivo JSON en la carpeta especificada.
-        Imita el comportamiento del módulo core 4_rename.py
+        Procesa un lote (carpeta) usando funciones del core.
         
         Returns:
-            str: Ruta completa al JSON encontrado, o None si no hay
+            dict: Estadísticas del procesamiento
         """
         try:
-            archivos_json = [f for f in os.listdir(ruta_carpeta) if f.lower().endswith('.json')]
+            # Buscar archivo JSON (USA EL CORE)
+            archivos_json = [f for f in os.listdir(carpeta_lote) if f.endswith('.json')]
             
             if not archivos_json:
-                return None
+                self.logger.warning(f"   ⚠️ No se encontró archivo JSON en {nombre_lote}")
+                return {
+                    'lote': nombre_lote,
+                    'exitosos': 0,
+                    'fallidos': 0,
+                    'omitidos': 0,
+                    'total': 0,
+                    'estado': 'sin_json'
+                }
             
             if len(archivos_json) > 1:
-                msg = f"⚠️ Múltiples JSON encontrados: {archivos_json}, usando: {archivos_json[0]}"
-                self.logger.warning(msg)
+                msg = f"   ⚠️ Múltiples JSON encontrados, usando: {archivos_json[0]}"
                 self.log_signal.emit("warning", msg)
+                self.logger.warning(msg)
             
-            json_path = os.path.join(ruta_carpeta, archivos_json[0])
-            return json_path
+            ruta_json = os.path.join(carpeta_lote, archivos_json[0])
             
-        except Exception as e:
-            self.logger.error(f"Error al buscar JSON: {str(e)}")
-            return None
-    
-    def _cargar_json(self, json_path):
-        """
-        Carga y valida el JSON de renombrado.
-        Maneja múltiples encodings como el módulo core.
-        
-        Returns:
-            dict: Mapeo {archivo_original: nuevo_nombre} o None si falla
-        """
-        try:
-            import json
-            
-            # Probar múltiples encodings
-            encodings = ['utf-8', 'utf-8-sig', 'latin-1', 'cp1252']
-            data = None
-            
-            for encoding in encodings:
-                try:
-                    with open(json_path, 'r', encoding=encoding) as f:
-                        data = json.load(f)
-                    self.logger.info(f"✅ JSON cargado con encoding: {encoding}")
-                    break
-                except UnicodeDecodeError:
-                    continue
-                except json.JSONDecodeError as e:
-                    self.logger.error(f"Error en estructura JSON: {e}")
-                    return None
-            
-            if data is None:
-                self.logger.error("No se pudo leer el JSON con ningún encoding")
-                return None
-            
-            # Convertir a mapeo (como hace el core)
-            if isinstance(data, list):
-                # Formato lista de diccionarios con "ARCHIVO ORIGINAL" y "NUEVO NOMBRE"
-                mapeo = self._convertir_lista_a_mapeo(data)
-            elif isinstance(data, dict):
-                # Formato directo {original: nuevo}
-                mapeo = data
-            else:
-                self.logger.error(f"Formato JSON inesperado: {type(data).__name__}")
-                return None
-            
-            msg = f"✅ {len(mapeo)} registros de renombrado cargados"
+            msg = f"   📄 JSON: {archivos_json[0]}"
+            self.log_signal.emit("info", msg)
             self.logger.info(msg)
-            self.log_signal.emit("success", msg)
             
-            return mapeo
+            # Cargar datos del JSON (USA EL CORE)
+            datos_json = cargar_json(ruta_json)
+            
+            if datos_json is None:
+                return {
+                    'lote': nombre_lote,
+                    'exitosos': 0,
+                    'fallidos': 0,
+                    'omitidos': 0,
+                    'total': 0,
+                    'estado': 'json_invalido'
+                }
+            
+            if not datos_json:
+                self.logger.warning(f"   ⚠️ El archivo JSON está vacío")
+                return {
+                    'lote': nombre_lote,
+                    'exitosos': 0,
+                    'fallidos': 0,
+                    'omitidos': 0,
+                    'total': 0,
+                    'estado': 'json_vacio'
+                }
+            
+            msg = f"   📋 Registros en JSON: {len(datos_json)}"
+            self.log_signal.emit("info", msg)
+            self.logger.info(msg)
+            
+            # Convertir a mapeo (USA EL CORE)
+            mapeo = convertir_json_a_mapeo(datos_json)
+            
+            if not mapeo:
+                self.logger.error(f"   ❌ No se pudo generar mapeo de renombrado")
+                return {
+                    'lote': nombre_lote,
+                    'exitosos': 0,
+                    'fallidos': 0,
+                    'omitidos': 0,
+                    'total': 0,
+                    'estado': 'mapeo_vacio'
+                }
+            
+            msg = f"   🔄 Archivos únicos a renombrar: {len(mapeo)}"
+            self.log_signal.emit("info", msg)
+            self.logger.info(msg)
+            
+            # Ejecutar renombrado (USA EL CORE)
+            exitosos, fallidos, omitidos, total = renombrar_archivos(carpeta_lote, mapeo)
+            
+            return {
+                'lote': nombre_lote,
+                'exitosos': exitosos,
+                'fallidos': fallidos,
+                'omitidos': omitidos,
+                'total': total,
+                'estado': 'procesado'
+            }
             
         except Exception as e:
-            self.logger.error(f"Error al cargar JSON: {str(e)}")
-            return None
-    
-    def _convertir_lista_a_mapeo(self, datos_json):
-        """
-        Convierte lista de diccionarios a mapeo directo.
-        Réplica del comportamiento del core.
-        """
-        mapeo = {}
-        duplicados = {}
-        
-        for idx, item in enumerate(datos_json):
-            if not isinstance(item, dict):
-                continue
-            
-            archivo_original = item.get("ARCHIVO ORIGINAL")
-            nuevo_nombre = item.get("NUEVO NOMBRE")
-            
-            if not archivo_original or not nuevo_nombre:
-                continue
-            
-            # Detectar duplicados
-            if archivo_original in mapeo:
-                if archivo_original not in duplicados:
-                    duplicados[archivo_original] = [mapeo[archivo_original]]
-                duplicados[archivo_original].append(nuevo_nombre)
-            
-            # Guardar (sobrescribe si hay duplicados)
-            mapeo[archivo_original] = nuevo_nombre
-        
-        # Reportar duplicados
-        if duplicados:
-            msg = f"⚠️ {len(duplicados)} archivos con múltiples nombres (se usa la última ocurrencia)"
-            self.logger.warning(msg)
-            self.log_signal.emit("warning", msg)
-        
-        return mapeo
-    
-    def _procesar_carpeta(self, ruta_carpeta, nombre_carpeta):
-        """
-        Procesa todos los PDFs en una carpeta.
-        Busca el JSON dentro de la misma carpeta.
-        """
-        stats = {
-            'renombrados': 0,
-            'errores': 0,
-            'omitidos': 0
-        }
-        
-        self.logger.info(f"📂 Procesando: {nombre_carpeta}")
-        self.log_signal.emit("info", "")
-        self.log_signal.emit("info", f"📂 Procesando: {nombre_carpeta}")
-        
-        # Buscar JSON en esta carpeta
-        json_path = self._buscar_json_en_carpeta(ruta_carpeta)
-        
-        if not json_path:
-            msg = f"⚠️ No se encontró JSON en '{nombre_carpeta}', omitiendo..."
-            self.logger.warning(msg)
-            self.log_signal.emit("warning", msg)
-            return stats
-        
-        nombre_json = os.path.basename(json_path)
-        msg = f"✅ JSON encontrado: {nombre_json}"
-        self.logger.info(msg)
-        self.log_signal.emit("success", msg)
-        
-        # Cargar mapeo de renombrado
-        rename_data = self._cargar_json(json_path)
-        
-        if not rename_data:
-            msg = f"❌ Error al cargar JSON de '{nombre_carpeta}'"
-            self.logger.error(msg)
-            self.log_signal.emit("error", msg)
-            return stats
-        
-        # Obtener archivos PDF
-        archivos_pdf = [f for f in os.listdir(ruta_carpeta) 
-                       if f.lower().endswith('.pdf')]
-        
-        self.logger.info(f"   📄 PDFs encontrados: {len(archivos_pdf)}")
-        self.log_signal.emit("info", f"   📄 PDFs encontrados: {len(archivos_pdf)}")
-        
-        # Renombrar archivos
-        for archivo in archivos_pdf:
-            if not self._is_running:
-                break
-            
-            # Verificar si está en el mapeo
-            if archivo not in rename_data:
-                stats['omitidos'] += 1
-                continue
-            
-            nuevo_nombre = rename_data[archivo]
-            
-            # Si es el mismo nombre, omitir
-            if archivo == nuevo_nombre:
-                stats['omitidos'] += 1
-                continue
-            
-            ruta_actual = os.path.join(ruta_carpeta, archivo)
-            ruta_nueva = os.path.join(ruta_carpeta, nuevo_nombre)
-            
-            # Intentar renombrar
-            try:
-                # Verificar si el destino ya existe
-                if os.path.exists(ruta_nueva):
-                    msg = f"   ⚠️ Ya existe: {nuevo_nombre}"
-                    self.logger.warning(msg)
-                    stats['errores'] += 1
-                    continue
-                
-                os.rename(ruta_actual, ruta_nueva)
-                stats['renombrados'] += 1
-                
-            except Exception as e:
-                msg = f"   ❌ Error en {archivo}: {str(e)}"
-                self.logger.error(msg)
-                stats['errores'] += 1
-        
-        msg = f"   ✅ Completado: {stats['renombrados']} renombrados, {stats['omitidos']} omitidos, {stats['errores']} errores"
-        self.logger.info(msg)
-        self.log_signal.emit("success", msg)
-        
-        return stats
+            self.logger.error(f"Error procesando lote {nombre_lote}: {str(e)}")
+            return {
+                'lote': nombre_lote,
+                'exitosos': 0,
+                'fallidos': 0,
+                'omitidos': 0,
+                'total': 0,
+                'estado': 'error'
+            }
     
     def stop(self):
         """Detiene el worker"""
         self._is_running = False
-        self.logger.warning("⏹️ Worker detenido por el usuario")
+        self.logger.warning("ℹ️ Worker detenido por el usuario")

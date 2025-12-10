@@ -1,2 +1,3 @@
 2025-12-10 10:28:06 | ERROR    | workers.CorePipelineStep4      | error                | c:\Users\ricuculm\OneDrive - Metso\Documents\VS Code\7. Matrix_Rework\utils\logger.py:57 | No se encontró archivo JSON de renombrado
 2025-12-10 10:36:05 | ERROR    | workers.CorePipelineStep4      | error                | c:\Users\ricuculm\OneDrive - Metso\Documents\VS Code\7. Matrix_Rework\utils\logger.py:57 | ❌ Errores: 0
+2025-12-10 11:30:54 | ERROR    | workers.CorePipelineStep2Worker | error                | c:\Users\ricuculm\OneDrive - Metso\Documents\VS Code\7. Matrix_Rework\utils\logger.py:57 | Existen 1339 archivos en las carpetas destino. Active 'sobrescribir' para continuar.
