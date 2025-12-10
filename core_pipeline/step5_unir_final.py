@@ -4,7 +4,7 @@ Pipeline: Escaneo → Copia → Diagnóstico → Fusión de PDFs por contrato
 
 Desarrollado para Matrix File Processor v3.0
 Autor: Richi
-Versión: 1.0
+Versión: 1.1 - FIXED: Ordenamiento garantizado de documentos
 """
 
 import os
@@ -24,6 +24,87 @@ except ImportError:
     print("⚠ PyPDF2 no está instalado. Ejecuta: pip install PyPDF2")
     PdfMerger = None
 logger = Logger("CorePipeline5_UnirFinal")
+
+# ============================================================
+# MÓDULO 0: ORDEN Y PRIORIDADES
+# ============================================================
+
+def definir_orden_documentos() -> Dict[str, int]:
+    """
+    Define el orden de prioridad para los tipos de documentos.
+    
+    Returns:
+        Diccionario con patrones y sus prioridades (menor = primero)
+    """
+    return {
+        'BOLETA DE PAGO Y CERTIFICADOS': 1,  # Boletas primero
+        'AFP': 2,                             # AFP segundo
+        '5TA': 3,                             # Quinta categoría tercero
+        'CERTIFICADOS': 4,                    # Certificados de trabajo cuarto
+        'CONVOCATORIA': 5                     # Convocatorias al final
+    }
+
+
+def extraer_tipo_documento(nombre_archivo: str) -> str:
+    """
+    Extrae el tipo de documento basándose en el nombre del archivo.
+    
+    Args:
+        nombre_archivo: Nombre del archivo PDF
+        
+    Returns:
+        Tipo de documento identificado o 'DESCONOCIDO'
+    """
+    nombre_upper = nombre_archivo.upper()
+    
+    if 'BOLETA DE PAGO Y CERTIFICADOS' in nombre_upper or 'BOLETA' in nombre_upper:
+        return 'BOLETA DE PAGO Y CERTIFICADOS'
+    elif 'AFP' in nombre_upper:
+        return 'AFP'
+    elif '5TA' in nombre_upper or 'QUINTA' in nombre_upper:
+        return '5TA'
+    elif 'CONVOCATORIA' in nombre_upper:
+        return 'CONVOCATORIA'
+    elif 'CERTIFICADO' in nombre_upper:
+        return 'CERTIFICADOS'
+    else:
+        return 'DESCONOCIDO'
+
+
+def ordenar_archivos_por_tipo(archivos: List[str]) -> List[str]:
+    """
+    Ordena una lista de archivos según el tipo de documento.
+    
+    Args:
+        archivos: Lista de nombres de archivos PDF
+        
+    Returns:
+        Lista ordenada según prioridades definidas
+    """
+    orden_prioridades = definir_orden_documentos()
+    
+    def obtener_prioridad(archivo: str) -> Tuple[int, str]:
+        """
+        Obtiene la prioridad de un archivo para ordenamiento.
+        
+        Returns:
+            Tupla (prioridad, nombre_archivo) para ordenamiento estable
+        """
+        tipo = extraer_tipo_documento(archivo)
+        prioridad = orden_prioridades.get(tipo, 999)  # 999 para desconocidos al final
+        return (prioridad, archivo)
+    
+    # Ordenar usando la función de prioridad
+    archivos_ordenados = sorted(archivos, key=obtener_prioridad)
+    
+    # Log del orden aplicado
+    logger.info("📋 Orden de documentos aplicado:")
+    for idx, archivo in enumerate(archivos_ordenados, 1):
+        tipo = extraer_tipo_documento(archivo)
+        logger.info(f"   {idx}. {tipo}: {archivo}")
+    
+    return archivos_ordenados
+
 
 # ============================================================
 # MÓDULO 1: INTERFAZ Y SELECCIÓN
@@ -301,6 +382,7 @@ def fusionar_pdfs_contrato(archivos: List[str], ruta_procesar: str,
                           nombre_salida: str, ruta_destino: str) -> bool:
     """
     Fusiona múltiples PDFs en un solo archivo.
+    ⚠️ CAMBIO CRÍTICO: Ahora ordena los archivos antes de fusionar
     
     Args:
         archivos: Lista de nombres de archivos PDF a fusionar
@@ -319,12 +401,18 @@ def fusionar_pdfs_contrato(archivos: List[str], ruta_procesar: str,
     try:
         merger = PdfMerger()
         
-        # Agregar cada PDF al merger
-        for archivo in archivos:
+        # ⭐ CAMBIO CRÍTICO: ORDENAR ARCHIVOS ANTES DE FUSIONAR
+        archivos_ordenados = ordenar_archivos_por_tipo(archivos)
+        
+        logger.info(f"  📄 Fusionando {len(archivos_ordenados)} documentos en orden específico...")
+        
+        # Agregar cada PDF al merger EN EL ORDEN CORRECTO
+        for archivo in archivos_ordenados:
             ruta_pdf = os.path.join(ruta_procesar, archivo)
             if os.path.exists(ruta_pdf):
                 merger.append(ruta_pdf)
-        logger.info(f"  📄 Fusionando {len(archivos)} documentos...")
+                logger.debug(f"     ✓ Agregado: {archivo}")
+        
         # Guardar PDF fusionado
         ruta_salida = os.path.join(ruta_destino, f"{nombre_salida}.pdf")
         logger.info(f"  ✅ Pack generado: {nombre_salida}")
@@ -336,12 +424,13 @@ def fusionar_pdfs_contrato(archivos: List[str], ruta_procesar: str,
     except Exception as e:
         print(f"  ✗ Error al fusionar PDFs: {e}")
         logger.error(f"  ✗ Error al fusionar '{nombre_salida}': {e}")
+        import traceback
         logger.error(traceback.format_exc())
         return False
 
 
 def generar_packs_documentales(ruta_procesar: str, diagnostico: Dict, 
-                               timestamp: str) -> Tuple[str, int, int]:
+                               timestamp: str, progress_callback=None) -> Tuple[str, int, int]:
     """
     Genera PDFs fusionados por contrato en carpeta Documentos_Enviar.
     
@@ -349,6 +438,7 @@ def generar_packs_documentales(ruta_procesar: str, diagnostico: Dict,
         ruta_procesar: Ruta de carpeta Documentos_Procesar
         diagnostico: Diccionario con diagnóstico
         timestamp: Timestamp del proceso
+        progress_callback: Función callback(current, total) para reportar progreso
         
     Returns:
         Tupla (ruta_carpeta_enviar, packs_generados, errores)
@@ -367,14 +457,19 @@ def generar_packs_documentales(ruta_procesar: str, diagnostico: Dict,
     
     packs_generados = 0
     errores = 0
+    total_contratos = len(diagnostico['contratos'])
     
     # Generar pack por cada contrato
-    for identificador, info in diagnostico['contratos'].items():
+    for idx, (identificador, info) in enumerate(diagnostico['contratos'].items(), 1):
         # Usar nombre de boleta como nombre del pack, o identificador si no hay boleta
         nombre_pack = info['nombre_pack'] if info['nombre_pack'] else f"Pack_{identificador}"
         
         print(f"\n  Generando pack: {nombre_pack}")
         print(f"  → Fusionando {info['cantidad_total']} documento(s)")
+        
+        # Reportar progreso antes de generar
+        if progress_callback:
+            progress_callback(idx, total_contratos)
         
         exito = fusionar_pdfs_contrato(
             info['archivos'],

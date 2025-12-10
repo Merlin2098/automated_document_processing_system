@@ -4,6 +4,8 @@ Usa directamente las funciones del módulo core sin reimplementar lógica
 
 Este worker actúa como un puente entre la UI (PySide6) y el módulo core,
 proporcionando señales para actualizar la interfaz sin duplicar código.
+
+VERSION 1.1: Progreso detallado por pack generado
 """
 from PySide6.QtCore import QThread, Signal
 from utils.logger import Logger
@@ -32,7 +34,7 @@ class CorePipelineStep5Worker(QThread):
     """Worker wrapper que usa el módulo core para fusión por contratos"""
     
     # Señales
-    progress_signal = Signal(int, int)  # (current, total)
+    progress_signal = Signal(int, int)  # (current, total) - Ahora reporta packs generados
     log_signal = Signal(str, str)  # (type, message)
     stats_signal = Signal(dict)  # estadísticas
     finished_signal = Signal(dict)  # resultado final
@@ -43,6 +45,17 @@ class CorePipelineStep5Worker(QThread):
         self.folder_path = folder_path
         self._is_running = True
         self.logger = Logger("CorePipelineStep5Worker")
+    
+    def _emit_pack_progress(self, current: int, total: int):
+        """
+        Callback interno para emitir progreso de generación de packs.
+        
+        Args:
+            current: Pack actual siendo generado
+            total: Total de packs a generar
+        """
+        self.progress_signal.emit(current, total)
+        self.log_signal.emit("info", f"   📦 Generando pack {current}/{total}...")
     
     def run(self):
         """Ejecuta el proceso usando funciones del core"""
@@ -78,8 +91,8 @@ class CorePipelineStep5Worker(QThread):
             # FASE 1: Validar subcarpetas (USA EL CORE)
             # ============================================================
             self.log_signal.emit("info", "")
-            self.log_signal.emit("info", "📋 [1/5] Validando estructura...")
-            self.logger.info("📋 [1/5] Validando estructura...")
+            self.log_signal.emit("info", "📋 [1/4] Validando estructura...")
+            self.logger.info("📋 [1/4] Validando estructura...")
             
             encontradas, faltantes = validar_y_detectar_subcarpetas(self.folder_path)
             
@@ -97,8 +110,6 @@ class CorePipelineStep5Worker(QThread):
                 self.log_signal.emit("warning", msg)
                 self.logger.warning(msg)
             
-            self.progress_signal.emit(1, 5)
-            
             # ============================================================
             # FASE 2: Copiar PDFs a carpeta temporal (USA EL CORE)
             # ============================================================
@@ -107,8 +118,8 @@ class CorePipelineStep5Worker(QThread):
                 return
             
             self.log_signal.emit("info", "")
-            self.log_signal.emit("info", "📋 [2/5] Copiando PDFs a carpeta temporal...")
-            self.logger.info("📋 [2/5] Copiando PDFs a carpeta temporal...")
+            self.log_signal.emit("info", "📋 [2/4] Copiando PDFs a carpeta temporal...")
+            self.logger.info("📋 [2/4] Copiando PDFs a carpeta temporal...")
             
             ruta_procesar, copiados, errores_copia = copiar_pdfs_a_procesamiento(
                 self.folder_path,
@@ -131,8 +142,6 @@ class CorePipelineStep5Worker(QThread):
                 self.log_signal.emit("warning", msg)
                 self.logger.warning(msg)
             
-            self.progress_signal.emit(2, 5)
-            
             # ============================================================
             # FASE 3: Generar diagnóstico de contratos (USA EL CORE)
             # ============================================================
@@ -141,8 +150,8 @@ class CorePipelineStep5Worker(QThread):
                 return
             
             self.log_signal.emit("info", "")
-            self.log_signal.emit("info", "📋 [3/5] Analizando contratos...")
-            self.logger.info("📋 [3/5] Analizando contratos...")
+            self.log_signal.emit("info", "📋 [3/4] Analizando contratos...")
+            self.logger.info("📋 [3/4] Analizando contratos...")
             
             diagnostico = generar_diagnostico(ruta_procesar, timestamp)
             
@@ -162,8 +171,6 @@ class CorePipelineStep5Worker(QThread):
             if ruta_json:
                 self.log_signal.emit("success", f"✅ Diagnóstico guardado: {os.path.basename(ruta_json)}")
             
-            self.progress_signal.emit(3, 5)
-            
             # ============================================================
             # FASE 4: Generar packs documentarios (USA EL CORE)
             # ============================================================
@@ -172,14 +179,19 @@ class CorePipelineStep5Worker(QThread):
                 return
             
             self.log_signal.emit("info", "")
-            self.log_signal.emit("info", "📋 [4/5] Generando packs por contrato...")
-            self.logger.info("📋 [4/5] Generando packs por contrato...")
+            self.log_signal.emit("info", "📋 [4/4] Generando packs por contrato...")
+            self.logger.info("📋 [4/4] Generando packs por contrato...")
             self.log_signal.emit("info", f"   Se generarán {diagnostico['total_contratos_unicos']} packs...")
             
+            # Inicializar progreso en 0
+            self.progress_signal.emit(0, diagnostico['total_contratos_unicos'])
+            
+            # Llamar a generar_packs_documentales CON callback de progreso
             ruta_enviar, packs_generados, errores_fusion = generar_packs_documentales(
                 ruta_procesar,
                 diagnostico,
-                timestamp
+                timestamp,
+                progress_callback=self._emit_pack_progress  # ⭐ CALLBACK PARA PROGRESO
             )
             
             if not ruta_enviar:
@@ -187,8 +199,6 @@ class CorePipelineStep5Worker(QThread):
                 self.logger.error(error_msg)
                 self.error_signal.emit(error_msg)
                 return
-            
-            self.progress_signal.emit(4, 5)
             
             # ============================================================
             # FASE 5: Resumen final
@@ -222,8 +232,6 @@ class CorePipelineStep5Worker(QThread):
             self.logger.info(f"📦 Carpeta salida: {ruta_enviar}")
             self.logger.info(f"⏱️ Tiempo total: {elapsed_time:.2f}s")
             self.logger.info("=" * 50)
-            
-            self.progress_signal.emit(5, 5)
             
             # Emitir estadísticas
             stats = {

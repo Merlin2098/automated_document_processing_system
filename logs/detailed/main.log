@@ -242,3 +242,155 @@
 2025-12-10 11:56:28 | INFO     | main                           | main                 | --------------------------------------------------------------------------------
 2025-12-10 11:56:28 | INFO     | main                           | main                 | Aplicación cerrada con código: 0
 2025-12-10 11:56:28 | INFO     | main                           | main                 | ================================================================================
+2025-12-10 12:41:19 | INFO     | main                           | main                 | ================================================================================
+2025-12-10 12:41:19 | INFO     | main                           | main                 | DocFlow Eventuales v4.0 - Iniciando aplicación
+2025-12-10 12:41:19 | INFO     | main                           | main                 | ================================================================================
+2025-12-10 12:41:19 | INFO     | main                           | main                 | Sistema operativo: win32
+2025-12-10 12:41:19 | INFO     | main                           | main                 | Versión Python: 3.13.9
+2025-12-10 12:41:19 | INFO     | main                           | main                 | --------------------------------------------------------------------------------
+2025-12-10 12:41:19 | INFO     | main                           | main                 | Configurando aplicación Qt...
+2025-12-10 12:41:19 | INFO     | main                           | main                 | ✅ Aplicación Qt configurada correctamente
+2025-12-10 12:41:19 | INFO     | main                           | main                 | Mostrando splash screen...
+2025-12-10 12:41:28 | INFO     | main                           | main                 | ✅ Splash screen mostrado
+2025-12-10 12:41:28 | INFO     | main                           | main                 | Iniciando event loop de Qt...
+2025-12-10 12:41:32 | INFO     | main                           | on_splash_finished   | Splash screen completado, cargando ventana principal...
+2025-12-10 12:41:32 | INFO     | main                           | on_splash_finished   | ✅ Ventana principal cargada y mostrada
+2025-12-10 12:41:32 | INFO     | main                           | on_splash_finished   | --------------------------------------------------------------------------------
+2025-12-10 12:41:32 | INFO     | main                           | on_splash_finished   | 🚀 Aplicación lista para usar
+2025-12-10 12:41:32 | INFO     | main                           | on_splash_finished   | ================================================================================
+2025-12-10 12:43:12 | INFO     | main                           | main                 | --------------------------------------------------------------------------------
+2025-12-10 12:43:12 | INFO     | main                           | main                 | Aplicación cerrada con código: 0
+2025-12-10 12:43:12 | INFO     | main                           | main                 | ================================================================================
+2025-12-10 13:03:01 | INFO     | main                           | main                 | ================================================================================
+2025-12-10 13:03:01 | INFO     | main                           | main                 | DocFlow Eventuales v4.0 - Iniciando aplicación
+2025-12-10 13:03:01 | INFO     | main                           | main                 | ================================================================================
+2025-12-10 13:03:01 | INFO     | main                           | main                 | Sistema operativo: win32
+2025-12-10 13:03:01 | INFO     | main                           | main                 | Versión Python: 3.13.9
+2025-12-10 13:03:01 | INFO     | main                           | main                 | --------------------------------------------------------------------------------
+2025-12-10 13:03:01 | INFO     | main                           | main                 | Configurando aplicación Qt...
+2025-12-10 13:03:01 | INFO     | main                           | main                 | ✅ Aplicación Qt configurada correctamente
+2025-12-10 13:03:01 | INFO     | main                           | main                 | Mostrando splash screen...
+2025-12-10 13:03:04 | INFO     | main                           | main                 | ✅ Splash screen mostrado
+2025-12-10 13:03:04 | INFO     | main                           | main                 | Iniciando event loop de Qt...
+2025-12-10 13:03:08 | INFO     | main                           | on_splash_finished   | Splash screen completado, cargando ventana principal...
+2025-12-10 13:03:08 | INFO     | main                           | on_splash_finished   | ✅ Ventana principal cargada y mostrada
+2025-12-10 13:03:08 | INFO     | main                           | on_splash_finished   | --------------------------------------------------------------------------------
+2025-12-10 13:03:08 | INFO     | main                           | on_splash_finished   | 🚀 Aplicación lista para usar
+2025-12-10 13:03:08 | INFO     | main                           | on_splash_finished   | ================================================================================
+2025-12-10 13:06:13 | INFO     | main                           | main                 | --------------------------------------------------------------------------------
+2025-12-10 13:06:13 | INFO     | main                           | main                 | Aplicación cerrada con código: 0
+2025-12-10 13:06:13 | INFO     | main                           | main                 | ================================================================================
+2025-12-10 15:57:52 | INFO     | main                           | main                 | ================================================================================
+2025-12-10 15:57:52 | INFO     | main                           | main                 | DocFlow Eventuales v4.0 - Iniciando aplicación
+2025-12-10 15:57:52 | INFO     | main                           | main                 | ================================================================================
+2025-12-10 15:57:52 | INFO     | main                           | main                 | Sistema operativo: win32
+2025-12-10 15:57:52 | INFO     | main                           | main                 | Versión Python: 3.13.9
+2025-12-10 15:57:52 | INFO     | main                           | main                 | --------------------------------------------------------------------------------
+2025-12-10 15:57:52 | INFO     | main                           | main                 | Configurando aplicación Qt...
+2025-12-10 15:57:53 | INFO     | main                           | main                 | ✅ Aplicación Qt configurada correctamente
+2025-12-10 15:57:53 | INFO     | main                           | main                 | Mostrando splash screen...
+2025-12-10 15:58:03 | INFO     | main                           | main                 | ✅ Splash screen mostrado
+2025-12-10 15:58:03 | INFO     | main                           | main                 | Iniciando event loop de Qt...
+2025-12-10 15:58:06 | INFO     | main                           | on_splash_finished   | Splash screen completado, cargando ventana principal...
+2025-12-10 15:58:06 | INFO     | main                           | on_splash_finished   | ✅ Ventana principal cargada y mostrada
+2025-12-10 15:58:06 | INFO     | main                           | on_splash_finished   | --------------------------------------------------------------------------------
+2025-12-10 15:58:06 | INFO     | main                           | on_splash_finished   | 🚀 Aplicación lista para usar
+2025-12-10 15:58:06 | INFO     | main                           | on_splash_finished   | ================================================================================
+2025-12-10 15:59:03 | INFO     | main                           | main                 | --------------------------------------------------------------------------------
+2025-12-10 15:59:03 | INFO     | main                           | main                 | Aplicación cerrada con código: 0
+2025-12-10 15:59:03 | INFO     | main                           | main                 | ================================================================================
+2025-12-10 16:17:07 | INFO     | main                           | main                 | ================================================================================
+2025-12-10 16:17:07 | INFO     | main                           | main                 | DocFlow Eventuales v4.0 - Iniciando aplicación
+2025-12-10 16:17:07 | INFO     | main                           | main                 | ================================================================================
+2025-12-10 16:17:07 | INFO     | main                           | main                 | Sistema operativo: win32
+2025-12-10 16:17:07 | INFO     | main                           | main                 | Versión Python: 3.13.9
+2025-12-10 16:17:07 | INFO     | main                           | main                 | --------------------------------------------------------------------------------
+2025-12-10 16:17:07 | INFO     | main                           | main                 | Configurando aplicación Qt...
+2025-12-10 16:17:07 | INFO     | main                           | main                 | ✅ Aplicación Qt configurada correctamente
+2025-12-10 16:17:07 | INFO     | main                           | main                 | Mostrando splash screen...
+2025-12-10 16:17:09 | INFO     | main                           | main                 | ✅ Splash screen mostrado
+2025-12-10 16:17:09 | INFO     | main                           | main                 | Iniciando event loop de Qt...
+2025-12-10 16:17:12 | INFO     | main                           | on_splash_finished   | Splash screen completado, cargando ventana principal...
+2025-12-10 16:17:12 | INFO     | main                           | on_splash_finished   | ✅ Ventana principal cargada y mostrada
+2025-12-10 16:17:12 | INFO     | main                           | on_splash_finished   | --------------------------------------------------------------------------------
+2025-12-10 16:17:12 | INFO     | main                           | on_splash_finished   | 🚀 Aplicación lista para usar
+2025-12-10 16:17:12 | INFO     | main                           | on_splash_finished   | ================================================================================
+2025-12-10 16:20:36 | INFO     | main                           | main                 | --------------------------------------------------------------------------------
+2025-12-10 16:20:36 | INFO     | main                           | main                 | Aplicación cerrada con código: 0
+2025-12-10 16:20:36 | INFO     | main                           | main                 | ================================================================================
+2025-12-10 16:20:56 | INFO     | main                           | main                 | ================================================================================
+2025-12-10 16:20:56 | INFO     | main                           | main                 | DocFlow Eventuales v4.0 - Iniciando aplicación
+2025-12-10 16:20:56 | INFO     | main                           | main                 | ================================================================================
+2025-12-10 16:20:56 | INFO     | main                           | main                 | Sistema operativo: win32
+2025-12-10 16:20:56 | INFO     | main                           | main                 | Versión Python: 3.13.9
+2025-12-10 16:20:56 | INFO     | main                           | main                 | --------------------------------------------------------------------------------
+2025-12-10 16:20:56 | INFO     | main                           | main                 | Configurando aplicación Qt...
+2025-12-10 16:20:56 | INFO     | main                           | main                 | ✅ Aplicación Qt configurada correctamente
+2025-12-10 16:20:56 | INFO     | main                           | main                 | Mostrando splash screen...
+2025-12-10 16:20:57 | INFO     | main                           | main                 | ✅ Splash screen mostrado
+2025-12-10 16:20:57 | INFO     | main                           | main                 | Iniciando event loop de Qt...
+2025-12-10 16:21:00 | INFO     | main                           | on_splash_finished   | Splash screen completado, cargando ventana principal...
+2025-12-10 16:21:00 | INFO     | main                           | on_splash_finished   | ✅ Ventana principal cargada y mostrada
+2025-12-10 16:21:00 | INFO     | main                           | on_splash_finished   | --------------------------------------------------------------------------------
+2025-12-10 16:21:00 | INFO     | main                           | on_splash_finished   | 🚀 Aplicación lista para usar
+2025-12-10 16:21:00 | INFO     | main                           | on_splash_finished   | ================================================================================
+2025-12-10 16:21:55 | INFO     | main                           | main                 | --------------------------------------------------------------------------------
+2025-12-10 16:21:55 | INFO     | main                           | main                 | Aplicación cerrada con código: 0
+2025-12-10 16:21:55 | INFO     | main                           | main                 | ================================================================================
+2025-12-10 16:23:47 | INFO     | main                           | main                 | ================================================================================
+2025-12-10 16:23:47 | INFO     | main                           | main                 | DocFlow Eventuales v4.0 - Iniciando aplicación
+2025-12-10 16:23:47 | INFO     | main                           | main                 | ================================================================================
+2025-12-10 16:23:47 | INFO     | main                           | main                 | Sistema operativo: win32
+2025-12-10 16:23:47 | INFO     | main                           | main                 | Versión Python: 3.13.9
+2025-12-10 16:23:47 | INFO     | main                           | main                 | --------------------------------------------------------------------------------
+2025-12-10 16:23:47 | INFO     | main                           | main                 | Configurando aplicación Qt...
+2025-12-10 16:23:47 | INFO     | main                           | main                 | ✅ Aplicación Qt configurada correctamente
+2025-12-10 16:23:47 | INFO     | main                           | main                 | Mostrando splash screen...
+2025-12-10 16:23:49 | INFO     | main                           | main                 | ✅ Splash screen mostrado
+2025-12-10 16:23:49 | INFO     | main                           | main                 | Iniciando event loop de Qt...
+2025-12-10 16:23:52 | INFO     | main                           | on_splash_finished   | Splash screen completado, cargando ventana principal...
+2025-12-10 16:23:52 | INFO     | main                           | on_splash_finished   | ✅ Ventana principal cargada y mostrada
+2025-12-10 16:23:52 | INFO     | main                           | on_splash_finished   | --------------------------------------------------------------------------------
+2025-12-10 16:23:52 | INFO     | main                           | on_splash_finished   | 🚀 Aplicación lista para usar
+2025-12-10 16:23:52 | INFO     | main                           | on_splash_finished   | ================================================================================
+2025-12-10 16:24:35 | INFO     | main                           | main                 | --------------------------------------------------------------------------------
+2025-12-10 16:24:35 | INFO     | main                           | main                 | Aplicación cerrada con código: 0
+2025-12-10 16:24:35 | INFO     | main                           | main                 | ================================================================================
+2025-12-10 16:33:40 | INFO     | main                           | main                 | ================================================================================
+2025-12-10 16:33:40 | INFO     | main                           | main                 | DocFlow Eventuales v4.0 - Iniciando aplicación
+2025-12-10 16:33:40 | INFO     | main                           | main                 | ================================================================================
+2025-12-10 16:33:40 | INFO     | main                           | main                 | Sistema operativo: win32
+2025-12-10 16:33:40 | INFO     | main                           | main                 | Versión Python: 3.13.9
+2025-12-10 16:33:40 | INFO     | main                           | main                 | --------------------------------------------------------------------------------
+2025-12-10 16:33:40 | INFO     | main                           | main                 | Configurando aplicación Qt...
+2025-12-10 16:33:40 | INFO     | main                           | main                 | ✅ Aplicación Qt configurada correctamente
+2025-12-10 16:33:40 | INFO     | main                           | main                 | Mostrando splash screen...
+2025-12-10 16:33:51 | INFO     | main                           | main                 | ✅ Splash screen mostrado
+2025-12-10 16:33:51 | INFO     | main                           | main                 | Iniciando event loop de Qt...
+2025-12-10 16:33:54 | INFO     | main                           | on_splash_finished   | Splash screen completado, cargando ventana principal...
+2025-12-10 16:33:55 | INFO     | main                           | on_splash_finished   | ✅ Ventana principal cargada y mostrada
+2025-12-10 16:33:55 | INFO     | main                           | on_splash_finished   | --------------------------------------------------------------------------------
+2025-12-10 16:33:55 | INFO     | main                           | on_splash_finished   | 🚀 Aplicación lista para usar
+2025-12-10 16:33:55 | INFO     | main                           | on_splash_finished   | ================================================================================
+2025-12-10 16:37:04 | INFO     | main                           | main                 | --------------------------------------------------------------------------------
+2025-12-10 16:37:04 | INFO     | main                           | main                 | Aplicación cerrada con código: 0
+2025-12-10 16:37:04 | INFO     | main                           | main                 | ================================================================================
+2025-12-10 16:41:14 | INFO     | main                           | main                 | ================================================================================
+2025-12-10 16:41:14 | INFO     | main                           | main                 | DocFlow Eventuales v4.0 - Iniciando aplicación
+2025-12-10 16:41:14 | INFO     | main                           | main                 | ================================================================================
+2025-12-10 16:41:14 | INFO     | main                           | main                 | Sistema operativo: win32
+2025-12-10 16:41:14 | INFO     | main                           | main                 | Versión Python: 3.13.9
+2025-12-10 16:41:14 | INFO     | main                           | main                 | --------------------------------------------------------------------------------
+2025-12-10 16:41:14 | INFO     | main                           | main                 | Configurando aplicación Qt...
+2025-12-10 16:41:14 | INFO     | main                           | main                 | ✅ Aplicación Qt configurada correctamente
+2025-12-10 16:41:14 | INFO     | main                           | main                 | Mostrando splash screen...
+2025-12-10 16:41:26 | INFO     | main                           | main                 | ✅ Splash screen mostrado
+2025-12-10 16:41:26 | INFO     | main                           | main                 | Iniciando event loop de Qt...
+2025-12-10 16:41:30 | INFO     | main                           | on_splash_finished   | Splash screen completado, cargando ventana principal...
+2025-12-10 16:41:30 | INFO     | main                           | on_splash_finished   | ✅ Ventana principal cargada y mostrada
+2025-12-10 16:41:30 | INFO     | main                           | on_splash_finished   | --------------------------------------------------------------------------------
+2025-12-10 16:41:30 | INFO     | main                           | on_splash_finished   | 🚀 Aplicación lista para usar
+2025-12-10 16:41:30 | INFO     | main                           | on_splash_finished   | ================================================================================
+2025-12-10 16:43:10 | INFO     | main                           | main                 | --------------------------------------------------------------------------------
+2025-12-10 16:43:10 | INFO     | main                           | main                 | Aplicación cerrada con código: 0
+2025-12-10 16:43:10 | INFO     | main                           | main                 | ================================================================================

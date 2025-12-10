@@ -1,3 +1,189 @@
 2025-12-10 10:28:06 | ERROR    | workers.CorePipelineStep4      | error                | c:\Users\ricuculm\OneDrive - Metso\Documents\VS Code\7. Matrix_Rework\utils\logger.py:57 | No se encontró archivo JSON de renombrado
 2025-12-10 10:36:05 | ERROR    | workers.CorePipelineStep4      | error                | c:\Users\ricuculm\OneDrive - Metso\Documents\VS Code\7. Matrix_Rework\utils\logger.py:57 | ❌ Errores: 0
 2025-12-10 11:30:54 | ERROR    | workers.CorePipelineStep2Worker | error                | c:\Users\ricuculm\OneDrive - Metso\Documents\VS Code\7. Matrix_Rework\utils\logger.py:57 | Existen 1339 archivos en las carpetas destino. Active 'sobrescribir' para continuar.
+2025-12-10 15:58:55 | ERROR    | workers.CoreSunat_Diagnostico  | error                | c:\Users\ricuculm\OneDrive - Metso\Documents\VS Code\7. Matrix_Rework\utils\logger.py:57 | ❌ Error en CIR_BAJA_TRA_20262478964_1053333_04122025131528.pdf: too many values to unpack (expected 4)
+2025-12-10 15:58:55 | ERROR    | workers.CoreSunat_Diagnostico  | error                | c:\Users\ricuculm\OneDrive - Metso\Documents\VS Code\7. Matrix_Rework\utils\logger.py:57 | ❌ Error en CIR_BAJA_TRA_20262478964_1053333_04122025131530.pdf: too many values to unpack (expected 4)
+2025-12-10 15:58:55 | ERROR    | workers.CoreSunat_Diagnostico  | error                | c:\Users\ricuculm\OneDrive - Metso\Documents\VS Code\7. Matrix_Rework\utils\logger.py:57 | ❌ Error en CIR_BAJA_TRA_20262478964_1053333_04122025131532.pdf: too many values to unpack (expected 4)
+2025-12-10 15:58:55 | ERROR    | workers.CoreSunat_Diagnostico  | error                | c:\Users\ricuculm\OneDrive - Metso\Documents\VS Code\7. Matrix_Rework\utils\logger.py:57 | ❌ Error en CIR_BAJA_TRA_20262478964_1053333_04122025131533.pdf: too many values to unpack (expected 4)
+2025-12-10 15:58:55 | ERROR    | workers.CoreSunat_Diagnostico  | error                | c:\Users\ricuculm\OneDrive - Metso\Documents\VS Code\7. Matrix_Rework\utils\logger.py:57 | Traceback (most recent call last):
+  File "c:\Users\ricuculm\OneDrive - Metso\Documents\VS Code\7. Matrix_Rework\core_sunat\sunat.py", line 72, in process_single_pdf
+    document_number, name, doc_type, fecha = self.extractor.extract_document_info(pdf_path)
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ValueError: too many values to unpack (expected 4)
+
+2025-12-10 15:58:55 | ERROR    | workers.CoreSunat_Diagnostico  | error                | c:\Users\ricuculm\OneDrive - Metso\Documents\VS Code\7. Matrix_Rework\utils\logger.py:57 | Traceback (most recent call last):
+  File "c:\Users\ricuculm\OneDrive - Metso\Documents\VS Code\7. Matrix_Rework\core_sunat\sunat.py", line 72, in process_single_pdf
+    document_number, name, doc_type, fecha = self.extractor.extract_document_info(pdf_path)
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ValueError: too many values to unpack (expected 4)
+
+2025-12-10 15:58:55 | ERROR    | workers.CoreSunat_Diagnostico  | error                | c:\Users\ricuculm\OneDrive - Metso\Documents\VS Code\7. Matrix_Rework\utils\logger.py:57 | Traceback (most recent call last):
+  File "c:\Users\ricuculm\OneDrive - Metso\Documents\VS Code\7. Matrix_Rework\core_sunat\sunat.py", line 72, in process_single_pdf
+    document_number, name, doc_type, fecha = self.extractor.extract_document_info(pdf_path)
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ValueError: too many values to unpack (expected 4)
+
+2025-12-10 15:58:55 | ERROR    | workers.SunatDiagnostic        | error                | c:\Users\ricuculm\OneDrive - Metso\Documents\VS Code\7. Matrix_Rework\utils\logger.py:57 | ✗ CIR_BAJA_TRA_20262478964_1053333_04122025131532.pdf - Error
+2025-12-10 15:58:55 | ERROR    | workers.SunatDiagnostic        | error                | c:\Users\ricuculm\OneDrive - Metso\Documents\VS Code\7. Matrix_Rework\utils\logger.py:57 | ✗ CIR_BAJA_TRA_20262478964_1053333_04122025131533.pdf - Error
+2025-12-10 15:58:55 | ERROR    | workers.SunatDiagnostic        | error                | c:\Users\ricuculm\OneDrive - Metso\Documents\VS Code\7. Matrix_Rework\utils\logger.py:57 | ✗ CIR_BAJA_TRA_20262478964_1053333_04122025131528.pdf - Error
+2025-12-10 15:58:55 | ERROR    | workers.CoreSunat_Diagnostico  | error                | c:\Users\ricuculm\OneDrive - Metso\Documents\VS Code\7. Matrix_Rework\utils\logger.py:57 | Traceback (most recent call last):
+  File "c:\Users\ricuculm\OneDrive - Metso\Documents\VS Code\7. Matrix_Rework\core_sunat\sunat.py", line 72, in process_single_pdf
+    document_number, name, doc_type, fecha = self.extractor.extract_document_info(pdf_path)
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ValueError: too many values to unpack (expected 4)
+
+2025-12-10 15:58:55 | ERROR    | workers.SunatDiagnostic        | error                | c:\Users\ricuculm\OneDrive - Metso\Documents\VS Code\7. Matrix_Rework\utils\logger.py:57 | ✗ CIR_BAJA_TRA_20262478964_1053333_04122025131530.pdf - Error
+2025-12-10 15:58:55 | ERROR    | workers.CoreSunat_Diagnostico  | error                | c:\Users\ricuculm\OneDrive - Metso\Documents\VS Code\7. Matrix_Rework\utils\logger.py:57 | ❌ Error en CIR_BAJA_TRA_20262478964_1053333_04122025131546.pdf: too many values to unpack (expected 4)
+2025-12-10 15:58:55 | ERROR    | workers.CoreSunat_Diagnostico  | error                | c:\Users\ricuculm\OneDrive - Metso\Documents\VS Code\7. Matrix_Rework\utils\logger.py:57 | ❌ Error en CIR_BAJA_TRA_20262478964_1053333_04122025131545.pdf: too many values to unpack (expected 4)
+2025-12-10 15:58:56 | ERROR    | workers.CoreSunat_Diagnostico  | error                | c:\Users\ricuculm\OneDrive - Metso\Documents\VS Code\7. Matrix_Rework\utils\logger.py:57 | ❌ Error en CIR_BAJA_TRA_20262478964_1053333_04122025131548.pdf: too many values to unpack (expected 4)
+2025-12-10 15:58:56 | ERROR    | workers.CoreSunat_Diagnostico  | error                | c:\Users\ricuculm\OneDrive - Metso\Documents\VS Code\7. Matrix_Rework\utils\logger.py:57 | ❌ Error en CIR_BAJA_TRA_20262478964_1053333_04122025131547.pdf: too many values to unpack (expected 4)
+2025-12-10 15:58:56 | ERROR    | workers.CoreSunat_Diagnostico  | error                | c:\Users\ricuculm\OneDrive - Metso\Documents\VS Code\7. Matrix_Rework\utils\logger.py:57 | Traceback (most recent call last):
+  File "c:\Users\ricuculm\OneDrive - Metso\Documents\VS Code\7. Matrix_Rework\core_sunat\sunat.py", line 72, in process_single_pdf
+    document_number, name, doc_type, fecha = self.extractor.extract_document_info(pdf_path)
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ValueError: too many values to unpack (expected 4)
+
+2025-12-10 15:58:56 | ERROR    | workers.CoreSunat_Diagnostico  | error                | c:\Users\ricuculm\OneDrive - Metso\Documents\VS Code\7. Matrix_Rework\utils\logger.py:57 | Traceback (most recent call last):
+  File "c:\Users\ricuculm\OneDrive - Metso\Documents\VS Code\7. Matrix_Rework\core_sunat\sunat.py", line 72, in process_single_pdf
+    document_number, name, doc_type, fecha = self.extractor.extract_document_info(pdf_path)
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ValueError: too many values to unpack (expected 4)
+
+2025-12-10 15:58:56 | ERROR    | workers.CoreSunat_Diagnostico  | error                | c:\Users\ricuculm\OneDrive - Metso\Documents\VS Code\7. Matrix_Rework\utils\logger.py:57 | Traceback (most recent call last):
+  File "c:\Users\ricuculm\OneDrive - Metso\Documents\VS Code\7. Matrix_Rework\core_sunat\sunat.py", line 72, in process_single_pdf
+    document_number, name, doc_type, fecha = self.extractor.extract_document_info(pdf_path)
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ValueError: too many values to unpack (expected 4)
+
+2025-12-10 15:58:56 | ERROR    | workers.CoreSunat_Diagnostico  | error                | c:\Users\ricuculm\OneDrive - Metso\Documents\VS Code\7. Matrix_Rework\utils\logger.py:57 | Traceback (most recent call last):
+  File "c:\Users\ricuculm\OneDrive - Metso\Documents\VS Code\7. Matrix_Rework\core_sunat\sunat.py", line 72, in process_single_pdf
+    document_number, name, doc_type, fecha = self.extractor.extract_document_info(pdf_path)
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ValueError: too many values to unpack (expected 4)
+
+2025-12-10 15:58:56 | ERROR    | workers.SunatDiagnostic        | error                | c:\Users\ricuculm\OneDrive - Metso\Documents\VS Code\7. Matrix_Rework\utils\logger.py:57 | ✗ CIR_BAJA_TRA_20262478964_1053333_04122025131546.pdf - Error
+2025-12-10 15:58:56 | ERROR    | workers.SunatDiagnostic        | error                | c:\Users\ricuculm\OneDrive - Metso\Documents\VS Code\7. Matrix_Rework\utils\logger.py:57 | ✗ CIR_BAJA_TRA_20262478964_1053333_04122025131545.pdf - Error
+2025-12-10 15:58:56 | ERROR    | workers.SunatDiagnostic        | error                | c:\Users\ricuculm\OneDrive - Metso\Documents\VS Code\7. Matrix_Rework\utils\logger.py:57 | ✗ CIR_BAJA_TRA_20262478964_1053333_04122025131548.pdf - Error
+2025-12-10 15:58:56 | ERROR    | workers.SunatDiagnostic        | error                | c:\Users\ricuculm\OneDrive - Metso\Documents\VS Code\7. Matrix_Rework\utils\logger.py:57 | ✗ CIR_BAJA_TRA_20262478964_1053333_04122025131547.pdf - Error
+2025-12-10 15:58:56 | ERROR    | workers.CoreSunat_Diagnostico  | error                | c:\Users\ricuculm\OneDrive - Metso\Documents\VS Code\7. Matrix_Rework\utils\logger.py:57 | ❌ Error en CIR_BAJA_TRA_20262478964_1053333_04122025131551.pdf: too many values to unpack (expected 4)
+2025-12-10 15:58:56 | ERROR    | workers.CoreSunat_Diagnostico  | error                | c:\Users\ricuculm\OneDrive - Metso\Documents\VS Code\7. Matrix_Rework\utils\logger.py:57 | Traceback (most recent call last):
+  File "c:\Users\ricuculm\OneDrive - Metso\Documents\VS Code\7. Matrix_Rework\core_sunat\sunat.py", line 72, in process_single_pdf
+    document_number, name, doc_type, fecha = self.extractor.extract_document_info(pdf_path)
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ValueError: too many values to unpack (expected 4)
+
+2025-12-10 15:58:56 | ERROR    | workers.CoreSunat_Diagnostico  | error                | c:\Users\ricuculm\OneDrive - Metso\Documents\VS Code\7. Matrix_Rework\utils\logger.py:57 | ❌ Error en CIR_BAJA_TRA_20262478964_1053333_04122025131549.pdf: too many values to unpack (expected 4)
+2025-12-10 15:58:56 | ERROR    | workers.CoreSunat_Diagnostico  | error                | c:\Users\ricuculm\OneDrive - Metso\Documents\VS Code\7. Matrix_Rework\utils\logger.py:57 | ❌ Error en CIR_BAJA_TRA_20262478964_1053333_04122025131550.pdf: too many values to unpack (expected 4)
+2025-12-10 15:58:56 | ERROR    | workers.SunatDiagnostic        | error                | c:\Users\ricuculm\OneDrive - Metso\Documents\VS Code\7. Matrix_Rework\utils\logger.py:57 | ✗ CIR_BAJA_TRA_20262478964_1053333_04122025131551.pdf - Error
+2025-12-10 15:58:56 | ERROR    | workers.CoreSunat_Diagnostico  | error                | c:\Users\ricuculm\OneDrive - Metso\Documents\VS Code\7. Matrix_Rework\utils\logger.py:57 | ❌ Error en CIR_BAJA_TRA_20262478964_1053333_04122025131552.pdf: too many values to unpack (expected 4)
+2025-12-10 15:58:56 | ERROR    | workers.CoreSunat_Diagnostico  | error                | c:\Users\ricuculm\OneDrive - Metso\Documents\VS Code\7. Matrix_Rework\utils\logger.py:57 | Traceback (most recent call last):
+  File "c:\Users\ricuculm\OneDrive - Metso\Documents\VS Code\7. Matrix_Rework\core_sunat\sunat.py", line 72, in process_single_pdf
+    document_number, name, doc_type, fecha = self.extractor.extract_document_info(pdf_path)
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ValueError: too many values to unpack (expected 4)
+
+2025-12-10 15:58:56 | ERROR    | workers.CoreSunat_Diagnostico  | error                | c:\Users\ricuculm\OneDrive - Metso\Documents\VS Code\7. Matrix_Rework\utils\logger.py:57 | Traceback (most recent call last):
+  File "c:\Users\ricuculm\OneDrive - Metso\Documents\VS Code\7. Matrix_Rework\core_sunat\sunat.py", line 72, in process_single_pdf
+    document_number, name, doc_type, fecha = self.extractor.extract_document_info(pdf_path)
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ValueError: too many values to unpack (expected 4)
+
+2025-12-10 15:58:56 | ERROR    | workers.CoreSunat_Diagnostico  | error                | c:\Users\ricuculm\OneDrive - Metso\Documents\VS Code\7. Matrix_Rework\utils\logger.py:57 | Traceback (most recent call last):
+  File "c:\Users\ricuculm\OneDrive - Metso\Documents\VS Code\7. Matrix_Rework\core_sunat\sunat.py", line 72, in process_single_pdf
+    document_number, name, doc_type, fecha = self.extractor.extract_document_info(pdf_path)
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ValueError: too many values to unpack (expected 4)
+
+2025-12-10 15:58:56 | ERROR    | workers.SunatDiagnostic        | error                | c:\Users\ricuculm\OneDrive - Metso\Documents\VS Code\7. Matrix_Rework\utils\logger.py:57 | ✗ CIR_BAJA_TRA_20262478964_1053333_04122025131549.pdf - Error
+2025-12-10 15:58:56 | ERROR    | workers.SunatDiagnostic        | error                | c:\Users\ricuculm\OneDrive - Metso\Documents\VS Code\7. Matrix_Rework\utils\logger.py:57 | ✗ CIR_BAJA_TRA_20262478964_1053333_04122025131550.pdf - Error
+2025-12-10 15:58:56 | ERROR    | workers.SunatDiagnostic        | error                | c:\Users\ricuculm\OneDrive - Metso\Documents\VS Code\7. Matrix_Rework\utils\logger.py:57 | ✗ CIR_BAJA_TRA_20262478964_1053333_04122025131552.pdf - Error
+2025-12-10 15:58:57 | ERROR    | workers.CoreSunat_Diagnostico  | error                | c:\Users\ricuculm\OneDrive - Metso\Documents\VS Code\7. Matrix_Rework\utils\logger.py:57 | ❌ Error en CIR_BAJA_TRA_20262478964_1053333_04122025131557.pdf: too many values to unpack (expected 4)
+2025-12-10 15:58:57 | ERROR    | workers.CoreSunat_Diagnostico  | error                | c:\Users\ricuculm\OneDrive - Metso\Documents\VS Code\7. Matrix_Rework\utils\logger.py:57 | ❌ Error en CIR_BAJA_TRA_20262478964_1053333_0412202513161.pdf: too many values to unpack (expected 4)
+2025-12-10 15:58:57 | ERROR    | workers.CoreSunat_Diagnostico  | error                | c:\Users\ricuculm\OneDrive - Metso\Documents\VS Code\7. Matrix_Rework\utils\logger.py:57 | ❌ Error en CIR_BAJA_TRA_20262478964_1053333_04122025131559.pdf: too many values to unpack (expected 4)
+2025-12-10 15:58:57 | ERROR    | workers.CoreSunat_Diagnostico  | error                | c:\Users\ricuculm\OneDrive - Metso\Documents\VS Code\7. Matrix_Rework\utils\logger.py:57 | Traceback (most recent call last):
+  File "c:\Users\ricuculm\OneDrive - Metso\Documents\VS Code\7. Matrix_Rework\core_sunat\sunat.py", line 72, in process_single_pdf
+    document_number, name, doc_type, fecha = self.extractor.extract_document_info(pdf_path)
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ValueError: too many values to unpack (expected 4)
+
+2025-12-10 15:58:57 | ERROR    | workers.CoreSunat_Diagnostico  | error                | c:\Users\ricuculm\OneDrive - Metso\Documents\VS Code\7. Matrix_Rework\utils\logger.py:57 | Traceback (most recent call last):
+  File "c:\Users\ricuculm\OneDrive - Metso\Documents\VS Code\7. Matrix_Rework\core_sunat\sunat.py", line 72, in process_single_pdf
+    document_number, name, doc_type, fecha = self.extractor.extract_document_info(pdf_path)
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ValueError: too many values to unpack (expected 4)
+
+2025-12-10 15:58:57 | ERROR    | workers.CoreSunat_Diagnostico  | error                | c:\Users\ricuculm\OneDrive - Metso\Documents\VS Code\7. Matrix_Rework\utils\logger.py:57 | Traceback (most recent call last):
+  File "c:\Users\ricuculm\OneDrive - Metso\Documents\VS Code\7. Matrix_Rework\core_sunat\sunat.py", line 72, in process_single_pdf
+    document_number, name, doc_type, fecha = self.extractor.extract_document_info(pdf_path)
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ValueError: too many values to unpack (expected 4)
+
+2025-12-10 15:58:57 | ERROR    | workers.CoreSunat_Diagnostico  | error                | c:\Users\ricuculm\OneDrive - Metso\Documents\VS Code\7. Matrix_Rework\utils\logger.py:57 | ❌ Error en CIR_BAJA_TRA_20262478964_1053333_04122025131610.pdf: too many values to unpack (expected 4)
+2025-12-10 15:58:57 | ERROR    | workers.SunatDiagnostic        | error                | c:\Users\ricuculm\OneDrive - Metso\Documents\VS Code\7. Matrix_Rework\utils\logger.py:57 | ✗ CIR_BAJA_TRA_20262478964_1053333_04122025131557.pdf - Error
+2025-12-10 15:58:57 | ERROR    | workers.SunatDiagnostic        | error                | c:\Users\ricuculm\OneDrive - Metso\Documents\VS Code\7. Matrix_Rework\utils\logger.py:57 | ✗ CIR_BAJA_TRA_20262478964_1053333_0412202513161.pdf - Error
+2025-12-10 15:58:57 | ERROR    | workers.SunatDiagnostic        | error                | c:\Users\ricuculm\OneDrive - Metso\Documents\VS Code\7. Matrix_Rework\utils\logger.py:57 | ✗ CIR_BAJA_TRA_20262478964_1053333_04122025131559.pdf - Error
+2025-12-10 15:58:57 | ERROR    | workers.CoreSunat_Diagnostico  | error                | c:\Users\ricuculm\OneDrive - Metso\Documents\VS Code\7. Matrix_Rework\utils\logger.py:57 | Traceback (most recent call last):
+  File "c:\Users\ricuculm\OneDrive - Metso\Documents\VS Code\7. Matrix_Rework\core_sunat\sunat.py", line 72, in process_single_pdf
+    document_number, name, doc_type, fecha = self.extractor.extract_document_info(pdf_path)
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ValueError: too many values to unpack (expected 4)
+
+2025-12-10 15:58:57 | ERROR    | workers.SunatDiagnostic        | error                | c:\Users\ricuculm\OneDrive - Metso\Documents\VS Code\7. Matrix_Rework\utils\logger.py:57 | ✗ CIR_BAJA_TRA_20262478964_1053333_04122025131610.pdf - Error
+2025-12-10 15:58:58 | ERROR    | workers.CoreSunat_Diagnostico  | error                | c:\Users\ricuculm\OneDrive - Metso\Documents\VS Code\7. Matrix_Rework\utils\logger.py:57 | ❌ Error en CIR_BAJA_TRA_20262478964_1053333_0412202513166.pdf: too many values to unpack (expected 4)
+2025-12-10 15:58:58 | ERROR    | workers.CoreSunat_Diagnostico  | error                | c:\Users\ricuculm\OneDrive - Metso\Documents\VS Code\7. Matrix_Rework\utils\logger.py:57 | ❌ Error en CIR_BAJA_TRA_20262478964_1053333_0412202513162.pdf: too many values to unpack (expected 4)
+2025-12-10 15:58:58 | ERROR    | workers.CoreSunat_Diagnostico  | error                | c:\Users\ricuculm\OneDrive - Metso\Documents\VS Code\7. Matrix_Rework\utils\logger.py:57 | ❌ Error en CIR_BAJA_TRA_20262478964_1053333_0412202513163.pdf: too many values to unpack (expected 4)
+2025-12-10 15:58:58 | ERROR    | workers.CoreSunat_Diagnostico  | error                | c:\Users\ricuculm\OneDrive - Metso\Documents\VS Code\7. Matrix_Rework\utils\logger.py:57 | Traceback (most recent call last):
+  File "c:\Users\ricuculm\OneDrive - Metso\Documents\VS Code\7. Matrix_Rework\core_sunat\sunat.py", line 72, in process_single_pdf
+    document_number, name, doc_type, fecha = self.extractor.extract_document_info(pdf_path)
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ValueError: too many values to unpack (expected 4)
+
+2025-12-10 15:58:58 | ERROR    | workers.CoreSunat_Diagnostico  | error                | c:\Users\ricuculm\OneDrive - Metso\Documents\VS Code\7. Matrix_Rework\utils\logger.py:57 | ❌ Error en CIR_BAJA_TRA_20262478964_1053333_0412202513165.pdf: too many values to unpack (expected 4)
+2025-12-10 15:58:58 | ERROR    | workers.CoreSunat_Diagnostico  | error                | c:\Users\ricuculm\OneDrive - Metso\Documents\VS Code\7. Matrix_Rework\utils\logger.py:57 | Traceback (most recent call last):
+  File "c:\Users\ricuculm\OneDrive - Metso\Documents\VS Code\7. Matrix_Rework\core_sunat\sunat.py", line 72, in process_single_pdf
+    document_number, name, doc_type, fecha = self.extractor.extract_document_info(pdf_path)
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ValueError: too many values to unpack (expected 4)
+
+2025-12-10 15:58:58 | ERROR    | workers.CoreSunat_Diagnostico  | error                | c:\Users\ricuculm\OneDrive - Metso\Documents\VS Code\7. Matrix_Rework\utils\logger.py:57 | Traceback (most recent call last):
+  File "c:\Users\ricuculm\OneDrive - Metso\Documents\VS Code\7. Matrix_Rework\core_sunat\sunat.py", line 72, in process_single_pdf
+    document_number, name, doc_type, fecha = self.extractor.extract_document_info(pdf_path)
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ValueError: too many values to unpack (expected 4)
+
+2025-12-10 15:58:58 | ERROR    | workers.SunatDiagnostic        | error                | c:\Users\ricuculm\OneDrive - Metso\Documents\VS Code\7. Matrix_Rework\utils\logger.py:57 | ✗ CIR_BAJA_TRA_20262478964_1053333_0412202513166.pdf - Error
+2025-12-10 15:58:58 | ERROR    | workers.CoreSunat_Diagnostico  | error                | c:\Users\ricuculm\OneDrive - Metso\Documents\VS Code\7. Matrix_Rework\utils\logger.py:57 | Traceback (most recent call last):
+  File "c:\Users\ricuculm\OneDrive - Metso\Documents\VS Code\7. Matrix_Rework\core_sunat\sunat.py", line 72, in process_single_pdf
+    document_number, name, doc_type, fecha = self.extractor.extract_document_info(pdf_path)
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ValueError: too many values to unpack (expected 4)
+
+2025-12-10 15:58:58 | ERROR    | workers.SunatDiagnostic        | error                | c:\Users\ricuculm\OneDrive - Metso\Documents\VS Code\7. Matrix_Rework\utils\logger.py:57 | ✗ CIR_BAJA_TRA_20262478964_1053333_0412202513162.pdf - Error
+2025-12-10 15:58:58 | ERROR    | workers.SunatDiagnostic        | error                | c:\Users\ricuculm\OneDrive - Metso\Documents\VS Code\7. Matrix_Rework\utils\logger.py:57 | ✗ CIR_BAJA_TRA_20262478964_1053333_0412202513163.pdf - Error
+2025-12-10 15:58:58 | ERROR    | workers.SunatDiagnostic        | error                | c:\Users\ricuculm\OneDrive - Metso\Documents\VS Code\7. Matrix_Rework\utils\logger.py:57 | ✗ CIR_BAJA_TRA_20262478964_1053333_0412202513165.pdf - Error
+2025-12-10 15:58:58 | ERROR    | workers.CoreSunat_Diagnostico  | error                | c:\Users\ricuculm\OneDrive - Metso\Documents\VS Code\7. Matrix_Rework\utils\logger.py:57 | ❌ Error en CIR_BAJA_TRA_20262478964_1053333_0412202513169.pdf: too many values to unpack (expected 4)
+2025-12-10 15:58:58 | ERROR    | workers.CoreSunat_Diagnostico  | error                | c:\Users\ricuculm\OneDrive - Metso\Documents\VS Code\7. Matrix_Rework\utils\logger.py:57 | ❌ Error en CIR_BAJA_TRA_20262478964_1053333_0412202513168.pdf: too many values to unpack (expected 4)
+2025-12-10 15:58:58 | ERROR    | workers.CoreSunat_Diagnostico  | error                | c:\Users\ricuculm\OneDrive - Metso\Documents\VS Code\7. Matrix_Rework\utils\logger.py:57 | Traceback (most recent call last):
+  File "c:\Users\ricuculm\OneDrive - Metso\Documents\VS Code\7. Matrix_Rework\core_sunat\sunat.py", line 72, in process_single_pdf
+    document_number, name, doc_type, fecha = self.extractor.extract_document_info(pdf_path)
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ValueError: too many values to unpack (expected 4)
+
+2025-12-10 15:58:58 | ERROR    | workers.CoreSunat_Diagnostico  | error                | c:\Users\ricuculm\OneDrive - Metso\Documents\VS Code\7. Matrix_Rework\utils\logger.py:57 | Traceback (most recent call last):
+  File "c:\Users\ricuculm\OneDrive - Metso\Documents\VS Code\7. Matrix_Rework\core_sunat\sunat.py", line 72, in process_single_pdf
+    document_number, name, doc_type, fecha = self.extractor.extract_document_info(pdf_path)
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ValueError: too many values to unpack (expected 4)
+
+2025-12-10 15:58:58 | ERROR    | workers.SunatDiagnostic        | error                | c:\Users\ricuculm\OneDrive - Metso\Documents\VS Code\7. Matrix_Rework\utils\logger.py:57 | ✗ CIR_BAJA_TRA_20262478964_1053333_0412202513169.pdf - Error
+2025-12-10 15:58:58 | ERROR    | workers.SunatDiagnostic        | error                | c:\Users\ricuculm\OneDrive - Metso\Documents\VS Code\7. Matrix_Rework\utils\logger.py:57 | ✗ CIR_BAJA_TRA_20262478964_1053333_0412202513168.pdf - Error
+2025-12-10 15:58:58 | ERROR    | workers.SunatDiagnostic        | error                | c:\Users\ricuculm\OneDrive - Metso\Documents\VS Code\7. Matrix_Rework\utils\logger.py:57 | ❌ Errores: 22
+2025-12-10 16:17:33 | ERROR    | workers.SunatDiagnostic        | error                | c:\Users\ricuculm\OneDrive - Metso\Documents\VS Code\7. Matrix_Rework\utils\logger.py:57 | ❌ Errores: 0
+2025-12-10 16:18:35 | ERROR    | workers.SunatRename            | error                | c:\Users\ricuculm\OneDrive - Metso\Documents\VS Code\7. Matrix_Rework\utils\logger.py:57 | No se encontró archivo JSON de renombrado.
+El archivo debe contener 'rename' en su nombre.
+2025-12-10 16:19:01 | ERROR    | workers.SunatDiagnostic        | error                | c:\Users\ricuculm\OneDrive - Metso\Documents\VS Code\7. Matrix_Rework\utils\logger.py:57 | ❌ Errores: 0
+2025-12-10 16:20:01 | ERROR    | workers.SunatDiagnostic        | error                | c:\Users\ricuculm\OneDrive - Metso\Documents\VS Code\7. Matrix_Rework\utils\logger.py:57 | ❌ Errores: 0
+2025-12-10 16:20:30 | ERROR    | workers.SunatDiagnostic        | error                | c:\Users\ricuculm\OneDrive - Metso\Documents\VS Code\7. Matrix_Rework\utils\logger.py:57 | ❌ Errores: 0
+2025-12-10 16:21:53 | ERROR    | workers.SunatDiagnostic        | error                | c:\Users\ricuculm\OneDrive - Metso\Documents\VS Code\7. Matrix_Rework\utils\logger.py:57 | ❌ Errores: 0
+2025-12-10 16:24:05 | ERROR    | workers.SunatRename            | error                | c:\Users\ricuculm\OneDrive - Metso\Documents\VS Code\7. Matrix_Rework\utils\logger.py:57 | ❌ Errores: 0
+2025-12-10 16:24:26 | ERROR    | workers.SunatDuplicates        | error                | c:\Users\ricuculm\OneDrive - Metso\Documents\VS Code\7. Matrix_Rework\utils\logger.py:57 | ❌ Errores: 0

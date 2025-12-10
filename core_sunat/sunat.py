@@ -69,7 +69,14 @@ class SUNATDiagnosticGenerator:
         logger.debug(f"Procesando: {filename}")
         
         try:
-            document_number, name, doc_type, fecha = self.extractor.extract_document_info(pdf_path)
+            # CORRECCIÓN: Recibir diccionario en lugar de tupla
+            result_dict = self.extractor.extract_document_info(pdf_path)
+            
+            # Extraer valores del diccionario
+            document_number = result_dict.get('dni')
+            name = result_dict.get('nombre')
+            doc_type = result_dict.get('tipo_doc')
+            fecha = result_dict.get('fecha')
             
             # Determinar estado del procesamiento
             if document_number and name:
@@ -130,7 +137,7 @@ class SUNATDiagnosticGenerator:
         self.stats['total_files'] = len(pdf_files)
         
         # AGREGAR logging
-        logger.info(f"📁 Escaneando carpeta: {len(pdf_files)} PDFs encontrados")
+        logger.info(f"🔍 Escaneando carpeta: {len(pdf_files)} PDFs encontrados")
         
         if not pdf_files:
             # AGREGAR logging
@@ -265,7 +272,7 @@ class SUNATDiagnosticGenerator:
         print(f"   • ALTA: {self.stats['alta']}")
         print(f"   • BAJA: {self.stats['baja']}")
         print(f"   • OTROS: {self.stats['otros']}")
-        print(f"⚠️  Sin datos extraíbles: {self.stats['sin_datos']}")
+        print(f"⚠️ Sin datos extraíbles: {self.stats['sin_datos']}")
         print(f"❌ Errores: {self.stats['errors']}")
         print("="*50)
         
@@ -338,7 +345,7 @@ if __name__ == "__main__":
     logger.info("📋 MODO STANDALONE - Diagnóstico SUNAT")
     logger.info("="*60)
     
-    print("🔍 Selecciona la carpeta con documentos SUNAT...")
+    print("📁 Selecciona la carpeta con documentos SUNAT...")
     
     # Permitir pasar ruta por argumento o usar selector
     if len(sys.argv) >= 2:
