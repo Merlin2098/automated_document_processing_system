@@ -99,3 +99,1394 @@
 2025-12-09 22:56:12 | INFO     | main                           | main                 | --------------------------------------------------------------------------------
 2025-12-09 22:56:12 | INFO     | main                           | main                 | Aplicación cerrada con código: 0
 2025-12-09 22:56:12 | INFO     | main                           | main                 | ================================================================================
+2025-12-09 23:41:55 | INFO     | main                           | setup_logging        | ================================================================================
+2025-12-09 23:41:55 | INFO     | main                           | setup_logging        | Sistema de logging inicializado correctamente
+2025-12-09 23:41:55 | INFO     | main                           | setup_logging        | Directorio de logs: C:\Users\ricuculm\OneDrive - Metso\Documents\VS Code\7. Matrix_Rework\logs
+2025-12-09 23:41:55 | INFO     | main                           | setup_logging        | ================================================================================
+2025-12-09 23:41:55 | INFO     | main                           | main                 | ================================================================================
+2025-12-09 23:41:55 | INFO     | main                           | main                 | DocFlow Eventuales v4.0 - Iniciando aplicación
+2025-12-09 23:41:55 | INFO     | main                           | main                 | ================================================================================
+2025-12-09 23:41:55 | INFO     | main                           | main                 | Sistema operativo: win32
+2025-12-09 23:41:55 | INFO     | main                           | main                 | Versión Python: 3.13.9
+2025-12-09 23:41:55 | INFO     | main                           | main                 | --------------------------------------------------------------------------------
+2025-12-09 23:41:55 | INFO     | main                           | main                 | Configurando aplicación Qt...
+2025-12-09 23:41:55 | INFO     | main                           | main                 | ✅ Aplicación Qt configurada correctamente
+2025-12-09 23:41:55 | INFO     | main                           | main                 | Mostrando splash screen...
+2025-12-09 23:42:05 | INFO     | main                           | main                 | ✅ Splash screen mostrado
+2025-12-09 23:42:05 | INFO     | main                           | main                 | Iniciando event loop de Qt...
+2025-12-09 23:42:09 | INFO     | main                           | on_splash_finished   | Splash screen completado, cargando ventana principal...
+2025-12-09 23:42:09 | INFO     | ui.main_window                 | __init__             | Inicializando ventana principal...
+2025-12-09 23:42:09 | INFO     | utils.theme_manager            | _load_themes         | ✅ Tema cargado: dark (Tema oscuro con fondo azul nocturno profundo)
+2025-12-09 23:42:09 | INFO     | utils.theme_manager            | _load_themes         | ✅ Tema cargado: light (Tema claro innovador y tecnológico con acentos verde-azulados)
+2025-12-09 23:42:09 | INFO     | utils.theme_manager            | _load_config         | ✅ Configuración cargada: tema 'light'
+2025-12-09 23:42:09 | INFO     | utils.theme_manager            | __init__             | ✅ Theme Manager inicializado - Tema activo: light
+2025-12-09 23:42:09 | INFO     | ui.main_window                 | __init__             | ✅ Tema cargado: light
+2025-12-09 23:42:09 | INFO     | ui.main_window                 | __init__             | ✅ Interfaz de usuario creada
+2025-12-09 23:42:09 | INFO     | ui.main_window                 | __init__             | ✅ Ventana principal inicializada correctamente
+2025-12-09 23:42:09 | INFO     | main                           | on_splash_finished   | ✅ Ventana principal cargada y mostrada
+2025-12-09 23:42:09 | INFO     | main                           | on_splash_finished   | --------------------------------------------------------------------------------
+2025-12-09 23:42:09 | INFO     | main                           | on_splash_finished   | 🚀 Aplicación lista para usar
+2025-12-09 23:42:09 | INFO     | main                           | on_splash_finished   | ================================================================================
+2025-12-09 23:42:09 | INFO     | ui.main_window                 | _load_tabs           | Iniciando carga lazy de tabs...
+2025-12-09 23:42:13 | INFO     | ui.main_window                 | _load_tabs           | ✅ Todos los tabs cargados correctamente
+2025-12-09 23:42:13 | INFO     | ui.main_window                 | _load_tabs           | ✅ Señales de tabs conectadas
+2025-12-09 23:42:30 | INFO     | utils.theme_manager            | set_theme            | Cambiando tema a: dark
+2025-12-09 23:42:30 | INFO     | utils.theme_manager            | _save_config         | ✅ Configuración guardada: tema 'dark'
+2025-12-09 23:42:30 | INFO     | utils.theme_manager            | set_theme            | ✅ Tema cambiado exitosamente: dark
+2025-12-09 23:42:59 | INFO     | ui.main_window                 | closeEvent           | Usuario solicitó cerrar la aplicación
+2025-12-09 23:42:59 | INFO     | ui.main_window                 | closeEvent           | Cerrando ventana principal...
+2025-12-09 23:43:00 | INFO     | main                           | main                 | --------------------------------------------------------------------------------
+2025-12-09 23:43:00 | INFO     | main                           | main                 | Aplicación cerrada con código: 0
+2025-12-09 23:43:00 | INFO     | main                           | main                 | ================================================================================
+2025-12-09 23:45:44 | INFO     | main                           | setup_logging        | ================================================================================
+2025-12-09 23:45:44 | INFO     | main                           | setup_logging        | Sistema de logging inicializado correctamente
+2025-12-09 23:45:44 | INFO     | main                           | setup_logging        | Directorio de logs: C:\Users\ricuculm\OneDrive - Metso\Documents\VS Code\7. Matrix_Rework\logs
+2025-12-09 23:45:44 | INFO     | main                           | setup_logging        | ================================================================================
+2025-12-09 23:45:44 | INFO     | main                           | main                 | ================================================================================
+2025-12-09 23:45:44 | INFO     | main                           | main                 | DocFlow Eventuales v4.0 - Iniciando aplicación
+2025-12-09 23:45:44 | INFO     | main                           | main                 | ================================================================================
+2025-12-09 23:45:44 | INFO     | main                           | main                 | Sistema operativo: win32
+2025-12-09 23:45:44 | INFO     | main                           | main                 | Versión Python: 3.13.9
+2025-12-09 23:45:44 | INFO     | main                           | main                 | --------------------------------------------------------------------------------
+2025-12-09 23:45:44 | INFO     | main                           | main                 | Configurando aplicación Qt...
+2025-12-09 23:45:45 | INFO     | main                           | main                 | ✅ Aplicación Qt configurada correctamente
+2025-12-09 23:45:45 | INFO     | main                           | main                 | Mostrando splash screen...
+2025-12-09 23:45:55 | INFO     | main                           | main                 | ✅ Splash screen mostrado
+2025-12-09 23:45:55 | INFO     | main                           | main                 | Iniciando event loop de Qt...
+2025-12-09 23:45:58 | INFO     | main                           | on_splash_finished   | Splash screen completado, cargando ventana principal...
+2025-12-09 23:45:58 | INFO     | ui.main_window                 | __init__             | Inicializando ventana principal...
+2025-12-09 23:45:58 | INFO     | utils.theme_manager            | _load_themes         | ✅ Tema cargado: dark (Tema oscuro con fondo azul nocturno profundo)
+2025-12-09 23:45:58 | INFO     | utils.theme_manager            | _load_themes         | ✅ Tema cargado: light (Tema claro innovador y tecnológico con acentos verde-azulados)
+2025-12-09 23:45:58 | INFO     | utils.theme_manager            | _load_config         | ✅ Configuración cargada: tema 'dark'
+2025-12-09 23:45:58 | INFO     | utils.theme_manager            | __init__             | ✅ Theme Manager inicializado - Tema activo: dark
+2025-12-09 23:45:58 | INFO     | ui.main_window                 | __init__             | ✅ Tema cargado: dark
+2025-12-09 23:45:58 | INFO     | ui.main_window                 | __init__             | ✅ Interfaz de usuario creada
+2025-12-09 23:45:58 | INFO     | ui.main_window                 | __init__             | ✅ Ventana principal inicializada correctamente
+2025-12-09 23:45:58 | INFO     | main                           | on_splash_finished   | ✅ Ventana principal cargada y mostrada
+2025-12-09 23:45:58 | INFO     | main                           | on_splash_finished   | --------------------------------------------------------------------------------
+2025-12-09 23:45:58 | INFO     | main                           | on_splash_finished   | 🚀 Aplicación lista para usar
+2025-12-09 23:45:58 | INFO     | main                           | on_splash_finished   | ================================================================================
+2025-12-09 23:45:58 | INFO     | ui.main_window                 | _load_tabs           | Iniciando carga lazy de tabs...
+2025-12-09 23:46:03 | INFO     | ui.main_window                 | _load_tabs           | ✅ Todos los tabs cargados correctamente
+2025-12-09 23:46:03 | INFO     | ui.main_window                 | _load_tabs           | ✅ Señales de tabs conectadas
+2025-12-09 23:46:18 | INFO     | ui.main_window                 | closeEvent           | Usuario solicitó cerrar la aplicación
+2025-12-09 23:46:18 | INFO     | ui.main_window                 | closeEvent           | Cerrando ventana principal...
+2025-12-09 23:46:18 | INFO     | main                           | main                 | --------------------------------------------------------------------------------
+2025-12-09 23:46:18 | INFO     | main                           | main                 | Aplicación cerrada con código: 0
+2025-12-09 23:46:18 | INFO     | main                           | main                 | ================================================================================
+2025-12-10 10:27:07 | INFO     | main                           | setup_logging        | ================================================================================
+2025-12-10 10:27:07 | INFO     | main                           | setup_logging        | Sistema de logging inicializado correctamente
+2025-12-10 10:27:07 | INFO     | main                           | setup_logging        | Directorio de logs: C:\Users\ricuculm\OneDrive - Metso\Documents\VS Code\7. Matrix_Rework\logs
+2025-12-10 10:27:07 | INFO     | main                           | setup_logging        | ================================================================================
+2025-12-10 10:27:07 | INFO     | main                           | main                 | ================================================================================
+2025-12-10 10:27:07 | INFO     | main                           | main                 | DocFlow Eventuales v4.0 - Iniciando aplicación
+2025-12-10 10:27:07 | INFO     | main                           | main                 | ================================================================================
+2025-12-10 10:27:07 | INFO     | main                           | main                 | Sistema operativo: win32
+2025-12-10 10:27:07 | INFO     | main                           | main                 | Versión Python: 3.13.9
+2025-12-10 10:27:07 | INFO     | main                           | main                 | --------------------------------------------------------------------------------
+2025-12-10 10:27:07 | INFO     | main                           | main                 | Configurando aplicación Qt...
+2025-12-10 10:27:07 | INFO     | main                           | main                 | ✅ Aplicación Qt configurada correctamente
+2025-12-10 10:27:07 | INFO     | main                           | main                 | Mostrando splash screen...
+2025-12-10 10:27:10 | INFO     | main                           | main                 | ✅ Splash screen mostrado
+2025-12-10 10:27:10 | INFO     | main                           | main                 | Iniciando event loop de Qt...
+2025-12-10 10:27:13 | INFO     | main                           | on_splash_finished   | Splash screen completado, cargando ventana principal...
+2025-12-10 10:27:13 | INFO     | ui.main_window                 | __init__             | Inicializando ventana principal...
+2025-12-10 10:27:13 | INFO     | utils.theme_manager            | _load_themes         | ✅ Tema cargado: dark (Tema oscuro con fondo azul nocturno profundo)
+2025-12-10 10:27:13 | INFO     | utils.theme_manager            | _load_themes         | ✅ Tema cargado: light (Tema claro innovador y tecnológico con acentos verde-azulados)
+2025-12-10 10:27:13 | INFO     | utils.theme_manager            | _load_config         | ✅ Configuración cargada: tema 'dark'
+2025-12-10 10:27:13 | INFO     | utils.theme_manager            | __init__             | ✅ Theme Manager inicializado - Tema activo: dark
+2025-12-10 10:27:13 | INFO     | ui.main_window                 | __init__             | ✅ Tema cargado: dark
+2025-12-10 10:27:13 | INFO     | ui.main_window                 | __init__             | ✅ Interfaz de usuario creada
+2025-12-10 10:27:13 | INFO     | ui.main_window                 | __init__             | ✅ Ventana principal inicializada correctamente
+2025-12-10 10:27:13 | INFO     | main                           | on_splash_finished   | ✅ Ventana principal cargada y mostrada
+2025-12-10 10:27:13 | INFO     | main                           | on_splash_finished   | --------------------------------------------------------------------------------
+2025-12-10 10:27:13 | INFO     | main                           | on_splash_finished   | 🚀 Aplicación lista para usar
+2025-12-10 10:27:13 | INFO     | main                           | on_splash_finished   | ================================================================================
+2025-12-10 10:27:14 | INFO     | ui.main_window                 | _load_tabs           | Iniciando carga lazy de tabs...
+2025-12-10 10:27:17 | INFO     | ui.main_window                 | _load_tabs           | ✅ Todos los tabs cargados correctamente
+2025-12-10 10:27:17 | INFO     | ui.main_window                 | _load_tabs           | ✅ Señales de tabs conectadas
+2025-12-10 10:28:06 | INFO     | workers.CorePipelineStep4      | info                 | 🚀 Iniciando renombrado de archivos
+2025-12-10 10:28:06 | INFO     | workers.CorePipelineStep4      | info                 | 📂 Carpeta de trabajo: C:/Users/ricuculm/OneDrive - Metso/Documents/Laboratorio/PruebaMatrix2
+2025-12-10 10:28:06 | INFO     | workers.CorePipelineStep4      | info                 | 🔍 Buscando archivo JSON de renombrado...
+2025-12-10 10:28:06 | ERROR    | workers.CorePipelineStep4      | error                | No se encontró archivo JSON de renombrado
+2025-12-10 10:29:12 | INFO     | ui.main_window                 | closeEvent           | Usuario solicitó cerrar la aplicación
+2025-12-10 10:29:12 | INFO     | ui.main_window                 | closeEvent           | Cerrando ventana principal...
+2025-12-10 10:29:12 | INFO     | main                           | main                 | --------------------------------------------------------------------------------
+2025-12-10 10:29:12 | INFO     | main                           | main                 | Aplicación cerrada con código: 0
+2025-12-10 10:29:12 | INFO     | main                           | main                 | ================================================================================
+2025-12-10 10:35:26 | INFO     | main                           | setup_logging        | ================================================================================
+2025-12-10 10:35:26 | INFO     | main                           | setup_logging        | Sistema de logging inicializado correctamente
+2025-12-10 10:35:26 | INFO     | main                           | setup_logging        | Directorio de logs: C:\Users\ricuculm\OneDrive - Metso\Documents\VS Code\7. Matrix_Rework\logs
+2025-12-10 10:35:26 | INFO     | main                           | setup_logging        | ================================================================================
+2025-12-10 10:35:26 | INFO     | main                           | main                 | ================================================================================
+2025-12-10 10:35:26 | INFO     | main                           | main                 | DocFlow Eventuales v4.0 - Iniciando aplicación
+2025-12-10 10:35:26 | INFO     | main                           | main                 | ================================================================================
+2025-12-10 10:35:26 | INFO     | main                           | main                 | Sistema operativo: win32
+2025-12-10 10:35:26 | INFO     | main                           | main                 | Versión Python: 3.13.9
+2025-12-10 10:35:26 | INFO     | main                           | main                 | --------------------------------------------------------------------------------
+2025-12-10 10:35:26 | INFO     | main                           | main                 | Configurando aplicación Qt...
+2025-12-10 10:35:26 | INFO     | main                           | main                 | ✅ Aplicación Qt configurada correctamente
+2025-12-10 10:35:26 | INFO     | main                           | main                 | Mostrando splash screen...
+2025-12-10 10:35:37 | INFO     | main                           | main                 | ✅ Splash screen mostrado
+2025-12-10 10:35:37 | INFO     | main                           | main                 | Iniciando event loop de Qt...
+2025-12-10 10:35:40 | INFO     | main                           | on_splash_finished   | Splash screen completado, cargando ventana principal...
+2025-12-10 10:35:40 | INFO     | ui.main_window                 | __init__             | Inicializando ventana principal...
+2025-12-10 10:35:40 | INFO     | utils.theme_manager            | _load_themes         | ✅ Tema cargado: dark (Tema oscuro con fondo azul nocturno profundo)
+2025-12-10 10:35:40 | INFO     | utils.theme_manager            | _load_themes         | ✅ Tema cargado: light (Tema claro innovador y tecnológico con acentos verde-azulados)
+2025-12-10 10:35:40 | INFO     | utils.theme_manager            | _load_config         | ✅ Configuración cargada: tema 'dark'
+2025-12-10 10:35:40 | INFO     | utils.theme_manager            | __init__             | ✅ Theme Manager inicializado - Tema activo: dark
+2025-12-10 10:35:40 | INFO     | ui.main_window                 | __init__             | ✅ Tema cargado: dark
+2025-12-10 10:35:40 | INFO     | ui.main_window                 | __init__             | ✅ Interfaz de usuario creada
+2025-12-10 10:35:40 | INFO     | ui.main_window                 | __init__             | ✅ Ventana principal inicializada correctamente
+2025-12-10 10:35:40 | INFO     | main                           | on_splash_finished   | ✅ Ventana principal cargada y mostrada
+2025-12-10 10:35:40 | INFO     | main                           | on_splash_finished   | --------------------------------------------------------------------------------
+2025-12-10 10:35:40 | INFO     | main                           | on_splash_finished   | 🚀 Aplicación lista para usar
+2025-12-10 10:35:40 | INFO     | main                           | on_splash_finished   | ================================================================================
+2025-12-10 10:35:40 | INFO     | ui.main_window                 | _load_tabs           | Iniciando carga lazy de tabs...
+2025-12-10 10:35:45 | INFO     | ui.main_window                 | _load_tabs           | ✅ Todos los tabs cargados correctamente
+2025-12-10 10:35:45 | INFO     | ui.main_window                 | _load_tabs           | ✅ Señales de tabs conectadas
+2025-12-10 10:36:03 | INFO     | workers.CorePipelineStep4      | info                 | 🚀 Iniciando renombrado de archivos
+2025-12-10 10:36:03 | INFO     | workers.CorePipelineStep4      | info                 | 📂 Carpeta de trabajo: C:/Users/ricuculm/OneDrive - Metso/Documents/Laboratorio/PruebaMatrix2
+2025-12-10 10:36:03 | INFO     | workers.CorePipelineStep4      | info                 | 📂 Procesando: 1_Boletas
+2025-12-10 10:36:03 | INFO     | workers.CorePipelineStep4      | info                 | ✅ JSON encontrado: rename_1_Boletas.json
+2025-12-10 10:36:03 | INFO     | workers.CorePipelineStep4      | info                 | ✅ JSON cargado con encoding: latin-1
+2025-12-10 10:36:03 | INFO     | workers.CorePipelineStep4      | info                 | ✅ 269 registros de renombrado cargados
+2025-12-10 10:36:03 | INFO     | workers.CorePipelineStep4      | info                 |    📄 PDFs encontrados: 269
+2025-12-10 10:36:03 | INFO     | workers.CorePipelineStep4      | info                 |    ✅ Completado: 269 renombrados, 0 omitidos, 0 errores
+2025-12-10 10:36:03 | INFO     | workers.CorePipelineStep4      | info                 | 📂 Procesando: 2_Afp
+2025-12-10 10:36:03 | INFO     | workers.CorePipelineStep4      | info                 | ✅ JSON encontrado: rename_2_Afp.json
+2025-12-10 10:36:04 | INFO     | workers.CorePipelineStep4      | info                 | ✅ JSON cargado con encoding: latin-1
+2025-12-10 10:36:04 | INFO     | workers.CorePipelineStep4      | info                 | ✅ 221 registros de renombrado cargados
+2025-12-10 10:36:04 | INFO     | workers.CorePipelineStep4      | info                 |    📄 PDFs encontrados: 221
+2025-12-10 10:36:04 | INFO     | workers.CorePipelineStep4      | info                 |    ✅ Completado: 221 renombrados, 0 omitidos, 0 errores
+2025-12-10 10:36:04 | INFO     | workers.CorePipelineStep4      | info                 | 📂 Procesando: 3_5ta
+2025-12-10 10:36:04 | INFO     | workers.CorePipelineStep4      | info                 | ✅ JSON encontrado: rename_3_5ta.json
+2025-12-10 10:36:04 | INFO     | workers.CorePipelineStep4      | info                 | ✅ JSON cargado con encoding: latin-1
+2025-12-10 10:36:04 | INFO     | workers.CorePipelineStep4      | info                 | ✅ 221 registros de renombrado cargados
+2025-12-10 10:36:04 | INFO     | workers.CorePipelineStep4      | info                 |    📄 PDFs encontrados: 221
+2025-12-10 10:36:05 | INFO     | workers.CorePipelineStep4      | info                 |    ✅ Completado: 221 renombrados, 0 omitidos, 0 errores
+2025-12-10 10:36:05 | INFO     | workers.CorePipelineStep4      | info                 | ==================================================
+2025-12-10 10:36:05 | INFO     | workers.CorePipelineStep4      | info                 | 📊 RESUMEN DEL RENOMBRADO
+2025-12-10 10:36:05 | INFO     | workers.CorePipelineStep4      | info                 | ✅ Archivos renombrados: 711
+2025-12-10 10:36:05 | WARNING  | workers.CorePipelineStep4      | warning              | ⭕️ Archivos omitidos: 0
+2025-12-10 10:36:05 | ERROR    | workers.CorePipelineStep4      | error                | ❌ Errores: 0
+2025-12-10 10:36:05 | INFO     | workers.CorePipelineStep4      | info                 | ⏱️ Tiempo transcurrido: 1.63s
+2025-12-10 10:36:05 | INFO     | workers.CorePipelineStep4      | info                 | ==================================================
+2025-12-10 10:36:05 | INFO     | workers.CorePipelineStep4      | info                 | 🎉 ¡Renombrado completado exitosamente!
+2025-12-10 10:37:01 | INFO     | ui.main_window                 | closeEvent           | Usuario solicitó cerrar la aplicación
+2025-12-10 10:37:01 | INFO     | ui.main_window                 | closeEvent           | Cerrando ventana principal...
+2025-12-10 10:37:01 | INFO     | main                           | main                 | --------------------------------------------------------------------------------
+2025-12-10 10:37:01 | INFO     | main                           | main                 | Aplicación cerrada con código: 0
+2025-12-10 10:37:01 | INFO     | main                           | main                 | ================================================================================
+2025-12-10 10:52:22 | INFO     | main                           | setup_logging        | ================================================================================
+2025-12-10 10:52:22 | INFO     | main                           | setup_logging        | Sistema de logging inicializado correctamente
+2025-12-10 10:52:22 | INFO     | main                           | setup_logging        | Directorio de logs: C:\Users\ricuculm\OneDrive - Metso\Documents\VS Code\7. Matrix_Rework\logs
+2025-12-10 10:52:22 | INFO     | main                           | setup_logging        | ================================================================================
+2025-12-10 10:52:22 | INFO     | main                           | main                 | ================================================================================
+2025-12-10 10:52:22 | INFO     | main                           | main                 | DocFlow Eventuales v4.0 - Iniciando aplicación
+2025-12-10 10:52:22 | INFO     | main                           | main                 | ================================================================================
+2025-12-10 10:52:22 | INFO     | main                           | main                 | Sistema operativo: win32
+2025-12-10 10:52:22 | INFO     | main                           | main                 | Versión Python: 3.13.9
+2025-12-10 10:52:22 | INFO     | main                           | main                 | --------------------------------------------------------------------------------
+2025-12-10 10:52:22 | INFO     | main                           | main                 | Configurando aplicación Qt...
+2025-12-10 10:52:22 | INFO     | main                           | main                 | ✅ Aplicación Qt configurada correctamente
+2025-12-10 10:52:22 | INFO     | main                           | main                 | Mostrando splash screen...
+2025-12-10 10:52:31 | INFO     | main                           | main                 | ✅ Splash screen mostrado
+2025-12-10 10:52:31 | INFO     | main                           | main                 | Iniciando event loop de Qt...
+2025-12-10 10:52:35 | INFO     | main                           | on_splash_finished   | Splash screen completado, cargando ventana principal...
+2025-12-10 10:52:35 | INFO     | ui.main_window                 | __init__             | Inicializando ventana principal...
+2025-12-10 10:52:35 | INFO     | utils.theme_manager            | _load_themes         | ✅ Tema cargado: dark (Tema oscuro con fondo azul nocturno profundo)
+2025-12-10 10:52:35 | INFO     | utils.theme_manager            | _load_themes         | ✅ Tema cargado: light (Tema claro innovador y tecnológico con acentos verde-azulados)
+2025-12-10 10:52:35 | INFO     | utils.theme_manager            | _load_config         | ✅ Configuración cargada: tema 'dark'
+2025-12-10 10:52:35 | INFO     | utils.theme_manager            | __init__             | ✅ Theme Manager inicializado - Tema activo: dark
+2025-12-10 10:52:35 | INFO     | ui.main_window                 | __init__             | ✅ Tema cargado: dark
+2025-12-10 10:52:35 | INFO     | ui.main_window                 | __init__             | ✅ Interfaz de usuario creada
+2025-12-10 10:52:35 | INFO     | ui.main_window                 | __init__             | ✅ Ventana principal inicializada correctamente
+2025-12-10 10:52:35 | INFO     | main                           | on_splash_finished   | ✅ Ventana principal cargada y mostrada
+2025-12-10 10:52:35 | INFO     | main                           | on_splash_finished   | --------------------------------------------------------------------------------
+2025-12-10 10:52:35 | INFO     | main                           | on_splash_finished   | 🚀 Aplicación lista para usar
+2025-12-10 10:52:35 | INFO     | main                           | on_splash_finished   | ================================================================================
+2025-12-10 10:52:35 | INFO     | ui.main_window                 | _load_tabs           | Iniciando carga lazy de tabs...
+2025-12-10 10:52:38 | INFO     | ui.main_window                 | _load_tabs           | ✅ Todos los tabs cargados correctamente
+2025-12-10 10:52:38 | INFO     | ui.main_window                 | _load_tabs           | ✅ Señales de tabs conectadas
+2025-12-10 10:53:04 | INFO     | workers.CorePipelineStep5      | info                 | 🚀 Iniciando proceso de fusión por contratos
+2025-12-10 10:53:04 | INFO     | workers.CorePipelineStep5      | info                 | 📂 Carpeta madre: C:/Users/ricuculm/OneDrive - Metso/Documents/Laboratorio/PruebaMatrix2
+2025-12-10 10:53:05 | INFO     | workers.CorePipelineStep5      | info                 | 📋 [1/5] Validando estructura...
+2025-12-10 10:53:05 | INFO     | workers.CorePipelineStep5      | info                 | ✅ Subcarpetas encontradas: 3
+2025-12-10 10:53:05 | WARNING  | workers.CorePipelineStep5      | warning              | ⚠️ Subcarpetas faltantes: 4_Convocatoria, 5_CertificadosTrabajo
+2025-12-10 10:53:05 | INFO     | workers.CorePipelineStep5      | info                 | 📋 [2/5] Copiando PDFs a carpeta temporal...
+2025-12-10 10:53:05 | INFO     | workers.CorePipelineStep5      | info                 | Carpeta creada: Documentos_Procesar_10.12.2025_10.53.05
+2025-12-10 10:53:05 | INFO     | workers.CorePipelineStep5      | info                 |   📁 1_Boletas: 269 PDFs
+2025-12-10 10:53:06 | INFO     | workers.CorePipelineStep5      | info                 |   📁 2_Afp: 221 PDFs
+2025-12-10 10:53:06 | INFO     | workers.CorePipelineStep5      | info                 |   📁 3_5ta: 221 PDFs
+2025-12-10 10:53:07 | INFO     | workers.CorePipelineStep5      | info                 | ✅ PDFs copiados: 711
+2025-12-10 10:53:07 | INFO     | workers.CorePipelineStep5      | info                 | 📋 [3/5] Analizando contratos...
+2025-12-10 10:53:07 | INFO     | workers.CorePipelineStep5      | info                 | ✅ Contratos únicos: 273
+2025-12-10 10:53:07 | INFO     | workers.CorePipelineStep5      | info                 | 📄 Total archivos: 711
+2025-12-10 10:53:07 | INFO     | workers.CorePipelineStep5      | info                 | Diagnóstico guardado: diagnostico_merge_10.12.2025_10.53.05.json
+2025-12-10 10:53:07 | INFO     | workers.CorePipelineStep5      | info                 | 📋 [4/5] Generando packs por contrato...
+2025-12-10 10:53:07 | INFO     | workers.CorePipelineStep5      | info                 | Carpeta creada: Documentos_Enviar_10.12.2025_10.53.05
+2025-12-10 10:53:07 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [1/273] PACK_8351.pdf (3 docs)
+2025-12-10 10:53:07 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:53:07 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [2/273] PACK_8352.pdf (3 docs)
+2025-12-10 10:53:07 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:53:07 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [3/273] PACK_8353.pdf (3 docs)
+2025-12-10 10:53:08 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:53:08 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [4/273] PACK_8423.pdf (1 docs)
+2025-12-10 10:53:08 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:53:08 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [5/273] PACK_8424.pdf (2 docs)
+2025-12-10 10:53:08 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:53:08 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [6/273] PACK_9124.pdf (3 docs)
+2025-12-10 10:53:08 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:53:08 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [7/273] PACK_9175.pdf (3 docs)
+2025-12-10 10:53:08 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:53:08 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [8/273] PACK_9179.pdf (3 docs)
+2025-12-10 10:53:08 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:53:08 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [9/273] PACK_9211.pdf (3 docs)
+2025-12-10 10:53:08 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:53:08 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [10/273] PACK_9212.pdf (3 docs)
+2025-12-10 10:53:09 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:53:09 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [11/273] PACK_9214.pdf (3 docs)
+2025-12-10 10:53:09 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:53:09 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [12/273] PACK_9277.pdf (3 docs)
+2025-12-10 10:53:09 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:53:09 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [13/273] PACK_9278.pdf (3 docs)
+2025-12-10 10:53:09 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:53:09 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [14/273] PACK_9290.pdf (3 docs)
+2025-12-10 10:53:09 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:53:09 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [15/273] PACK_9291.pdf (3 docs)
+2025-12-10 10:53:10 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:53:10 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [16/273] PACK_9292.pdf (1 docs)
+2025-12-10 10:53:10 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:53:10 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [17/273] PACK_9293.pdf (3 docs)
+2025-12-10 10:53:10 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:53:10 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [18/273] PACK_9296.pdf (3 docs)
+2025-12-10 10:53:10 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:53:10 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [19/273] PACK_9297.pdf (3 docs)
+2025-12-10 10:53:10 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:53:10 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [20/273] PACK_9300.pdf (1 docs)
+2025-12-10 10:53:10 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:53:10 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [21/273] PACK_9301.pdf (3 docs)
+2025-12-10 10:53:10 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:53:10 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [22/273] PACK_9302.pdf (1 docs)
+2025-12-10 10:53:10 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:53:10 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [23/273] PACK_9304.pdf (3 docs)
+2025-12-10 10:53:10 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:53:10 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [24/273] PACK_9305.pdf (3 docs)
+2025-12-10 10:53:11 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:53:11 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [25/273] PACK_9309.pdf (3 docs)
+2025-12-10 10:53:11 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:53:11 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [26/273] PACK_9310.pdf (3 docs)
+2025-12-10 10:53:11 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:53:11 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [27/273] PACK_9311.pdf (3 docs)
+2025-12-10 10:53:11 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:53:11 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [28/273] PACK_9312.pdf (3 docs)
+2025-12-10 10:53:11 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:53:11 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [29/273] PACK_9314.pdf (1 docs)
+2025-12-10 10:53:11 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:53:11 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [30/273] PACK_9315.pdf (3 docs)
+2025-12-10 10:53:11 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:53:11 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [31/273] PACK_9316.pdf (3 docs)
+2025-12-10 10:53:11 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:53:11 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [32/273] PACK_9317.pdf (3 docs)
+2025-12-10 10:53:11 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:53:11 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [33/273] PACK_9321.pdf (3 docs)
+2025-12-10 10:53:12 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:53:12 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [34/273] PACK_9368.pdf (3 docs)
+2025-12-10 10:53:12 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:53:12 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [35/273] PACK_9423.pdf (3 docs)
+2025-12-10 10:53:12 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:53:12 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [36/273] PACK_9464.pdf (1 docs)
+2025-12-10 10:53:12 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:53:12 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [37/273] PACK_9467.pdf (3 docs)
+2025-12-10 10:53:12 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:53:12 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [38/273] PACK_9468.pdf (3 docs)
+2025-12-10 10:53:12 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:53:12 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [39/273] PACK_9469.pdf (1 docs)
+2025-12-10 10:53:12 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:53:12 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [40/273] PACK_9470.pdf (1 docs)
+2025-12-10 10:53:12 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:53:12 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [41/273] PACK_9502.pdf (1 docs)
+2025-12-10 10:53:12 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:53:12 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [42/273] PACK_9503.pdf (3 docs)
+2025-12-10 10:53:12 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:53:12 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [43/273] PACK_9504.pdf (3 docs)
+2025-12-10 10:53:12 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:53:12 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [44/273] PACK_9505.pdf (1 docs)
+2025-12-10 10:53:12 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:53:12 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [45/273] PACK_9506.pdf (3 docs)
+2025-12-10 10:53:13 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:53:13 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [46/273] PACK_9507.pdf (3 docs)
+2025-12-10 10:53:13 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:53:13 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [47/273] PACK_9508.pdf (3 docs)
+2025-12-10 10:53:13 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:53:13 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [48/273] PACK_9509.pdf (1 docs)
+2025-12-10 10:53:13 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:53:13 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [49/273] PACK_9510.pdf (1 docs)
+2025-12-10 10:53:13 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:53:13 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [50/273] PACK_9511.pdf (1 docs)
+2025-12-10 10:53:13 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:53:13 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [51/273] PACK_9512.pdf (1 docs)
+2025-12-10 10:53:13 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:53:13 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [52/273] PACK_9513.pdf (1 docs)
+2025-12-10 10:53:13 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:53:13 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [53/273] PACK_9514.pdf (1 docs)
+2025-12-10 10:53:13 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:53:13 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [54/273] PACK_9515.pdf (1 docs)
+2025-12-10 10:53:13 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:53:13 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [55/273] PACK_9517.pdf (1 docs)
+2025-12-10 10:53:13 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:53:13 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [56/273] PACK_9518.pdf (3 docs)
+2025-12-10 10:53:13 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:53:13 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [57/273] PACK_9519.pdf (3 docs)
+2025-12-10 10:53:13 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:53:13 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [58/273] PACK_9520.pdf (3 docs)
+2025-12-10 10:53:13 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:53:13 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [59/273] PACK_9521.pdf (1 docs)
+2025-12-10 10:53:14 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:53:14 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [60/273] PACK_9522.pdf (3 docs)
+2025-12-10 10:53:14 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:53:14 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [61/273] PACK_9523.pdf (3 docs)
+2025-12-10 10:53:14 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:53:14 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [62/273] PACK_9525.pdf (1 docs)
+2025-12-10 10:53:14 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:53:14 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [63/273] PACK_9526.pdf (3 docs)
+2025-12-10 10:53:14 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:53:14 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [64/273] PACK_9527.pdf (3 docs)
+2025-12-10 10:53:14 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:53:14 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [65/273] PACK_9528.pdf (3 docs)
+2025-12-10 10:53:14 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:53:14 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [66/273] PACK_9550.pdf (3 docs)
+2025-12-10 10:53:14 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:53:14 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [67/273] PACK_9551.pdf (3 docs)
+2025-12-10 10:53:15 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:53:15 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [68/273] PACK_9552.pdf (1 docs)
+2025-12-10 10:53:15 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:53:15 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [69/273] PACK_9553.pdf (3 docs)
+2025-12-10 10:53:15 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:53:15 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [70/273] PACK_9554.pdf (3 docs)
+2025-12-10 10:53:15 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:53:15 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [71/273] PACK_9555.pdf (3 docs)
+2025-12-10 10:53:15 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:53:15 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [72/273] PACK_9557.pdf (1 docs)
+2025-12-10 10:53:15 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:53:15 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [73/273] PACK_9561.pdf (1 docs)
+2025-12-10 10:53:15 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:53:15 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [74/273] PACK_9562.pdf (1 docs)
+2025-12-10 10:53:15 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:53:15 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [75/273] PACK_9569.pdf (3 docs)
+2025-12-10 10:53:15 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:53:15 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [76/273] PACK_9571.pdf (1 docs)
+2025-12-10 10:53:15 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:53:15 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [77/273] PACK_9574.pdf (1 docs)
+2025-12-10 10:53:15 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:53:15 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [78/273] PACK_9575.pdf (1 docs)
+2025-12-10 10:53:15 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:53:15 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [79/273] PACK_9578.pdf (3 docs)
+2025-12-10 10:53:15 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:53:15 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [80/273] PACK_9581.pdf (1 docs)
+2025-12-10 10:53:15 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:53:15 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [81/273] PACK_9582.pdf (3 docs)
+2025-12-10 10:53:16 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:53:16 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [82/273] PACK_9584.pdf (1 docs)
+2025-12-10 10:53:16 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:53:16 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [83/273] PACK_9585.pdf (1 docs)
+2025-12-10 10:53:16 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:53:16 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [84/273] PACK_9587.pdf (3 docs)
+2025-12-10 10:53:16 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:53:16 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [85/273] PACK_9588.pdf (3 docs)
+2025-12-10 10:53:16 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:53:16 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [86/273] PACK_9589.pdf (3 docs)
+2025-12-10 10:53:16 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:53:16 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [87/273] PACK_9590.pdf (3 docs)
+2025-12-10 10:53:16 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:53:16 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [88/273] PACK_9591.pdf (3 docs)
+2025-12-10 10:53:16 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:53:16 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [89/273] PACK_9593.pdf (3 docs)
+2025-12-10 10:53:16 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:53:16 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [90/273] PACK_9594.pdf (3 docs)
+2025-12-10 10:53:17 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:53:17 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [91/273] PACK_9595.pdf (1 docs)
+2025-12-10 10:53:17 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:53:17 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [92/273] PACK_9596.pdf (3 docs)
+2025-12-10 10:53:17 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:53:17 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [93/273] PACK_9597.pdf (3 docs)
+2025-12-10 10:53:17 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:53:17 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [94/273] PACK_9598.pdf (3 docs)
+2025-12-10 10:53:17 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:53:17 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [95/273] PACK_9599.pdf (3 docs)
+2025-12-10 10:53:17 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:53:17 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [96/273] PACK_9600.pdf (3 docs)
+2025-12-10 10:53:17 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:53:17 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [97/273] PACK_9601.pdf (3 docs)
+2025-12-10 10:53:17 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:53:17 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [98/273] PACK_9602.pdf (3 docs)
+2025-12-10 10:53:17 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:53:17 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [99/273] PACK_9603.pdf (3 docs)
+2025-12-10 10:53:18 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:53:18 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [100/273] PACK_9604.pdf (3 docs)
+2025-12-10 10:53:18 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:53:18 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [101/273] PACK_9605.pdf (3 docs)
+2025-12-10 10:53:18 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:53:18 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [102/273] PACK_9606.pdf (1 docs)
+2025-12-10 10:53:18 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:53:18 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [103/273] PACK_9607.pdf (1 docs)
+2025-12-10 10:53:18 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:53:18 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [104/273] PACK_9608.pdf (1 docs)
+2025-12-10 10:53:18 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:53:18 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [105/273] PACK_9609.pdf (1 docs)
+2025-12-10 10:53:18 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:53:18 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [106/273] PACK_9611.pdf (3 docs)
+2025-12-10 10:53:18 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:53:18 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [107/273] PACK_9612.pdf (1 docs)
+2025-12-10 10:53:18 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:53:18 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [108/273] PACK_9613.pdf (3 docs)
+2025-12-10 10:53:18 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:53:18 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [109/273] PACK_9614.pdf (3 docs)
+2025-12-10 10:53:18 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:53:18 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [110/273] PACK_9615.pdf (3 docs)
+2025-12-10 10:53:18 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:53:18 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [111/273] PACK_9616.pdf (1 docs)
+2025-12-10 10:53:19 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:53:19 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [112/273] PACK_9617.pdf (3 docs)
+2025-12-10 10:53:19 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:53:19 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [113/273] PACK_9618.pdf (3 docs)
+2025-12-10 10:53:19 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:53:19 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [114/273] PACK_9619.pdf (3 docs)
+2025-12-10 10:53:19 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:53:19 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [115/273] PACK_9620.pdf (3 docs)
+2025-12-10 10:53:19 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:53:19 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [116/273] PACK_9621.pdf (3 docs)
+2025-12-10 10:53:19 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:53:19 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [117/273] PACK_9622.pdf (3 docs)
+2025-12-10 10:53:19 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:53:19 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [118/273] PACK_9623.pdf (3 docs)
+2025-12-10 10:53:19 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:53:19 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [119/273] PACK_9624.pdf (3 docs)
+2025-12-10 10:53:19 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:53:19 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [120/273] PACK_9625.pdf (3 docs)
+2025-12-10 10:53:19 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:53:19 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [121/273] PACK_9626.pdf (3 docs)
+2025-12-10 10:53:19 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:53:19 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [122/273] PACK_9627.pdf (3 docs)
+2025-12-10 10:53:20 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:53:20 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [123/273] PACK_9628.pdf (1 docs)
+2025-12-10 10:53:20 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:53:20 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [124/273] PACK_9629.pdf (1 docs)
+2025-12-10 10:53:20 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:53:20 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [125/273] PACK_9630.pdf (1 docs)
+2025-12-10 10:53:20 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:53:20 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [126/273] PACK_9631.pdf (3 docs)
+2025-12-10 10:53:20 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:53:20 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [127/273] PACK_9632.pdf (3 docs)
+2025-12-10 10:53:20 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:53:20 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [128/273] PACK_9633.pdf (3 docs)
+2025-12-10 10:53:20 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:53:20 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [129/273] PACK_9634.pdf (3 docs)
+2025-12-10 10:53:20 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:53:20 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [130/273] PACK_9635.pdf (3 docs)
+2025-12-10 10:53:20 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:53:20 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [131/273] PACK_9636.pdf (3 docs)
+2025-12-10 10:53:20 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:53:20 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [132/273] PACK_9637.pdf (3 docs)
+2025-12-10 10:53:20 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:53:20 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [133/273] PACK_9638.pdf (3 docs)
+2025-12-10 10:53:20 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:53:20 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [134/273] PACK_9639.pdf (1 docs)
+2025-12-10 10:53:20 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:53:20 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [135/273] PACK_9640.pdf (1 docs)
+2025-12-10 10:53:20 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:53:20 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [136/273] PACK_9641.pdf (3 docs)
+2025-12-10 10:53:21 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:53:21 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [137/273] PACK_9642.pdf (1 docs)
+2025-12-10 10:53:21 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:53:21 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [138/273] PACK_9643.pdf (3 docs)
+2025-12-10 10:53:21 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:53:21 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [139/273] PACK_9644.pdf (1 docs)
+2025-12-10 10:53:21 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:53:21 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [140/273] PACK_9645.pdf (1 docs)
+2025-12-10 10:53:21 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:53:21 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [141/273] PACK_9646.pdf (1 docs)
+2025-12-10 10:53:21 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:53:21 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [142/273] PACK_9647.pdf (1 docs)
+2025-12-10 10:53:21 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:53:21 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [143/273] PACK_9648.pdf (1 docs)
+2025-12-10 10:53:21 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:53:21 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [144/273] PACK_9649.pdf (1 docs)
+2025-12-10 10:53:21 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:53:21 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [145/273] PACK_9650.pdf (3 docs)
+2025-12-10 10:53:21 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:53:21 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [146/273] PACK_9651.pdf (3 docs)
+2025-12-10 10:53:21 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:53:21 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [147/273] PACK_9652.pdf (1 docs)
+2025-12-10 10:53:21 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:53:21 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [148/273] PACK_9657.pdf (3 docs)
+2025-12-10 10:53:21 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:53:21 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [149/273] PACK_9658.pdf (3 docs)
+2025-12-10 10:53:21 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:53:21 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [150/273] PACK_9659.pdf (3 docs)
+2025-12-10 10:53:21 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:53:21 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [151/273] PACK_9660.pdf (3 docs)
+2025-12-10 10:53:22 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:53:22 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [152/273] PACK_9661.pdf (3 docs)
+2025-12-10 10:53:22 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:53:22 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [153/273] PACK_9662.pdf (2 docs)
+2025-12-10 10:53:22 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:53:22 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [154/273] PACK_9663.pdf (3 docs)
+2025-12-10 10:53:22 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:53:22 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [155/273] PACK_9664.pdf (3 docs)
+2025-12-10 10:53:22 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:53:22 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [156/273] PACK_9665.pdf (3 docs)
+2025-12-10 10:53:22 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:53:22 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [157/273] PACK_9666.pdf (3 docs)
+2025-12-10 10:53:22 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:53:22 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [158/273] PACK_9667.pdf (2 docs)
+2025-12-10 10:53:22 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:53:22 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [159/273] PACK_9668.pdf (3 docs)
+2025-12-10 10:53:22 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:53:22 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [160/273] PACK_9669.pdf (3 docs)
+2025-12-10 10:53:22 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:53:22 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [161/273] PACK_9670.pdf (3 docs)
+2025-12-10 10:53:23 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:53:23 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [162/273] PACK_9671.pdf (3 docs)
+2025-12-10 10:53:23 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:53:23 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [163/273] PACK_9672.pdf (3 docs)
+2025-12-10 10:53:23 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:53:23 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [164/273] PACK_9673.pdf (3 docs)
+2025-12-10 10:53:23 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:53:23 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [165/273] PACK_9674.pdf (3 docs)
+2025-12-10 10:53:23 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:53:23 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [166/273] PACK_9675.pdf (1 docs)
+2025-12-10 10:53:23 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:53:23 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [167/273] PACK_9676.pdf (3 docs)
+2025-12-10 10:53:23 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:53:23 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [168/273] PACK_9677.pdf (3 docs)
+2025-12-10 10:53:23 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:53:23 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [169/273] PACK_9678.pdf (1 docs)
+2025-12-10 10:53:23 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:53:23 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [170/273] PACK_9679.pdf (3 docs)
+2025-12-10 10:53:23 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:53:23 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [171/273] PACK_9680.pdf (3 docs)
+2025-12-10 10:53:23 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:53:23 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [172/273] PACK_9681.pdf (3 docs)
+2025-12-10 10:53:23 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:53:23 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [173/273] PACK_9682.pdf (3 docs)
+2025-12-10 10:53:24 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:53:24 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [174/273] PACK_9683.pdf (3 docs)
+2025-12-10 10:53:24 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:53:24 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [175/273] PACK_9684.pdf (3 docs)
+2025-12-10 10:53:24 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:53:24 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [176/273] PACK_9685.pdf (3 docs)
+2025-12-10 10:53:24 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:53:24 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [177/273] PACK_9686.pdf (3 docs)
+2025-12-10 10:53:24 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:53:24 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [178/273] PACK_9687.pdf (3 docs)
+2025-12-10 10:53:24 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:53:24 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [179/273] PACK_9688.pdf (3 docs)
+2025-12-10 10:53:24 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:53:24 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [180/273] PACK_9689.pdf (3 docs)
+2025-12-10 10:53:24 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:53:24 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [181/273] PACK_9690.pdf (3 docs)
+2025-12-10 10:53:24 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:53:24 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [182/273] PACK_9692.pdf (3 docs)
+2025-12-10 10:53:24 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:53:24 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [183/273] PACK_9693.pdf (3 docs)
+2025-12-10 10:53:25 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:53:25 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [184/273] PACK_9694.pdf (3 docs)
+2025-12-10 10:53:25 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:53:25 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [185/273] PACK_9696.pdf (3 docs)
+2025-12-10 10:53:25 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:53:25 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [186/273] PACK_9697.pdf (3 docs)
+2025-12-10 10:53:25 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:53:25 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [187/273] PACK_9698.pdf (3 docs)
+2025-12-10 10:53:25 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:53:25 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [188/273] PACK_9700.pdf (3 docs)
+2025-12-10 10:53:25 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:53:25 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [189/273] PACK_9701.pdf (3 docs)
+2025-12-10 10:53:25 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:53:25 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [190/273] PACK_9702.pdf (3 docs)
+2025-12-10 10:53:25 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:53:25 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [191/273] PACK_9703.pdf (3 docs)
+2025-12-10 10:53:25 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:53:25 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [192/273] PACK_9704.pdf (3 docs)
+2025-12-10 10:53:25 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:53:25 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [193/273] PACK_9705.pdf (3 docs)
+2025-12-10 10:53:26 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:53:26 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [194/273] PACK_9706.pdf (3 docs)
+2025-12-10 10:53:26 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:53:26 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [195/273] PACK_9707.pdf (3 docs)
+2025-12-10 10:53:26 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:53:26 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [196/273] PACK_9708.pdf (3 docs)
+2025-12-10 10:53:26 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:53:26 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [197/273] PACK_9709.pdf (3 docs)
+2025-12-10 10:53:26 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:53:26 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [198/273] PACK_9710.pdf (3 docs)
+2025-12-10 10:53:26 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:53:26 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [199/273] PACK_9711.pdf (3 docs)
+2025-12-10 10:53:26 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:53:26 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [200/273] PACK_9712.pdf (3 docs)
+2025-12-10 10:53:26 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:53:26 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [201/273] PACK_9714.pdf (3 docs)
+2025-12-10 10:53:26 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:53:26 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [202/273] PACK_9715.pdf (3 docs)
+2025-12-10 10:53:26 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:53:26 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [203/273] PACK_9716.pdf (3 docs)
+2025-12-10 10:53:27 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:53:27 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [204/273] PACK_9717.pdf (3 docs)
+2025-12-10 10:53:27 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:53:27 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [205/273] PACK_9718.pdf (3 docs)
+2025-12-10 10:53:27 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:53:27 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [206/273] PACK_9720.pdf (3 docs)
+2025-12-10 10:53:27 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:53:27 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [207/273] PACK_9722.pdf (3 docs)
+2025-12-10 10:53:27 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:53:27 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [208/273] PACK_9723.pdf (3 docs)
+2025-12-10 10:53:27 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:53:27 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [209/273] PACK_9724.pdf (3 docs)
+2025-12-10 10:53:27 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:53:27 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [210/273] PACK_9725.pdf (3 docs)
+2025-12-10 10:53:27 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:53:27 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [211/273] PACK_9726.pdf (3 docs)
+2025-12-10 10:53:27 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:53:27 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [212/273] PACK_9727.pdf (3 docs)
+2025-12-10 10:53:27 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:53:27 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [213/273] PACK_9728.pdf (3 docs)
+2025-12-10 10:53:27 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:53:27 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [214/273] PACK_9729.pdf (3 docs)
+2025-12-10 10:53:28 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:53:28 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [215/273] PACK_9730.pdf (3 docs)
+2025-12-10 10:53:28 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:53:28 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [216/273] PACK_9731.pdf (3 docs)
+2025-12-10 10:53:28 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:53:28 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [217/273] PACK_9732.pdf (3 docs)
+2025-12-10 10:53:28 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:53:28 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [218/273] PACK_9733.pdf (3 docs)
+2025-12-10 10:53:28 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:53:28 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [219/273] PACK_9734.pdf (3 docs)
+2025-12-10 10:53:28 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:53:28 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [220/273] PACK_9735.pdf (3 docs)
+2025-12-10 10:53:28 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:53:28 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [221/273] PACK_9736.pdf (3 docs)
+2025-12-10 10:53:28 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:53:28 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [222/273] PACK_9737.pdf (3 docs)
+2025-12-10 10:53:28 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:53:28 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [223/273] PACK_9738.pdf (3 docs)
+2025-12-10 10:53:29 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:53:29 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [224/273] PACK_9739.pdf (3 docs)
+2025-12-10 10:53:29 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:53:29 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [225/273] PACK_9740.pdf (3 docs)
+2025-12-10 10:53:29 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:53:29 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [226/273] PACK_9741.pdf (3 docs)
+2025-12-10 10:53:29 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:53:29 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [227/273] PACK_9742.pdf (3 docs)
+2025-12-10 10:53:29 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:53:29 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [228/273] PACK_9743.pdf (3 docs)
+2025-12-10 10:53:29 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:53:29 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [229/273] PACK_9745.pdf (3 docs)
+2025-12-10 10:53:29 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:53:29 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [230/273] PACK_9746.pdf (3 docs)
+2025-12-10 10:53:29 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:53:29 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [231/273] PACK_9747.pdf (3 docs)
+2025-12-10 10:53:29 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:53:29 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [232/273] PACK_9748.pdf (3 docs)
+2025-12-10 10:53:29 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:53:29 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [233/273] PACK_9749.pdf (3 docs)
+2025-12-10 10:53:30 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:53:30 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [234/273] PACK_9750.pdf (3 docs)
+2025-12-10 10:53:30 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:53:30 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [235/273] PACK_9751.pdf (3 docs)
+2025-12-10 10:53:30 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:53:30 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [236/273] PACK_9752.pdf (3 docs)
+2025-12-10 10:53:30 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:53:30 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [237/273] PACK_9753.pdf (3 docs)
+2025-12-10 10:53:30 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:53:30 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [238/273] PACK_9754.pdf (3 docs)
+2025-12-10 10:53:30 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:53:30 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [239/273] PACK_9755.pdf (3 docs)
+2025-12-10 10:53:30 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:53:30 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [240/273] PACK_9756.pdf (3 docs)
+2025-12-10 10:53:30 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:53:30 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [241/273] PACK_9757.pdf (3 docs)
+2025-12-10 10:53:30 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:53:30 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [242/273] PACK_9758.pdf (3 docs)
+2025-12-10 10:53:30 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:53:30 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [243/273] PACK_9759.pdf (3 docs)
+2025-12-10 10:53:31 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:53:31 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [244/273] PACK_9760.pdf (3 docs)
+2025-12-10 10:53:31 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:53:31 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [245/273] PACK_9761.pdf (3 docs)
+2025-12-10 10:53:31 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:53:31 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [246/273] PACK_9762.pdf (3 docs)
+2025-12-10 10:53:31 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:53:31 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [247/273] PACK_9763.pdf (3 docs)
+2025-12-10 10:53:31 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:53:31 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [248/273] PACK_9764.pdf (3 docs)
+2025-12-10 10:53:31 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:53:31 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [249/273] PACK_9765.pdf (3 docs)
+2025-12-10 10:53:31 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:53:31 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [250/273] PACK_9766.pdf (3 docs)
+2025-12-10 10:53:31 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:53:31 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [251/273] PACK_9767.pdf (3 docs)
+2025-12-10 10:53:31 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:53:31 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [252/273] PACK_9768.pdf (3 docs)
+2025-12-10 10:53:32 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:53:32 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [253/273] PACK_9769.pdf (3 docs)
+2025-12-10 10:53:32 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:53:32 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [254/273] PACK_9770.pdf (3 docs)
+2025-12-10 10:53:32 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:53:32 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [255/273] PACK_9771.pdf (3 docs)
+2025-12-10 10:53:32 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:53:32 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [256/273] PACK_9772.pdf (3 docs)
+2025-12-10 10:53:32 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:53:32 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [257/273] PACK_9773.pdf (3 docs)
+2025-12-10 10:53:32 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:53:32 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [258/273] PACK_9774.pdf (3 docs)
+2025-12-10 10:53:32 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:53:32 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [259/273] PACK_9775.pdf (3 docs)
+2025-12-10 10:53:32 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:53:32 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [260/273] PACK_9776.pdf (3 docs)
+2025-12-10 10:53:32 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:53:32 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [261/273] PACK_9777.pdf (3 docs)
+2025-12-10 10:53:32 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:53:32 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [262/273] PACK_9778.pdf (3 docs)
+2025-12-10 10:53:33 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:53:33 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [263/273] PACK_9779.pdf (3 docs)
+2025-12-10 10:53:33 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:53:33 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [264/273] PACK_9780.pdf (3 docs)
+2025-12-10 10:53:33 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:53:33 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [265/273] PACK_9781.pdf (3 docs)
+2025-12-10 10:53:33 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:53:33 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [266/273] PACK_9782.pdf (3 docs)
+2025-12-10 10:53:33 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:53:33 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [267/273] PACK_9783.pdf (3 docs)
+2025-12-10 10:53:33 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:53:33 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [268/273] PACK_9784.pdf (2 docs)
+2025-12-10 10:53:33 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:53:33 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [269/273] PACK_9785.pdf (3 docs)
+2025-12-10 10:53:33 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:53:33 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [270/273] PACK_9786.pdf (3 docs)
+2025-12-10 10:53:34 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:53:34 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [271/273] PACK_9787.pdf (3 docs)
+2025-12-10 10:53:34 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:53:34 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [272/273] PACK_9788.pdf (3 docs)
+2025-12-10 10:53:34 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:53:34 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [273/273] PACK_9990.pdf (3 docs)
+2025-12-10 10:53:34 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:53:34 | INFO     | workers.CorePipelineStep5      | info                 | ==================================================
+2025-12-10 10:53:34 | INFO     | workers.CorePipelineStep5      | info                 | 📊 RESUMEN FINAL
+2025-12-10 10:53:34 | INFO     | workers.CorePipelineStep5      | info                 | ✅ Packs generados: 273
+2025-12-10 10:53:34 | INFO     | workers.CorePipelineStep5      | info                 | 📂 Carpeta salida: Documentos_Enviar_10.12.2025_10.53.05
+2025-12-10 10:53:34 | INFO     | workers.CorePipelineStep5      | info                 | ⏱️ Tiempo total: 29.87s
+2025-12-10 10:53:34 | INFO     | workers.CorePipelineStep5      | info                 | ==================================================
+2025-12-10 10:53:34 | INFO     | workers.CorePipelineStep5      | info                 | 🎉 ¡Proceso completado exitosamente!
+2025-12-10 10:54:35 | INFO     | ui.main_window                 | closeEvent           | Usuario solicitó cerrar la aplicación
+2025-12-10 10:54:35 | INFO     | ui.main_window                 | closeEvent           | Cerrando ventana principal...
+2025-12-10 10:54:35 | INFO     | main                           | main                 | --------------------------------------------------------------------------------
+2025-12-10 10:54:35 | INFO     | main                           | main                 | Aplicación cerrada con código: 0
+2025-12-10 10:54:35 | INFO     | main                           | main                 | ================================================================================
+2025-12-10 10:56:59 | INFO     | main                           | setup_logging        | ================================================================================
+2025-12-10 10:56:59 | INFO     | main                           | setup_logging        | Sistema de logging inicializado correctamente
+2025-12-10 10:56:59 | INFO     | main                           | setup_logging        | Directorio de logs: C:\Users\ricuculm\OneDrive - Metso\Documents\VS Code\7. Matrix_Rework\logs
+2025-12-10 10:56:59 | INFO     | main                           | setup_logging        | ================================================================================
+2025-12-10 10:56:59 | INFO     | main                           | main                 | ================================================================================
+2025-12-10 10:56:59 | INFO     | main                           | main                 | DocFlow Eventuales v4.0 - Iniciando aplicación
+2025-12-10 10:56:59 | INFO     | main                           | main                 | ================================================================================
+2025-12-10 10:56:59 | INFO     | main                           | main                 | Sistema operativo: win32
+2025-12-10 10:56:59 | INFO     | main                           | main                 | Versión Python: 3.13.9
+2025-12-10 10:56:59 | INFO     | main                           | main                 | --------------------------------------------------------------------------------
+2025-12-10 10:56:59 | INFO     | main                           | main                 | Configurando aplicación Qt...
+2025-12-10 10:56:59 | INFO     | main                           | main                 | ✅ Aplicación Qt configurada correctamente
+2025-12-10 10:56:59 | INFO     | main                           | main                 | Mostrando splash screen...
+2025-12-10 10:57:01 | INFO     | main                           | main                 | ✅ Splash screen mostrado
+2025-12-10 10:57:01 | INFO     | main                           | main                 | Iniciando event loop de Qt...
+2025-12-10 10:57:04 | INFO     | main                           | on_splash_finished   | Splash screen completado, cargando ventana principal...
+2025-12-10 10:57:04 | INFO     | ui.main_window                 | __init__             | Inicializando ventana principal...
+2025-12-10 10:57:04 | INFO     | utils.theme_manager            | _load_themes         | ✅ Tema cargado: dark (Tema oscuro con fondo azul nocturno profundo)
+2025-12-10 10:57:04 | INFO     | utils.theme_manager            | _load_themes         | ✅ Tema cargado: light (Tema claro innovador y tecnológico con acentos verde-azulados)
+2025-12-10 10:57:04 | INFO     | utils.theme_manager            | _load_config         | ✅ Configuración cargada: tema 'dark'
+2025-12-10 10:57:04 | INFO     | utils.theme_manager            | __init__             | ✅ Theme Manager inicializado - Tema activo: dark
+2025-12-10 10:57:04 | INFO     | ui.main_window                 | __init__             | ✅ Tema cargado: dark
+2025-12-10 10:57:04 | INFO     | ui.main_window                 | __init__             | ✅ Interfaz de usuario creada
+2025-12-10 10:57:04 | INFO     | ui.main_window                 | __init__             | ✅ Ventana principal inicializada correctamente
+2025-12-10 10:57:04 | INFO     | main                           | on_splash_finished   | ✅ Ventana principal cargada y mostrada
+2025-12-10 10:57:04 | INFO     | main                           | on_splash_finished   | --------------------------------------------------------------------------------
+2025-12-10 10:57:04 | INFO     | main                           | on_splash_finished   | 🚀 Aplicación lista para usar
+2025-12-10 10:57:04 | INFO     | main                           | on_splash_finished   | ================================================================================
+2025-12-10 10:57:04 | INFO     | ui.main_window                 | _load_tabs           | Iniciando carga lazy de tabs...
+2025-12-10 10:57:04 | INFO     | ui.main_window                 | _load_tabs           | ✅ Todos los tabs cargados correctamente
+2025-12-10 10:57:04 | INFO     | ui.main_window                 | _load_tabs           | ✅ Señales de tabs conectadas
+2025-12-10 10:57:22 | INFO     | workers.CorePipelineStep5      | info                 | 🚀 Iniciando proceso de fusión por contratos
+2025-12-10 10:57:22 | INFO     | workers.CorePipelineStep5      | info                 | 📂 Carpeta madre: C:/Users/ricuculm/OneDrive - Metso/Documents/Laboratorio/PruebaMatrix2
+2025-12-10 10:57:22 | INFO     | workers.CorePipelineStep5      | info                 | 📋 [1/5] Validando estructura...
+2025-12-10 10:57:22 | INFO     | workers.CorePipelineStep5      | info                 | ✅ Subcarpetas encontradas: 3
+2025-12-10 10:57:22 | WARNING  | workers.CorePipelineStep5      | warning              | ⚠️ Subcarpetas faltantes: 4_Convocatoria, 5_CertificadosTrabajo
+2025-12-10 10:57:22 | INFO     | workers.CorePipelineStep5      | info                 | 📋 [2/5] Copiando PDFs a carpeta temporal...
+2025-12-10 10:57:22 | INFO     | workers.CorePipelineStep5      | info                 | Carpeta creada: Documentos_Procesar_10.12.2025_10.57.22
+2025-12-10 10:57:22 | INFO     | workers.CorePipelineStep5      | info                 |   📁 1_Boletas: 269 PDFs
+2025-12-10 10:57:22 | INFO     | workers.CorePipelineStep5      | info                 |   📁 2_Afp: 221 PDFs
+2025-12-10 10:57:23 | INFO     | workers.CorePipelineStep5      | info                 |   📁 3_5ta: 221 PDFs
+2025-12-10 10:57:24 | INFO     | workers.CorePipelineStep5      | info                 | ✅ PDFs copiados: 711
+2025-12-10 10:57:24 | INFO     | workers.CorePipelineStep5      | info                 | 📋 [3/5] Analizando contratos...
+2025-12-10 10:57:24 | INFO     | workers.CorePipelineStep5      | info                 | ✅ Contratos únicos: 273
+2025-12-10 10:57:24 | INFO     | workers.CorePipelineStep5      | info                 | 📄 Total archivos: 711
+2025-12-10 10:57:24 | INFO     | workers.CorePipelineStep5      | info                 | Diagnóstico guardado: diagnostico_merge_10.12.2025_10.57.22.json
+2025-12-10 10:57:24 | INFO     | workers.CorePipelineStep5      | info                 | 📋 [4/5] Generando packs por contrato...
+2025-12-10 10:57:24 | INFO     | workers.CorePipelineStep5      | info                 | Carpeta creada: Documentos_Enviar_10.12.2025_10.57.22
+2025-12-10 10:57:24 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [1/273] 8351 PAUCAR ABANTO ROY ALEX_BOLETA DE PAGO Y CERTIFICADOS (3 docs)
+2025-12-10 10:57:24 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:57:24 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [2/273] 8352 PAITAN MATAMOROS PAUL OLMEDO_BOLETA DE PAGO Y CERTIFICADOS (3 docs)
+2025-12-10 10:57:24 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:57:24 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [3/273] 8353 CHAHUAYA HUAMAN ERICK BHEKER_BOLETA DE PAGO Y CERTIFICADOS (3 docs)
+2025-12-10 10:57:24 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:57:24 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [4/273] 8423 GUTIERREZ PASCUAL HECTOR ABEL_BOLETA DE PAGO Y CERTIFICADOS (1 docs)
+2025-12-10 10:57:24 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:57:24 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [5/273] 8424 MUÑOZ CLAUDIO JUAN DANIEL_BOLETA DE PAGO Y CERTIFICADOS (2 docs)
+2025-12-10 10:57:24 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:57:24 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [6/273] 9124 CAJACURI CAJACURI MARLO LUIS_BOLETA DE PAGO Y CERTIFICADOS (3 docs)
+2025-12-10 10:57:25 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:57:25 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [7/273] 9175 ILLANES YUCRA RICHARD ALEXANDER_BOLETA DE PAGO Y CERTIFICADOS (3 docs)
+2025-12-10 10:57:25 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:57:25 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [8/273] 9179 LERMA GIBERA ALEXANDER_BOLETA DE PAGO Y CERTIFICADOS (3 docs)
+2025-12-10 10:57:25 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:57:25 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [9/273] 9211 SERPA PEÑALOZA ANDRES PEDRO_BOLETA DE PAGO Y CERTIFICADOS (3 docs)
+2025-12-10 10:57:25 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:57:25 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [10/273] 9212 JINTE CARMONA CRISTIAN RAMON_BOLETA DE PAGO Y CERTIFICADOS (3 docs)
+2025-12-10 10:57:25 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:57:25 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [11/273] 9214 UNGARO CURASI CARLOS ALBERTO_BOLETA DE PAGO Y CERTIFICADOS (3 docs)
+2025-12-10 10:57:25 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:57:25 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [12/273] 9277 OSCCO POCCOMO SEVERINO MAXIMO_BOLETA DE PAGO Y CERTIFICADOS (3 docs)
+2025-12-10 10:57:26 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:57:26 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [13/273] 9278 RAMIREZ ANAMPA ROLANDO_BOLETA DE PAGO Y CERTIFICADOS (3 docs)
+2025-12-10 10:57:26 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:57:26 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [14/273] 9290 ZEBALLOS NUÑEZ DEL PRADO ALLISON MICHELLE_BOLETA DE PAGO Y CERTIFICADOS (3 docs)
+2025-12-10 10:57:26 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:57:26 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [15/273] 9291 COSSI ALI FRANCISCO NARTI_BOLETA DE PAGO Y CERTIFICADOS (3 docs)
+2025-12-10 10:57:26 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:57:26 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [16/273] 9292 FERNANDEZ OLIVAREZ DARWIN DENNIS_BOLETA DE PAGO Y CERTIFICADOS (1 docs)
+2025-12-10 10:57:26 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:57:26 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [17/273] 9293 CHURATA PANIBRA DIEGO RAMIRO_BOLETA DE PAGO Y CERTIFICADOS (3 docs)
+2025-12-10 10:57:26 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:57:26 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [18/273] 9296 TACO ROQUE FRANKLIN CUBILLAS_BOLETA DE PAGO Y CERTIFICADOS (3 docs)
+2025-12-10 10:57:26 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:57:26 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [19/273] 9297 RONDAN MAMANI ANGEL JESUS_BOLETA DE PAGO Y CERTIFICADOS (3 docs)
+2025-12-10 10:57:27 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:57:27 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [20/273] 9300 HANCCO ZAMATA WILFREDO_BOLETA DE PAGO Y CERTIFICADOS (1 docs)
+2025-12-10 10:57:27 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:57:27 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [21/273] 9301 CESPEDES LAURA YHON CARLOS_BOLETA DE PAGO Y CERTIFICADOS (3 docs)
+2025-12-10 10:57:27 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:57:27 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [22/273] 9302 CENTENO COILA BRIAM ALBERTO_BOLETA DE PAGO Y CERTIFICADOS (1 docs)
+2025-12-10 10:57:27 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:57:27 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [23/273] 9304 LOZA BANEGAS DERLY_BOLETA DE PAGO Y CERTIFICADOS (3 docs)
+2025-12-10 10:57:27 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:57:27 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [24/273] 9305 CARPIO BEJARANO DIEGO ALBERTO_BOLETA DE PAGO Y CERTIFICADOS (3 docs)
+2025-12-10 10:57:27 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:57:27 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [25/273] 9309 FERNANDEZ MARTEL DANIEL_BOLETA DE PAGO Y CERTIFICADOS (3 docs)
+2025-12-10 10:57:27 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:57:27 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [26/273] 9310 GUTIERREZ JAYO MIGUEL ANGEL_BOLETA DE PAGO Y CERTIFICADOS (3 docs)
+2025-12-10 10:57:28 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:57:28 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [27/273] 9311 LOO REYNA MOISES ENRIQUE_BOLETA DE PAGO Y CERTIFICADOS (3 docs)
+2025-12-10 10:57:28 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:57:28 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [28/273] 9312 SULCA BAUTISTA FREDDY_BOLETA DE PAGO Y CERTIFICADOS (3 docs)
+2025-12-10 10:57:28 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:57:28 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [29/273] 9314 ARENAS RODRIGUEZ BRAYAM LUDWING_BOLETA DE PAGO Y CERTIFICADOS (1 docs)
+2025-12-10 10:57:28 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:57:28 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [30/273] 9315 SOTO HUAMAN CESAR JONATHAN_BOLETA DE PAGO Y CERTIFICADOS (3 docs)
+2025-12-10 10:57:28 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:57:28 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [31/273] 9316 GARCIA DELGADO JEROMY FRANCISCO_BOLETA DE PAGO Y CERTIFICADOS (3 docs)
+2025-12-10 10:57:28 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:57:28 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [32/273] 9317 RIOS QUISINI WASHINGTON_BOLETA DE PAGO Y CERTIFICADOS (3 docs)
+2025-12-10 10:57:28 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:57:28 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [33/273] 9321 LEON MAMANI JONATHAN FRANK_BOLETA DE PAGO Y CERTIFICADOS (3 docs)
+2025-12-10 10:57:29 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:57:29 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [34/273] 9368 BURGOS MILLA ANIBAL LEONEL_BOLETA DE PAGO Y CERTIFICADOS (3 docs)
+2025-12-10 10:57:29 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:57:29 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [35/273] 9423 OXA CATASI ANICETO DANIEL_BOLETA DE PAGO Y CERTIFICADOS (3 docs)
+2025-12-10 10:57:29 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:57:29 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [36/273] 9464 APAZA HUICHI PAUL ARMANDO_BOLETA DE PAGO Y CERTIFICADOS (1 docs)
+2025-12-10 10:57:29 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:57:29 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [37/273] 9467 LLERENA CHACON CARLOS CESAR_BOLETA DE PAGO Y CERTIFICADOS (3 docs)
+2025-12-10 10:57:29 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:57:29 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [38/273] 9468 PRIETO DIAZ ALVARO RICARDO_BOLETA DE PAGO Y CERTIFICADOS (3 docs)
+2025-12-10 10:57:29 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:57:29 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [39/273] 9469 CUTIRE CONDORI FRANCISCO HOOVER_BOLETA DE PAGO Y CERTIFICADOS (1 docs)
+2025-12-10 10:57:29 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:57:29 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [40/273] 9470 CAMONES HUAÑEC GILBER PASCUAL_BOLETA DE PAGO Y CERTIFICADOS (1 docs)
+2025-12-10 10:57:29 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:57:29 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [41/273] 9502 BORDA SONCCO ENRIQUE_BOLETA DE PAGO Y CERTIFICADOS (1 docs)
+2025-12-10 10:57:29 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:57:29 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [42/273] 9503 ZEGARRA ROJAS BRAYNERD CESAR_BOLETA DE PAGO Y CERTIFICADOS (3 docs)
+2025-12-10 10:57:30 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:57:30 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [43/273] 9504 CHAVEZ PINTO RAUL ORLANDO_BOLETA DE PAGO Y CERTIFICADOS (3 docs)
+2025-12-10 10:57:30 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:57:30 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [44/273] 9505 CAYLLAHUA VENTURA MILTON RENE_BOLETA DE PAGO Y CERTIFICADOS (1 docs)
+2025-12-10 10:57:30 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:57:30 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [45/273] 9506 BALDARRAGO VALDIVIA TOMAS CARLOS_BOLETA DE PAGO Y CERTIFICADOS (3 docs)
+2025-12-10 10:57:30 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:57:30 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [46/273] 9507 CASTRO CUBA CENTENO LUIS ENRIQUE_BOLETA DE PAGO Y CERTIFICADOS (3 docs)
+2025-12-10 10:57:30 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:57:30 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [47/273] 9508 HERRERA PILLACA SUHAIR ALEXANDER_BOLETA DE PAGO Y CERTIFICADOS (3 docs)
+2025-12-10 10:57:30 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:57:30 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [48/273] 9509 CONDORI APAZA SANDRO_BOLETA DE PAGO Y CERTIFICADOS (1 docs)
+2025-12-10 10:57:30 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:57:30 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [49/273] 9510 CAYO PEÑALOZA ANDERSON JAIME_BOLETA DE PAGO Y CERTIFICADOS (1 docs)
+2025-12-10 10:57:30 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:57:30 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [50/273] 9511 ANAHUA YARETA EDWIN DANIEL_BOLETA DE PAGO Y CERTIFICADOS (1 docs)
+2025-12-10 10:57:30 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:57:30 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [51/273] 9512 SUCASAIRE ALANOCA JULIO CESAR_BOLETA DE PAGO Y CERTIFICADOS (1 docs)
+2025-12-10 10:57:30 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:57:30 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [52/273] 9513 GALIANO VERGARA ROSMEL_BOLETA DE PAGO Y CERTIFICADOS (1 docs)
+2025-12-10 10:57:30 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:57:30 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [53/273] 9514 MAMANI MAMANI DANIEL HECTOR_BOLETA DE PAGO Y CERTIFICADOS (1 docs)
+2025-12-10 10:57:30 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:57:30 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [54/273] 9515 MERMA PUMA FRANK LUIS_BOLETA DE PAGO Y CERTIFICADOS (1 docs)
+2025-12-10 10:57:30 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:57:30 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [55/273] 9517 ARHUATA QUISPE ISMAEL CLINTON_BOLETA DE PAGO Y CERTIFICADOS (1 docs)
+2025-12-10 10:57:31 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:57:31 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [56/273] 9518 ALVAREZ SARAYASI EMERSON KEVIN_BOLETA DE PAGO Y CERTIFICADOS (3 docs)
+2025-12-10 10:57:31 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:57:31 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [57/273] 9519 PUCHURI CHUCTAYA ROGER_BOLETA DE PAGO Y CERTIFICADOS (3 docs)
+2025-12-10 10:57:31 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:57:31 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [58/273] 9520 CONDORI CASTILLO EUGENIO ALBERTO_BOLETA DE PAGO Y CERTIFICADOS (3 docs)
+2025-12-10 10:57:31 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:57:31 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [59/273] 9521 SILVA QUISPE ADEMIR EDWIN_BOLETA DE PAGO Y CERTIFICADOS (1 docs)
+2025-12-10 10:57:31 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:57:31 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [60/273] 9522 BETANCUR GAMARRA EDWIN ALEX_BOLETA DE PAGO Y CERTIFICADOS (3 docs)
+2025-12-10 10:57:31 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:57:31 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [61/273] 9523 VARGAS PUMA PERCY YONNY_BOLETA DE PAGO Y CERTIFICADOS (3 docs)
+2025-12-10 10:57:31 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:57:31 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [62/273] 9525 APAZA CHAYÑI LUIS PAUL_BOLETA DE PAGO Y CERTIFICADOS (1 docs)
+2025-12-10 10:57:31 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:57:31 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [63/273] 9526 ALARCON PUMA JEAN PAUL_BOLETA DE PAGO Y CERTIFICADOS (3 docs)
+2025-12-10 10:57:32 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:57:32 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [64/273] 9527 LAZARO TACO VICTOR RONALD_BOLETA DE PAGO Y CERTIFICADOS (3 docs)
+2025-12-10 10:57:32 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:57:32 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [65/273] 9528 ZAVALA ALVAREZ ALONSO VITO_BOLETA DE PAGO Y CERTIFICADOS (3 docs)
+2025-12-10 10:57:32 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:57:32 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [66/273] 9550 AMADO DAVILA DIEGO SALOMON_BOLETA DE PAGO Y CERTIFICADOS (3 docs)
+2025-12-10 10:57:32 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:57:32 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [67/273] 9551 TAIPE TUNQUI JONATAN BERNARDO_BOLETA DE PAGO Y CERTIFICADOS (3 docs)
+2025-12-10 10:57:32 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:57:32 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [68/273] 9552 ALATRISTA MIRANDA JULIO ALEJANDRO_BOLETA DE PAGO Y CERTIFICADOS (1 docs)
+2025-12-10 10:57:32 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:57:32 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [69/273] 9553 AMBROSIO SOTO DEIVIS_BOLETA DE PAGO Y CERTIFICADOS (3 docs)
+2025-12-10 10:57:32 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:57:32 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [70/273] 9554 ROJAS JIMENEZ WILFREDO SIMEON_BOLETA DE PAGO Y CERTIFICADOS (3 docs)
+2025-12-10 10:57:32 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:57:32 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [71/273] 9555 CORDERO CHIPANA HECTOR BENJAMIN_BOLETA DE PAGO Y CERTIFICADOS (3 docs)
+2025-12-10 10:57:33 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:57:33 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [72/273] 9557 HUAMANI RAMOS ANGEL_BOLETA DE PAGO Y CERTIFICADOS (1 docs)
+2025-12-10 10:57:33 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:57:33 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [73/273] 9561 DURAN PACHO DANIEL_BOLETA DE PAGO Y CERTIFICADOS (1 docs)
+2025-12-10 10:57:33 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:57:33 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [74/273] 9562 SILVA ROSAS CHRISTIAN GIORDY_BOLETA DE PAGO Y CERTIFICADOS (1 docs)
+2025-12-10 10:57:33 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:57:33 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [75/273] 9569 ALVA MENDOZA DIEGO ALONSO_BOLETA DE PAGO Y CERTIFICADOS (3 docs)
+2025-12-10 10:57:33 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:57:33 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [76/273] 9571 HALLASI VILLANUEVA ALEJANDRO_BOLETA DE PAGO Y CERTIFICADOS (1 docs)
+2025-12-10 10:57:33 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:57:33 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [77/273] 9574 ABARCA SOCLLE JOEY LUIS_BOLETA DE PAGO Y CERTIFICADOS (1 docs)
+2025-12-10 10:57:33 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:57:33 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [78/273] 9575 CRUZ PIZAN HIBER_BOLETA DE PAGO Y CERTIFICADOS (1 docs)
+2025-12-10 10:57:33 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:57:33 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [79/273] 9578 NINA CHAÑI JAVIER FERNANDO_BOLETA DE PAGO Y CERTIFICADOS (3 docs)
+2025-12-10 10:57:33 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:57:33 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [80/273] 9581 MELGAR BARRIGA MAX ROBERTO_BOLETA DE PAGO Y CERTIFICADOS (1 docs)
+2025-12-10 10:57:33 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:57:33 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [81/273] 9582 BENITES VILCHEZ JEAN CARLO_BOLETA DE PAGO Y CERTIFICADOS (3 docs)
+2025-12-10 10:57:33 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:57:33 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [82/273] 9584 HUARSAYA TURPO MILTON RENATO_BOLETA DE PAGO Y CERTIFICADOS (1 docs)
+2025-12-10 10:57:33 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:57:33 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [83/273] 9585 CUSI CHINO SAMUEL_BOLETA DE PAGO Y CERTIFICADOS (1 docs)
+2025-12-10 10:57:33 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:57:33 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [84/273] 9587 RUIZ VICENTE JOSE PEDRO_BOLETA DE PAGO Y CERTIFICADOS (3 docs)
+2025-12-10 10:57:34 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:57:34 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [85/273] 9588 BOZA HUARICALLO ROGER ANGEL_BOLETA DE PAGO Y CERTIFICADOS (3 docs)
+2025-12-10 10:57:34 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:57:34 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [86/273] 9589 CRUZ GAMBOA RENZO SAMIR_BOLETA DE PAGO Y CERTIFICADOS (3 docs)
+2025-12-10 10:57:34 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:57:34 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [87/273] 9590 GUARDIA PILCO JERIK BRANDON_BOLETA DE PAGO Y CERTIFICADOS (3 docs)
+2025-12-10 10:57:34 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:57:34 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [88/273] 9591 HUERTA BARBOZA JHON HITLER_BOLETA DE PAGO Y CERTIFICADOS (3 docs)
+2025-12-10 10:57:34 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:57:34 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [89/273] 9593 NAVARRO NINAHUANCA FABRICIO LEO_BOLETA DE PAGO Y CERTIFICADOS (3 docs)
+2025-12-10 10:57:34 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:57:34 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [90/273] 9594 CHUPOS DAMIAN RENAN ALBERTO_BOLETA DE PAGO Y CERTIFICADOS (3 docs)
+2025-12-10 10:57:34 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:57:34 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [91/273] 9595 SANTOS DAVILA MAYKOOLL BRAYAN_BOLETA DE PAGO Y CERTIFICADOS (1 docs)
+2025-12-10 10:57:34 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:57:34 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [92/273] 9596 NICHO TEJADA JUNIORS CESAR_BOLETA DE PAGO Y CERTIFICADOS (3 docs)
+2025-12-10 10:57:35 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:57:35 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [93/273] 9597 RUIZ COVEÑAS JORGE LUIS_BOLETA DE PAGO Y CERTIFICADOS (3 docs)
+2025-12-10 10:57:35 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:57:35 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [94/273] 9598 TORRES APOLINARIO JORGE LUIS_BOLETA DE PAGO Y CERTIFICADOS (3 docs)
+2025-12-10 10:57:35 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:57:35 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [95/273] 9599 MARTIN CURICHAHUA JOSE LUIS_BOLETA DE PAGO Y CERTIFICADOS (3 docs)
+2025-12-10 10:57:35 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:57:35 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [96/273] 9600 HUAMAN ROSALES KEVIN ALFREDO_BOLETA DE PAGO Y CERTIFICADOS (3 docs)
+2025-12-10 10:57:35 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:57:35 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [97/273] 9601 NUÑEZ LANAZCA RUBEN_BOLETA DE PAGO Y CERTIFICADOS (3 docs)
+2025-12-10 10:57:35 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:57:35 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [98/273] 9602 SALINAS SANDON WALTHER GUSTAVO_BOLETA DE PAGO Y CERTIFICADOS (3 docs)
+2025-12-10 10:57:35 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:57:35 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [99/273] 9603 LLANCO ROMERO JULIO DIEGO_BOLETA DE PAGO Y CERTIFICADOS (3 docs)
+2025-12-10 10:57:36 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:57:36 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [100/273] 9604 CRUZ BAÑEZ CHRISTIAN RUDY_BOLETA DE PAGO Y CERTIFICADOS (3 docs)
+2025-12-10 10:57:36 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:57:36 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [101/273] 9605 HUAMAN ROBLES YURI NIEL_BOLETA DE PAGO Y CERTIFICADOS (3 docs)
+2025-12-10 10:57:36 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:57:36 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [102/273] 9606 VILLARAN VASQUEZ CARLOS JAVIER_BOLETA DE PAGO Y CERTIFICADOS (1 docs)
+2025-12-10 10:57:36 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:57:36 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [103/273] 9607 HUACASI TICONA JOHNNY ARTHUR_BOLETA DE PAGO Y CERTIFICADOS (1 docs)
+2025-12-10 10:57:36 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:57:36 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [104/273] 9608 ORDIALES ESPINOZA ANTHONY DANIEL_BOLETA DE PAGO Y CERTIFICADOS (1 docs)
+2025-12-10 10:57:36 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:57:36 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [105/273] 9609 VARGAS FIGUEROA GUILLERMO ENZO_BOLETA DE PAGO Y CERTIFICADOS (1 docs)
+2025-12-10 10:57:36 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:57:36 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [106/273] 9611 FABIAN VILCANQUI CESAR JESUS_BOLETA DE PAGO Y CERTIFICADOS (3 docs)
+2025-12-10 10:57:36 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:57:36 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [107/273] 9612 CRUZ PIZAN HIBER_BOLETA DE PAGO Y CERTIFICADOS (1 docs)
+2025-12-10 10:57:36 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:57:36 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [108/273] 9613 ALVAREZ PACCO MANUEL RODOLFO_BOLETA DE PAGO Y CERTIFICADOS (3 docs)
+2025-12-10 10:57:36 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:57:36 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [109/273] 9614 CALIZAYA CORNEJO JOSE GABRIEL_BOLETA DE PAGO Y CERTIFICADOS (3 docs)
+2025-12-10 10:57:36 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:57:36 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [110/273] 9615 CAMONES HUAÑEC GILBER PASCUAL_BOLETA DE PAGO Y CERTIFICADOS (3 docs)
+2025-12-10 10:57:36 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:57:36 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [111/273] 9616 BRICEÑO PAREDES GERALD PAUL_BOLETA DE PAGO Y CERTIFICADOS (1 docs)
+2025-12-10 10:57:36 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:57:36 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [112/273] 9617 CUTIRE CONDORI FRANCISCO HOOVER_BOLETA DE PAGO Y CERTIFICADOS (3 docs)
+2025-12-10 10:57:37 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:57:37 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [113/273] 9618 PACHECO DIAZ CESAR ISMAEL_BOLETA DE PAGO Y CERTIFICADOS (3 docs)
+2025-12-10 10:57:37 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:57:37 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [114/273] 9619 VASQUEZ CASTILLO RENE ALONSO_BOLETA DE PAGO Y CERTIFICADOS (3 docs)
+2025-12-10 10:57:37 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:57:37 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [115/273] 9620 CHINO FIGUEROA DAVID_BOLETA DE PAGO Y CERTIFICADOS (3 docs)
+2025-12-10 10:57:37 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:57:37 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [116/273] 9621 ALATRISTA MIRANDA JULIO ALEJANDRO_BOLETA DE PAGO Y CERTIFICADOS (3 docs)
+2025-12-10 10:57:37 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:57:37 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [117/273] 9622 HUAMANI RAMOS ANGEL_BOLETA DE PAGO Y CERTIFICADOS (3 docs)
+2025-12-10 10:57:37 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:57:37 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [118/273] 9623 MAMANI MAMANI ANGEL ALFREDO_BOLETA DE PAGO Y CERTIFICADOS (3 docs)
+2025-12-10 10:57:37 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:57:37 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [119/273] 9624 MONTESINOS CHAYÑA LUIS ABRAHAM_BOLETA DE PAGO Y CERTIFICADOS (3 docs)
+2025-12-10 10:57:37 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:57:37 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [120/273] 9625 DURAN PACHO DANIEL_BOLETA DE PAGO Y CERTIFICADOS (3 docs)
+2025-12-10 10:57:37 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:57:37 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [121/273] 9626 VENTURA PARI HECTOR_BOLETA DE PAGO Y CERTIFICADOS (3 docs)
+2025-12-10 10:57:37 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:57:37 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [122/273] 9627 HUACASI TICONA JOHNNY ARTHUR_BOLETA DE PAGO Y CERTIFICADOS (3 docs)
+2025-12-10 10:57:38 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:57:38 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [123/273] 9628 CALDERÓN ALVAREZ MARCO ANTONIO_BOLETA DE PAGO Y CERTIFICADOS (1 docs)
+2025-12-10 10:57:38 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:57:38 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [124/273] 9629 MAMANI IQUISE ALFONSO_BOLETA DE PAGO Y CERTIFICADOS (1 docs)
+2025-12-10 10:57:38 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:57:38 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [125/273] 9630 SILVA ROSAS CHRISTIAN GIORDY_BOLETA DE PAGO Y CERTIFICADOS (1 docs)
+2025-12-10 10:57:38 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:57:38 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [126/273] 9631 CUARITE DELGADO IVAN_BOLETA DE PAGO Y CERTIFICADOS (3 docs)
+2025-12-10 10:57:38 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:57:38 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [127/273] 9632 MACHACA GUTIERREZ BETO WILBER_BOLETA DE PAGO Y CERTIFICADOS (3 docs)
+2025-12-10 10:57:38 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:57:38 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [128/273] 9633 ABARCA SOCLLE JOEY LUIS_BOLETA DE PAGO Y CERTIFICADOS (3 docs)
+2025-12-10 10:57:38 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:57:38 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [129/273] 9634 ARENAS RODRIGUEZ BRAYAM LUDWING_BOLETA DE PAGO Y CERTIFICADOS (3 docs)
+2025-12-10 10:57:38 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:57:38 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [130/273] 9635 AGUILAR NINA ELVER WALDEMAR_BOLETA DE PAGO Y CERTIFICADOS (3 docs)
+2025-12-10 10:57:38 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:57:38 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [131/273] 9636 NINA BENEGAS JOHNNY JOEL_BOLETA DE PAGO Y CERTIFICADOS (3 docs)
+2025-12-10 10:57:38 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:57:38 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [132/273] 9637 TITO OCSA EDWIN PAUL_BOLETA DE PAGO Y CERTIFICADOS (3 docs)
+2025-12-10 10:57:38 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:57:38 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [133/273] 9638 GERI PUCHO JUAN GABRIEL_BOLETA DE PAGO Y CERTIFICADOS (3 docs)
+2025-12-10 10:57:38 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:57:38 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [134/273] 9639 FERNANDEZ OLIVAREZ DARWIN DENNIS_BOLETA DE PAGO Y CERTIFICADOS (1 docs)
+2025-12-10 10:57:39 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:57:39 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [135/273] 9640 PINEDO BANCHO TEOFILO_BOLETA DE PAGO Y CERTIFICADOS (1 docs)
+2025-12-10 10:57:39 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:57:39 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [136/273] 9641 QUISPE LUQUE BRATT ALEXANDER_BOLETA DE PAGO Y CERTIFICADOS (3 docs)
+2025-12-10 10:57:39 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:57:39 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [137/273] 9642 HUARSAYA TURPO MILTON RENATO_BOLETA DE PAGO Y CERTIFICADOS (1 docs)
+2025-12-10 10:57:39 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:57:39 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [138/273] 9643 MEZA GALA NOEMI SOLEDAD_BOLETA DE PAGO Y CERTIFICADOS (3 docs)
+2025-12-10 10:57:39 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:57:39 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [139/273] 9644 MAMANI HUACOTO MILTON ADAN_BOLETA DE PAGO Y CERTIFICADOS (1 docs)
+2025-12-10 10:57:39 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:57:39 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [140/273] 9645 SUCASAIRE ALANOCA JULIO CESAR_BOLETA DE PAGO Y CERTIFICADOS (1 docs)
+2025-12-10 10:57:39 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:57:39 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [141/273] 9646 CUSI CHINO SAMUEL_BOLETA DE PAGO Y CERTIFICADOS (1 docs)
+2025-12-10 10:57:39 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:57:39 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [142/273] 9647 FERNANDEZ AMPUERO JORDAN ANDRE_BOLETA DE PAGO Y CERTIFICADOS (1 docs)
+2025-12-10 10:57:39 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:57:39 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [143/273] 9648 LEON GUTIERREZ RUBEN ERICKSON_BOLETA DE PAGO Y CERTIFICADOS (1 docs)
+2025-12-10 10:57:39 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:57:39 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [144/273] 9649 HUARSAYA TURPO MILTON RENATO_BOLETA DE PAGO Y CERTIFICADOS (1 docs)
+2025-12-10 10:57:39 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:57:39 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [145/273] 9650 GUZMAN CHUQUICUZMA JAVIER ANTONIO_BOLETA DE PAGO Y CERTIFICADOS (3 docs)
+2025-12-10 10:57:39 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:57:39 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [146/273] 9651 MELGAR BARRIGA MAX ROBERTO_BOLETA DE PAGO Y CERTIFICADOS (3 docs)
+2025-12-10 10:57:39 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:57:39 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [147/273] 9652 BRICEÑO PAREDES GERALD PAUL_BOLETA DE PAGO Y CERTIFICADOS (1 docs)
+2025-12-10 10:57:39 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:57:39 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [148/273] 9657 GOMEZ ROJAS YORDIÑO_BOLETA DE PAGO Y CERTIFICADOS (3 docs)
+2025-12-10 10:57:39 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:57:39 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [149/273] 9658 TITO MONTESINOS PIERRE ASHLY_BOLETA DE PAGO Y CERTIFICADOS (3 docs)
+2025-12-10 10:57:39 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:57:39 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [150/273] 9659 YLLA CONDORI ISAIAS_BOLETA DE PAGO Y CERTIFICADOS (3 docs)
+2025-12-10 10:57:39 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:57:39 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [151/273] 9660 ESPINOZA TURPO MARIO_BOLETA DE PAGO Y CERTIFICADOS (3 docs)
+2025-12-10 10:57:40 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:57:40 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [152/273] 9661 ORDIALES ESPINOZA ANTHONY DANIEL_BOLETA DE PAGO Y CERTIFICADOS (3 docs)
+2025-12-10 10:57:40 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:57:40 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [153/273] Pack_9662 (2 docs)
+2025-12-10 10:57:40 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:57:40 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [154/273] 9663 ESCOBAR MINAYA JUAN CARLOS_BOLETA DE PAGO Y CERTIFICADOS (3 docs)
+2025-12-10 10:57:40 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:57:40 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [155/273] 9664 CABELLO ORTIZ WALDIR ALBERTO_BOLETA DE PAGO Y CERTIFICADOS (3 docs)
+2025-12-10 10:57:40 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:57:40 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [156/273] 9665 SILVA GONZALES OLIVER SEBASTIAN_BOLETA DE PAGO Y CERTIFICADOS (3 docs)
+2025-12-10 10:57:40 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:57:40 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [157/273] 9666 CARBAJAL NUÑEZ RILDO_BOLETA DE PAGO Y CERTIFICADOS (3 docs)
+2025-12-10 10:57:40 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:57:40 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [158/273] Pack_9667 (2 docs)
+2025-12-10 10:57:40 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:57:40 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [159/273] 9668 LEMACHE MONTAÑEZ JAVIER_BOLETA DE PAGO Y CERTIFICADOS (3 docs)
+2025-12-10 10:57:40 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:57:40 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [160/273] 9669 ZEGARRA DEL CARPIO MIGUEL ALEJANDRO_BOLETA DE PAGO Y CERTIFICADOS (3 docs)
+2025-12-10 10:57:40 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:57:40 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [161/273] 9670 SILVA ROSAS CHRISTIAN GIORDY_BOLETA DE PAGO Y CERTIFICADOS (3 docs)
+2025-12-10 10:57:41 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:57:41 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [162/273] 9671 MAMANI IQUISE ALFONSO_BOLETA DE PAGO Y CERTIFICADOS (3 docs)
+2025-12-10 10:57:41 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:57:41 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [163/273] 9672 CALDERÓN ALVAREZ MARCO ANTONIO_BOLETA DE PAGO Y CERTIFICADOS (3 docs)
+2025-12-10 10:57:41 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:57:41 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [164/273] 9673 CENTENO COILA BRIAM ALBERTO_BOLETA DE PAGO Y CERTIFICADOS (3 docs)
+2025-12-10 10:57:41 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:57:41 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [165/273] 9674 ENRIQUEZ CHAVEZ FLOR ANGELA ALEXANDRA_BOLETA DE PAGO Y CERTIFICADOS (3 docs)
+2025-12-10 10:57:41 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:57:41 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [166/273] 9675 GARCIA LAVA YERMANN FARID_BOLETA DE PAGO Y CERTIFICADOS (1 docs)
+2025-12-10 10:57:41 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:57:41 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [167/273] 9676 ORE ALVAREZ ERICK GUSTAVO_BOLETA DE PAGO Y CERTIFICADOS (3 docs)
+2025-12-10 10:57:41 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:57:41 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [168/273] 9677 HALLASI VILLANUEVA ALEJANDRO_BOLETA DE PAGO Y CERTIFICADOS (3 docs)
+2025-12-10 10:57:41 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:57:41 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [169/273] 9678 VILLENA VILLANUEVA MELISSA INES_BOLETA DE PAGO Y CERTIFICADOS (1 docs)
+2025-12-10 10:57:41 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:57:41 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [170/273] 9679 FERNANDEZ AMPUERO JORDAN ANDRE_BOLETA DE PAGO Y CERTIFICADOS (3 docs)
+2025-12-10 10:57:41 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:57:41 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [171/273] 9680 CUSI CHINO SAMUEL_BOLETA DE PAGO Y CERTIFICADOS (3 docs)
+2025-12-10 10:57:41 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:57:41 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [172/273] 9681 BRICEÑO PAREDES GERALD PAUL_BOLETA DE PAGO Y CERTIFICADOS (3 docs)
+2025-12-10 10:57:42 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:57:42 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [173/273] 9682 SUCASAIRE ALANOCA JULIO CESAR_BOLETA DE PAGO Y CERTIFICADOS (3 docs)
+2025-12-10 10:57:42 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:57:42 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [174/273] 9683 FERNANDEZ OLIVAREZ DARWIN DENNIS_BOLETA DE PAGO Y CERTIFICADOS (3 docs)
+2025-12-10 10:57:42 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:57:42 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [175/273] 9684 HUARSAYA TURPO MILTON RENATO_BOLETA DE PAGO Y CERTIFICADOS (3 docs)
+2025-12-10 10:57:42 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:57:42 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [176/273] 9685 LEON GUTIERREZ RUBEN ERICKSON_BOLETA DE PAGO Y CERTIFICADOS (3 docs)
+2025-12-10 10:57:42 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:57:42 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [177/273] 9686 CCOTO CACERES JUAN CARLOS_BOLETA DE PAGO Y CERTIFICADOS (3 docs)
+2025-12-10 10:57:42 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:57:42 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [178/273] 9687 MAMANI HUACOTO MILTON ADAN_BOLETA DE PAGO Y CERTIFICADOS (3 docs)
+2025-12-10 10:57:42 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:57:42 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [179/273] 9688 YANQUE MAMANI KEVIN RONAL_BOLETA DE PAGO Y CERTIFICADOS (3 docs)
+2025-12-10 10:57:42 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:57:42 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [180/273] 9689 GARCIA SALINAS BRANDDO BORIS_BOLETA DE PAGO Y CERTIFICADOS (3 docs)
+2025-12-10 10:57:42 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:57:42 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [181/273] 9690 HANCCO ZAMATA WILFREDO_BOLETA DE PAGO Y CERTIFICADOS (3 docs)
+2025-12-10 10:57:42 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:57:42 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [182/273] 9692 ALVAREZ CHUMBES YOVERLING JONATAN_BOLETA DE PAGO Y CERTIFICADOS (3 docs)
+2025-12-10 10:57:42 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:57:42 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [183/273] 9693 PACHO VELASQUEZ PERCY_BOLETA DE PAGO Y CERTIFICADOS (3 docs)
+2025-12-10 10:57:43 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:57:43 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [184/273] 9694 CAYLLAHUA VENTURA MILTON RENE_BOLETA DE PAGO Y CERTIFICADOS (3 docs)
+2025-12-10 10:57:43 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:57:43 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [185/273] 9696 ZUÑIGA ARENAS FAVIO LEONARDO_BOLETA DE PAGO Y CERTIFICADOS (3 docs)
+2025-12-10 10:57:43 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:57:43 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [186/273] 9697 MAMANI MAMANI LUIS ARMANDO_BOLETA DE PAGO Y CERTIFICADOS (3 docs)
+2025-12-10 10:57:43 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:57:43 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [187/273] 9698 AQUISE BRICEÑO BRYAN ALEXANDER_BOLETA DE PAGO Y CERTIFICADOS (3 docs)
+2025-12-10 10:57:43 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:57:43 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [188/273] 9700 SAICO VIZA WILGEN JAFET_BOLETA DE PAGO Y CERTIFICADOS (3 docs)
+2025-12-10 10:57:43 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:57:43 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [189/273] 9701 BACA ARAOZ YORMAN JAEL_BOLETA DE PAGO Y CERTIFICADOS (3 docs)
+2025-12-10 10:57:43 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:57:43 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [190/273] 9702 AYAQUE ANCCO ENERSON PAUL_BOLETA DE PAGO Y CERTIFICADOS (3 docs)
+2025-12-10 10:57:43 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:57:43 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [191/273] 9703 CCAPA PEÑA ROY ROBERTS_BOLETA DE PAGO Y CERTIFICADOS (3 docs)
+2025-12-10 10:57:43 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:57:43 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [192/273] 9704 AMAYA ROJAS VICTOR LUIS_BOLETA DE PAGO Y CERTIFICADOS (3 docs)
+2025-12-10 10:57:43 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:57:43 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [193/273] 9705 MERMA PUMA FRANK LUIS_BOLETA DE PAGO Y CERTIFICADOS (3 docs)
+2025-12-10 10:57:44 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:57:44 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [194/273] 9706 CONDORI APAZA SANDRO_BOLETA DE PAGO Y CERTIFICADOS (3 docs)
+2025-12-10 10:57:44 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:57:44 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [195/273] 9707 QUISPE MENDIZAVAL EDWIN JACQUOU_BOLETA DE PAGO Y CERTIFICADOS (3 docs)
+2025-12-10 10:57:44 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:57:44 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [196/273] 9708 AQQUEPUCHO SAPACAYO URIEL_BOLETA DE PAGO Y CERTIFICADOS (3 docs)
+2025-12-10 10:57:44 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:57:44 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [197/273] 9709 REA MEZA CARLOS ALBERTO_BOLETA DE PAGO Y CERTIFICADOS (3 docs)
+2025-12-10 10:57:44 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:57:44 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [198/273] 9710 CCOA QUISPE JORGE MANUEL_BOLETA DE PAGO Y CERTIFICADOS (3 docs)
+2025-12-10 10:57:44 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:57:44 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [199/273] 9711 CHAVEZ GONZALES RENZO ADOLFO_BOLETA DE PAGO Y CERTIFICADOS (3 docs)
+2025-12-10 10:57:44 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:57:44 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [200/273] 9712 CHOQUEHUANCA COLQUEHUANCA JHONY_BOLETA DE PAGO Y CERTIFICADOS (3 docs)
+2025-12-10 10:57:44 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:57:44 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [201/273] 9714 ROSAS CCOA EDISON JOEL_BOLETA DE PAGO Y CERTIFICADOS (3 docs)
+2025-12-10 10:57:44 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:57:44 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [202/273] 9715 LAUREL CHUSPI WILFREDO_BOLETA DE PAGO Y CERTIFICADOS (3 docs)
+2025-12-10 10:57:44 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:57:44 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [203/273] 9716 APAZA CHAYÑI LUIS PAUL_BOLETA DE PAGO Y CERTIFICADOS (3 docs)
+2025-12-10 10:57:44 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:57:44 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [204/273] 9717 VALERIANO PAREDES GIANCARLO JESUS_BOLETA DE PAGO Y CERTIFICADOS (3 docs)
+2025-12-10 10:57:45 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:57:45 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [205/273] 9718 SILVA QUISPE ADEMIR EDWIN_BOLETA DE PAGO Y CERTIFICADOS (3 docs)
+2025-12-10 10:57:45 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:57:45 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [206/273] 9720 CACERES CHINO MARGOT_BOLETA DE PAGO Y CERTIFICADOS (3 docs)
+2025-12-10 10:57:45 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:57:45 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [207/273] 9722 GARCIA LAVA YERMANN FARID_BOLETA DE PAGO Y CERTIFICADOS (3 docs)
+2025-12-10 10:57:45 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:57:45 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [208/273] 9723 PAREDES QUEZADA JOHN ANDRES_BOLETA DE PAGO Y CERTIFICADOS (3 docs)
+2025-12-10 10:57:45 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:57:45 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [209/273] 9724 TACURI CANO DIENER JUS_BOLETA DE PAGO Y CERTIFICADOS (3 docs)
+2025-12-10 10:57:45 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:57:45 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [210/273] 9725 ARAPA ESCALANTE BRIAN LUIGGI_BOLETA DE PAGO Y CERTIFICADOS (3 docs)
+2025-12-10 10:57:45 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:57:45 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [211/273] 9726 VARGAS FIGUEROA GUILLERMO ENZO_BOLETA DE PAGO Y CERTIFICADOS (3 docs)
+2025-12-10 10:57:45 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:57:45 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [212/273] 9727 CASTILLO JARA ANTHONY ALFONSO_BOLETA DE PAGO Y CERTIFICADOS (3 docs)
+2025-12-10 10:57:45 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:57:45 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [213/273] 9728 CAMPOS HURTADO WENDY YVONNE_BOLETA DE PAGO Y CERTIFICADOS (3 docs)
+2025-12-10 10:57:45 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:57:45 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [214/273] 9729 ANCCO MAMANI GABRIEL ALONZO_BOLETA DE PAGO Y CERTIFICADOS (3 docs)
+2025-12-10 10:57:46 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:57:46 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [215/273] 9730 QUIROZ TACO ELVIS JESUS_BOLETA DE PAGO Y CERTIFICADOS (3 docs)
+2025-12-10 10:57:46 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:57:46 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [216/273] 9731 ARIAS CHAPOÑAN ANGEL MELCHOR_BOLETA DE PAGO Y CERTIFICADOS (3 docs)
+2025-12-10 10:57:46 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:57:46 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [217/273] 9732 PAUCAR CURILLA RAFAEL_BOLETA DE PAGO Y CERTIFICADOS (3 docs)
+2025-12-10 10:57:46 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:57:46 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [218/273] 9733 CRUZ PIZAN HIBER_BOLETA DE PAGO Y CERTIFICADOS (3 docs)
+2025-12-10 10:57:46 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:57:46 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [219/273] 9734 BARJA POMATAY MIGUEL ANGEL_BOLETA DE PAGO Y CERTIFICADOS (3 docs)
+2025-12-10 10:57:46 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:57:46 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [220/273] 9735 CALDERON CORNEJO JOHN OMAR_BOLETA DE PAGO Y CERTIFICADOS (3 docs)
+2025-12-10 10:57:46 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:57:46 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [221/273] 9736 CORONEL SAAVEDRA EDDY JASSON_BOLETA DE PAGO Y CERTIFICADOS (3 docs)
+2025-12-10 10:57:46 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:57:46 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [222/273] 9737 USCAMAYTA CAMPOS MELVIN_BOLETA DE PAGO Y CERTIFICADOS (3 docs)
+2025-12-10 10:57:46 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:57:46 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [223/273] 9738 LOPEZ HUAYHUA JUAN ALBERTO_BOLETA DE PAGO Y CERTIFICADOS (3 docs)
+2025-12-10 10:57:46 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:57:46 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [224/273] 9739 NOLASCO MEZA ELDER BENANCIO_BOLETA DE PAGO Y CERTIFICADOS (3 docs)
+2025-12-10 10:57:47 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:57:47 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [225/273] 9740 BORDA SONCCO ENRIQUE_BOLETA DE PAGO Y CERTIFICADOS (3 docs)
+2025-12-10 10:57:47 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:57:47 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [226/273] 9741 CHURA TANCA CARLOS ALBERTO_BOLETA DE PAGO Y CERTIFICADOS (3 docs)
+2025-12-10 10:57:47 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:57:47 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [227/273] 9742 ANAHUA YARETA EDWIN DANIEL_BOLETA DE PAGO Y CERTIFICADOS (3 docs)
+2025-12-10 10:57:47 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:57:47 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [228/273] 9743 APAZA HUICHI PAUL ARMANDO_BOLETA DE PAGO Y CERTIFICADOS (3 docs)
+2025-12-10 10:57:47 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:57:47 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [229/273] 9745 CAYO PEÑALOZA ANDERSON JAIME_BOLETA DE PAGO Y CERTIFICADOS (3 docs)
+2025-12-10 10:57:47 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:57:47 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [230/273] 9746 CHILO CHOQUE ROGER EDISON_BOLETA DE PAGO Y CERTIFICADOS (3 docs)
+2025-12-10 10:57:47 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:57:47 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [231/273] 9747 CHILO CHOQUE ROMARIO OLIVER_BOLETA DE PAGO Y CERTIFICADOS (3 docs)
+2025-12-10 10:57:47 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:57:47 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [232/273] 9748 GALIANO VERGARA ROSMEL_BOLETA DE PAGO Y CERTIFICADOS (3 docs)
+2025-12-10 10:57:47 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:57:47 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [233/273] 9749 TORRES MAMANI ALAIN CRISTHOFER_BOLETA DE PAGO Y CERTIFICADOS (3 docs)
+2025-12-10 10:57:47 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:57:47 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [234/273] 9750 ARHUATA QUISPE ISMAEL CLINTON_BOLETA DE PAGO Y CERTIFICADOS (3 docs)
+2025-12-10 10:57:48 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:57:48 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [235/273] 9751 CAYRO ARMEJO JIM GIOVANNI_BOLETA DE PAGO Y CERTIFICADOS (3 docs)
+2025-12-10 10:57:48 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:57:48 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [236/273] 9752 AGUILAR SALAS MELIZZA BEATRIZ_BOLETA DE PAGO Y CERTIFICADOS (3 docs)
+2025-12-10 10:57:48 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:57:48 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [237/273] 9753 PERALTA POMA ELIUDON_BOLETA DE PAGO Y CERTIFICADOS (3 docs)
+2025-12-10 10:57:48 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:57:48 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [238/273] 9754 GRANADOS SILVESTRE RICHARD JENRY_BOLETA DE PAGO Y CERTIFICADOS (3 docs)
+2025-12-10 10:57:48 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:57:48 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [239/273] 9755 MAMANI MAMANI DANIEL HECTOR_BOLETA DE PAGO Y CERTIFICADOS (3 docs)
+2025-12-10 10:57:48 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:57:48 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [240/273] 9756 AJAHUANA COLQUE VIDAL_BOLETA DE PAGO Y CERTIFICADOS (3 docs)
+2025-12-10 10:57:48 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:57:48 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [241/273] 9757 ZAPANA MAMANI EDGAR ALONZO_BOLETA DE PAGO Y CERTIFICADOS (3 docs)
+2025-12-10 10:57:48 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:57:48 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [242/273] 9758 CRUZ GAMBOA FRANK AARON_BOLETA DE PAGO Y CERTIFICADOS (3 docs)
+2025-12-10 10:57:48 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:57:48 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [243/273] 9759 CARREÑO QUISPE SANDY ALISSON_BOLETA DE PAGO Y CERTIFICADOS (3 docs)
+2025-12-10 10:57:49 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:57:49 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [244/273] 9760 SOTACURO ENCISO WILFREDO_BOLETA DE PAGO Y CERTIFICADOS (3 docs)
+2025-12-10 10:57:49 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:57:49 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [245/273] 9761 RAMIREZ YARASCA CRISTHIAN LEONARDO_BOLETA DE PAGO Y CERTIFICADOS (3 docs)
+2025-12-10 10:57:49 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:57:49 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [246/273] 9762 VALENTIN VICENTE DANIEL HANS_BOLETA DE PAGO Y CERTIFICADOS (3 docs)
+2025-12-10 10:57:49 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:57:49 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [247/273] 9763 SILVA ANTONIO NELSON JESUS_BOLETA DE PAGO Y CERTIFICADOS (3 docs)
+2025-12-10 10:57:49 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:57:49 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [248/273] 9764 AVILA VASQUEZ SANTOS LEONIDAS_BOLETA DE PAGO Y CERTIFICADOS (3 docs)
+2025-12-10 10:57:49 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:57:49 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [249/273] 9765 RICALDI HUAMAN JOSEPH KEVIN_BOLETA DE PAGO Y CERTIFICADOS (3 docs)
+2025-12-10 10:57:49 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:57:49 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [250/273] 9766 MORENO CONDOR EDGAR FERNANDO_BOLETA DE PAGO Y CERTIFICADOS (3 docs)
+2025-12-10 10:57:49 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:57:49 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [251/273] 9767 OSORES FABIAN ERIK JOSE_BOLETA DE PAGO Y CERTIFICADOS (3 docs)
+2025-12-10 10:57:50 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:57:50 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [252/273] 9768 CUEVA CUEVA FELICIANO_BOLETA DE PAGO Y CERTIFICADOS (3 docs)
+2025-12-10 10:57:50 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:57:50 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [253/273] 9769 ESTRADA ARZAPALO PATRICK CARLOS_BOLETA DE PAGO Y CERTIFICADOS (3 docs)
+2025-12-10 10:57:50 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:57:50 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [254/273] 9770 GAVILAN PALOMINO ISAAC_BOLETA DE PAGO Y CERTIFICADOS (3 docs)
+2025-12-10 10:57:50 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:57:50 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [255/273] 9771 MARAVI POMA HUGO LUIS_BOLETA DE PAGO Y CERTIFICADOS (3 docs)
+2025-12-10 10:57:50 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:57:50 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [256/273] 9772 HINOSTROZA HUANUCO WILDER PEDRO_BOLETA DE PAGO Y CERTIFICADOS (3 docs)
+2025-12-10 10:57:50 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:57:50 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [257/273] 9773 SURJANO ZEVALLOS PERCY_BOLETA DE PAGO Y CERTIFICADOS (3 docs)
+2025-12-10 10:57:50 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:57:50 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [258/273] 9774 LLICAN REVOREDO CARLOS ALBERTO_BOLETA DE PAGO Y CERTIFICADOS (3 docs)
+2025-12-10 10:57:51 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:57:51 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [259/273] 9775 VILLALOBOS AMAYA EDINSON_BOLETA DE PAGO Y CERTIFICADOS (3 docs)
+2025-12-10 10:57:51 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:57:51 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [260/273] 9776 RAMOS NUÑEZ EDGAR JHONATAN_BOLETA DE PAGO Y CERTIFICADOS (3 docs)
+2025-12-10 10:57:51 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:57:51 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [261/273] 9777 TOLEDO VASQUEZ JHEFERSON JESUS WILLIAM_BOLETA DE PAGO Y CERTIFICADOS (3 docs)
+2025-12-10 10:57:51 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:57:51 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [262/273] 9778 TORRES CASTILLO RENZO PAOLO_BOLETA DE PAGO Y CERTIFICADOS (3 docs)
+2025-12-10 10:57:51 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:57:51 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [263/273] 9779 SARE PRADO IVAN FANY_BOLETA DE PAGO Y CERTIFICADOS (3 docs)
+2025-12-10 10:57:51 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:57:51 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [264/273] 9780 CERNA OBREGON ELIAS MAXIMO_BOLETA DE PAGO Y CERTIFICADOS (3 docs)
+2025-12-10 10:57:52 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:57:52 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [265/273] 9781 VILLENA VILLANUEVA MELISSA INES_BOLETA DE PAGO Y CERTIFICADOS (3 docs)
+2025-12-10 10:57:52 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:57:52 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [266/273] 9782 ESCOBEDO QUISPE VICTOR ORLANDO_BOLETA DE PAGO Y CERTIFICADOS (3 docs)
+2025-12-10 10:57:52 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:57:52 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [267/273] 9783 MOTONARI YUPANQUI KEVIN ENRIQUE_BOLETA DE PAGO Y CERTIFICADOS (3 docs)
+2025-12-10 10:57:52 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:57:52 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [268/273] Pack_9784 (2 docs)
+2025-12-10 10:57:52 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:57:52 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [269/273] 9785 ALVAREZ AYLAS ERIKSSON DANIEL_BOLETA DE PAGO Y CERTIFICADOS (3 docs)
+2025-12-10 10:57:52 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:57:52 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [270/273] 9786 MACHUCA CURO YOSHIRO MARON_BOLETA DE PAGO Y CERTIFICADOS (3 docs)
+2025-12-10 10:57:52 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:57:52 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [271/273] 9787 MARTINEZ YGUIA SANTIAGO JESUS_BOLETA DE PAGO Y CERTIFICADOS (3 docs)
+2025-12-10 10:57:53 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:57:53 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [272/273] 9788 SUPO PARICELA SAMUEL JONATHAN_BOLETA DE PAGO Y CERTIFICADOS (3 docs)
+2025-12-10 10:57:53 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:57:53 | INFO     | workers.CorePipelineStep5      | info                 |   📦 [273/273] Pack_9990 (3 docs)
+2025-12-10 10:57:53 | INFO     | workers.CorePipelineStep5      | info                 |      ✅ Pack generado
+2025-12-10 10:57:53 | INFO     | workers.CorePipelineStep5      | info                 | ==================================================
+2025-12-10 10:57:53 | INFO     | workers.CorePipelineStep5      | info                 | 📊 RESUMEN FINAL
+2025-12-10 10:57:53 | INFO     | workers.CorePipelineStep5      | info                 | ✅ Packs generados: 273
+2025-12-10 10:57:53 | INFO     | workers.CorePipelineStep5      | info                 | 📂 Carpeta salida: Documentos_Enviar_10.12.2025_10.57.22
+2025-12-10 10:57:53 | INFO     | workers.CorePipelineStep5      | info                 | ⏱️ Tiempo total: 31.32s
+2025-12-10 10:57:53 | INFO     | workers.CorePipelineStep5      | info                 | ==================================================
+2025-12-10 10:57:53 | INFO     | workers.CorePipelineStep5      | info                 | 🎉 ¡Proceso completado exitosamente!
+2025-12-10 10:58:11 | INFO     | ui.main_window                 | closeEvent           | Usuario solicitó cerrar la aplicación
+2025-12-10 10:58:11 | INFO     | ui.main_window                 | closeEvent           | Cerrando ventana principal...
+2025-12-10 10:58:11 | INFO     | main                           | main                 | --------------------------------------------------------------------------------
+2025-12-10 10:58:11 | INFO     | main                           | main                 | Aplicación cerrada con código: 0
+2025-12-10 10:58:11 | INFO     | main                           | main                 | ================================================================================

@@ -9,8 +9,6 @@ from PySide6.QtWidgets import (
 from PySide6.QtCore import Signal, Slot, Qt
 from PySide6.QtGui import QColor
 
-from ui.widgets.file_selector import FileSelector
-
 
 class TabSettings(QWidget):
     """Tab de configuración"""
@@ -54,9 +52,6 @@ class TabSettings(QWidget):
         
         performance_card = self._create_performance_card()
         layout.addWidget(performance_card)
-        
-        logs_card = self._create_logs_card()
-        layout.addWidget(logs_card)
         
         about_card = self._create_about_card()
         layout.addWidget(about_card)
@@ -176,34 +171,6 @@ class TabSettings(QWidget):
         ])
         self.console_combo.setCurrentIndex(1)
         layout.addWidget(self.console_combo)
-        
-        return group
-    
-    def _create_logs_card(self) -> QGroupBox:
-        """Card de logs y reportes"""
-        group = QGroupBox("📋 Logs y Reportes")
-        layout = QVBoxLayout(group)
-        layout.setSpacing(12)
-        
-        # Carpeta de reportes
-        folder_label = QLabel("Carpeta de reportes")
-        folder_label.setProperty("labelStyle", "header")
-        layout.addWidget(folder_label)
-        
-        self.logs_folder = FileSelector(
-            mode="folder",
-            placeholder="Seleccionar carpeta..."
-        )
-        layout.addWidget(self.logs_folder)
-        
-        # Checkboxes
-        self.check_auto_excel = QCheckBox("Generar reporte Excel automático")
-        self.check_auto_excel.setChecked(True)
-        layout.addWidget(self.check_auto_excel)
-        
-        self.check_open_report = QCheckBox("Abrir reporte al finalizar")
-        self.check_open_report.setChecked(False)
-        layout.addWidget(self.check_open_report)
         
         return group
     

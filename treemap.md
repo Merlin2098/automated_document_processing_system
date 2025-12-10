@@ -27,6 +27,7 @@
 │       └── theme_light.json
 ├── ui/
 │   ├── main_window.py
+│   ├── splash_screen.py
 │   ├── tabs/
 │   │   ├── tab_pipeline_core.py
 │   │   ├── tab_pipeline_sunat.py
@@ -49,5 +50,7 @@
 │       └── sunat_rename_worker.py
 └── utils/
     ├── excel_converter.py
+    ├── logger.py
+    ├── logger_config.py
     └── theme_manager.py
 ```
