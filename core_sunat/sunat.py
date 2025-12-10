@@ -7,6 +7,7 @@ from tkinter import Tk, filedialog
 from openpyxl import Workbook
 from openpyxl.styles import Font, Alignment, PatternFill
 from openpyxl.cell.cell import TYPE_STRING
+import traceback
 
 # Importar el extractor (ajustar ruta según estructura final)
 # Agregar el directorio padre al path para poder importar desde extractores
@@ -16,6 +17,10 @@ if parent_dir not in sys.path:
     sys.path.insert(0, parent_dir)
 
 from extractores.extractor_sunat import SunatDocumentExtractor
+from utils.logger import Logger
+
+# Inicializar logger
+logger = Logger("CoreSunat_Diagnostico")
 
 
 class SUNATDiagnosticGenerator:
@@ -42,6 +47,11 @@ class SUNATDiagnosticGenerator:
             'otros': 0,
             'sin_datos': 0
         }
+        
+        # AGREGAR logging
+        logger.info(f"📊 Generador SUNAT inicializado")
+        logger.info(f"   Carpeta: {folder_path}")
+        logger.info(f"   Workers: {max_workers}")
 
     def process_single_pdf(self, filename):
         """
@@ -54,6 +64,9 @@ class SUNATDiagnosticGenerator:
             dict: Información extraída del documento
         """
         pdf_path = os.path.join(self.folder_path, filename)
+        
+        # AGREGAR logging
+        logger.debug(f"Procesando: {filename}")
         
         try:
             document_number, name, doc_type, fecha = self.extractor.extract_document_info(pdf_path)
@@ -70,9 +83,14 @@ class SUNATDiagnosticGenerator:
                     self.stats['baja'] += 1
                 else:
                     self.stats['otros'] += 1
+                    
+                # AGREGAR logging
+                logger.debug(f"✓ {filename} - Datos extraídos")
             else:
                 status = "SIN_DATOS"
                 self.stats['sin_datos'] += 1
+                # AGREGAR logging
+                logger.warning(f"⚠ {filename} - Sin datos extraíbles")
             
             return {
                 'filename': filename,
@@ -86,6 +104,10 @@ class SUNATDiagnosticGenerator:
             
         except Exception as e:
             self.stats['errors'] += 1
+            # AGREGAR logging
+            logger.error(f"❌ Error en {filename}: {e}")
+            logger.error(traceback.format_exc())
+            
             return {
                 'filename': filename,
                 'status': "ERROR",
@@ -107,7 +129,12 @@ class SUNATDiagnosticGenerator:
         pdf_files = [f for f in os.listdir(self.folder_path) if f.lower().endswith('.pdf')]
         self.stats['total_files'] = len(pdf_files)
         
+        # AGREGAR logging
+        logger.info(f"📁 Escaneando carpeta: {len(pdf_files)} PDFs encontrados")
+        
         if not pdf_files:
+            # AGREGAR logging
+            logger.warning("⚠️ No se encontraron archivos PDF")
             return []
         
         # Procesar archivos en paralelo
@@ -118,6 +145,8 @@ class SUNATDiagnosticGenerator:
                 result = future.result()
                 self.results.append(result)
         
+        # AGREGAR logging
+        logger.info(f"✅ Escaneo completado: {len(self.results)} archivos procesados")
         return self.results
 
     def generate_diagnostic_excel(self):
@@ -131,6 +160,9 @@ class SUNATDiagnosticGenerator:
         timestamp = datetime.now().strftime("%d.%m.%y_%H.%M.%S")
         excel_filename = f"diagnostico_sunat_{timestamp}.xlsx"
         excel_path = os.path.join(self.folder_path, excel_filename)
+        
+        # AGREGAR logging
+        logger.info(f"📊 Generando Excel: {excel_filename}")
         
         # Crear workbook
         wb = Workbook()
@@ -185,6 +217,9 @@ class SUNATDiagnosticGenerator:
         # Guardar archivo
         wb.save(excel_path)
         
+        # AGREGAR logging
+        logger.info(f"✅ Excel guardado: {excel_path}")
+        
         return excel_path
 
     def run(self):
@@ -194,6 +229,11 @@ class SUNATDiagnosticGenerator:
         Returns:
             tuple: (excel_path, stats)
         """
+        # AGREGAR logging
+        logger.info("="*60)
+        logger.info("🚀 INICIANDO ANÁLISIS SUNAT")
+        logger.info("="*60)
+        
         print(f"🚀 Iniciando análisis de documentos SUNAT")
         print(f"📁 Carpeta: {self.folder_path}\n")
         
@@ -207,6 +247,11 @@ class SUNATDiagnosticGenerator:
         self._print_summary()
         
         print(f"\n✅ Diagnóstico guardado en: {excel_path}")
+        
+        # AGREGAR logging
+        logger.info("="*60)
+        logger.info("✅ DIAGNÓSTICO COMPLETADO")
+        logger.info("="*60)
         
         return excel_path, self.stats
 
@@ -223,6 +268,19 @@ class SUNATDiagnosticGenerator:
         print(f"⚠️  Sin datos extraíbles: {self.stats['sin_datos']}")
         print(f"❌ Errores: {self.stats['errors']}")
         print("="*50)
+        
+        # AGREGAR logging paralelo
+        logger.info("="*50)
+        logger.info("📊 RESUMEN DEL DIAGNÓSTICO")
+        logger.info("="*50)
+        logger.info(f"📄 Total archivos: {self.stats['total_files']}")
+        logger.info(f"✅ Procesados: {self.stats['processed']}")
+        logger.info(f"   • ALTA: {self.stats['alta']}")
+        logger.info(f"   • BAJA: {self.stats['baja']}")
+        logger.info(f"   • OTROS: {self.stats['otros']}")
+        logger.warning(f"⚠️ Sin datos: {self.stats['sin_datos']}")
+        logger.error(f"❌ Errores: {self.stats['errors']}")
+        logger.info("="*50)
 
 
 def seleccionar_carpeta():
@@ -257,14 +315,29 @@ def generar_diagnostico_sunat(folder_path: str, max_workers: int = 4):
         tuple: (excel_path, stats)
     """
     if not os.path.isdir(folder_path):
-        raise ValueError(f"La ruta '{folder_path}' no es una carpeta válida")
+        error_msg = f"La ruta '{folder_path}' no es una carpeta válida"
+        logger.error(error_msg)  # AGREGAR logging
+        raise ValueError(error_msg)
+    
+    # AGREGAR logging
+    logger.info(f"🎬 Iniciando diagnóstico SUNAT en: {folder_path}")
     
     generator = SUNATDiagnosticGenerator(folder_path, max_workers)
-    return generator.run()
+    result = generator.run()
+    
+    # AGREGAR logging
+    logger.info("✅ Diagnóstico SUNAT completado exitosamente")
+    
+    return result
 
 
 # Punto de entrada para uso standalone
 if __name__ == "__main__":
+    # AGREGAR logging
+    logger.info("="*60)
+    logger.info("📋 MODO STANDALONE - Diagnóstico SUNAT")
+    logger.info("="*60)
+    
     print("🔍 Selecciona la carpeta con documentos SUNAT...")
     
     # Permitir pasar ruta por argumento o usar selector
@@ -275,14 +348,17 @@ if __name__ == "__main__":
     
     if not folder_path:
         print("❌ No se seleccionó ninguna carpeta. Proceso cancelado.")
+        logger.warning("⚠️ No se seleccionó carpeta - Proceso cancelado")
         sys.exit(1)
     
     try:
         excel_path, stats = generar_diagnostico_sunat(folder_path)
         print(f"\n✅ Proceso completado exitosamente")
+        logger.info("✅ Proceso completado exitosamente")
         sys.exit(0)
     except Exception as e:
         print(f"❌ Error crítico: {e}")
-        import traceback
+        logger.error(f"❌ Error crítico: {e}")
+        logger.error(traceback.format_exc())
         traceback.print_exc()
         sys.exit(1)

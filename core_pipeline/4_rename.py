@@ -2,6 +2,10 @@ import os
 import json
 from pathlib import Path
 from tkinter import Tk, filedialog
+import sys
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+from utils.logger import Logger
+logger = Logger("CorePipeline4_Rename")
 
 def seleccionar_carpeta_madre():
     """Abre un diálogo para seleccionar la carpeta madre."""
@@ -20,14 +24,17 @@ def cargar_json(ruta_json):
             with open(ruta_json, 'r', encoding=encoding) as f:
                 datos = json.load(f)
             print(f"  ✓ JSON cargado con encoding: {encoding}")
+            logger.info(f"  ✓ JSON cargado con encoding: {encoding}")
             return datos
         except UnicodeDecodeError:
             continue
         except json.JSONDecodeError as e:
             print(f"  ✗ Error en estructura JSON: {e}")
+            logger.error(f"  ✗ Error en estructura JSON: {e}")
             return None
     
     print(f"  ✗ No se pudo leer el JSON con ningún encoding estándar")
+    logger.error("  ✗ No se pudo leer el JSON con ningún encoding estándar")
     return None
 
 def convertir_json_a_mapeo(datos_json):
@@ -43,6 +50,7 @@ def convertir_json_a_mapeo(datos_json):
     """
     if not isinstance(datos_json, list):
         print(f"  ✗ Se esperaba una lista, se recibió: {type(datos_json).__name__}")
+        logger.error(f"  ✗ Se esperaba una lista, se recibió: {type(datos_json).__name__}")
         return {}
     
     mapeo = {}
@@ -73,6 +81,7 @@ def convertir_json_a_mapeo(datos_json):
     # Reportar duplicados
     if duplicados:
         print(f"\n  ⚠ ADVERTENCIA: Se encontraron {len(duplicados)} archivos con múltiples nombres:")
+        logger.warning(f"  ⚠️ ADVERTENCIA: Se encontraron {len(duplicados)} archivos con múltiples nombres")
         mostrados = 0
         for original, nombres in duplicados.items():
             if mostrados < 5:  # Mostrar solo los primeros 5
@@ -82,6 +91,7 @@ def convertir_json_a_mapeo(datos_json):
         if len(duplicados) > 5:
             print(f"    ... y {len(duplicados) - 5} archivos duplicados más")
         print(f"  → Se usará la última ocurrencia de cada archivo duplicado\n")
+        logger.warning(f"  → Se usará la última ocurrencia de cada archivo duplicado")
     
     return mapeo
 
@@ -109,6 +119,7 @@ def renombrar_archivos(carpeta, mapeo):
         # Verificar que el archivo original existe
         if not os.path.exists(ruta_anterior):
             errores.append(f"    ✗ No encontrado: {nombre_anterior}")
+            logger.error(f"    ✗ No encontrado: {nombre_anterior}")
             fallidos += 1
             continue
         
@@ -116,12 +127,14 @@ def renombrar_archivos(carpeta, mapeo):
         if os.path.exists(ruta_nueva):
             # Si el archivo destino ya existe, omitir
             advertencias.append(f"    ⚠ Ya existe: {nombre_nuevo}")
+            logger.warning(f"    ⚠️ Ya existe: {nombre_nuevo}")
             omitidos += 1
             continue
         
         # Verificar si es el mismo nombre (no hace falta renombrar)
         if nombre_anterior == nombre_nuevo:
             advertencias.append(f"    → Mismo nombre: {nombre_anterior}")
+            logger.info(f"    ✓ Renombrado: {nombre_anterior} → {nombre_nuevo}")
             omitidos += 1
             continue
         
@@ -130,6 +143,7 @@ def renombrar_archivos(carpeta, mapeo):
             exitosos += 1
         except Exception as e:
             errores.append(f"    ✗ Error al renombrar '{nombre_anterior}': {str(e)}")
+            logger.error(f"    ✗ Error al renombrar '{nombre_anterior}': {str(e)}")
             fallidos += 1
     
     # Mostrar errores si los hay (máximo 10)
@@ -161,12 +175,16 @@ def procesar_lote(carpeta_lote):
     print(f"\n{'='*60}")
     print(f"Procesando lote: {nombre_lote}")
     print(f"{'='*60}")
+    logger.info("="*60)
+    logger.info(f"Procesando lote: {nombre_lote}")
+    logger.info("="*60)
     
     # Buscar archivo JSON
     archivos_json = [f for f in os.listdir(carpeta_lote) if f.endswith('.json')]
     
     if not archivos_json:
         print("  ⚠ No se encontró archivo JSON en este lote")
+        logger.warning("  ⚠️ No se encontró archivo JSON en este lote")
         return {
             'lote': nombre_lote,
             'exitosos': 0,
@@ -179,9 +197,12 @@ def procesar_lote(carpeta_lote):
     if len(archivos_json) > 1:
         print(f"  ⚠ Se encontraron múltiples JSON: {archivos_json}")
         print(f"  → Se usará: {archivos_json[0]}")
+        logger.warning(f"  ⚠️ Se encontraron múltiples JSON: {archivos_json}")
+        logger.info(f"  → Se usará: {archivos_json[0]}")
     
     ruta_json = os.path.join(carpeta_lote, archivos_json[0])
     print(f"  JSON encontrado: {archivos_json[0]}")
+    logger.info(f"  JSON encontrado: {archivos_json[0]}")
     
     # Cargar datos del JSON
     datos_json = cargar_json(ruta_json)
@@ -198,6 +219,7 @@ def procesar_lote(carpeta_lote):
     
     if not datos_json:
         print("  ⚠ El archivo JSON está vacío")
+        logger.warning("  ⚠️ El archivo JSON está vacío")
         return {
             'lote': nombre_lote,
             'exitosos': 0,
@@ -247,15 +269,20 @@ def main():
     print("\n" + "="*60)
     print(" RENOMBRADO MASIVO DE ARCHIVOS POR LOTES")
     print("="*60)
+    logger.info("="*60)
+    logger.info(" RENOMBRADO MASIVO DE ARCHIVOS POR LOTES")
+    logger.info("="*60)
     
     # Seleccionar carpeta madre
     carpeta_madre = seleccionar_carpeta_madre()
     
     if not carpeta_madre:
         print("\n✗ No se seleccionó ninguna carpeta. Proceso cancelado.")
+        logger.warning("✗ No se seleccionó ninguna carpeta. Proceso cancelado.")
         return
     
     print(f"\nCarpeta seleccionada: {carpeta_madre}")
+    logger.info(f"Carpeta seleccionada: {carpeta_madre}")
     
     # Definir las carpetas a procesar (las 3 primeras)
     carpetas_a_procesar = ['1_Boletas', '2_Afp', '3_5ta']
@@ -291,6 +318,9 @@ def main():
     print("\n" + "="*60)
     print(" RESUMEN FINAL")
     print("="*60)
+    logger.info("="*60)
+    logger.info(" RESUMEN FINAL")
+    logger.info("="*60)
     
     total_exitosos = sum(e['exitosos'] for e in estadisticas)
     total_fallidos = sum(e['fallidos'] for e in estadisticas)
@@ -303,6 +333,9 @@ def main():
     print(f"  ✗ Archivos con errores: {total_fallidos}")
     print(f"  ⊘ Archivos omitidos: {total_omitidos}")
     print(f"  Total de archivos procesados: {total_archivos}")
+    logger.info(f"  ✓ Archivos renombrados exitosamente: {total_exitosos}")
+    logger.info(f"  ✗ Archivos con errores: {total_fallidos}")
+    logger.info(f"  ⊘ Archivos omitidos: {total_omitidos}")
     
     if total_archivos > 0:
         porcentaje = (total_exitosos / total_archivos) * 100

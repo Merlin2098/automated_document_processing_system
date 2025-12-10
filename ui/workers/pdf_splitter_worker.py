@@ -2,6 +2,7 @@
 PDF Splitter Worker - Worker thread para dividir PDFs sin bloquear la UI
 """
 from PySide6.QtCore import QThread, Signal
+from utils.logger import Logger
 import os
 from datetime import datetime
 
@@ -20,6 +21,7 @@ class PdfSplitterWorker(QThread):
         self.pdf_path = pdf_path
         self.pages_per_file = pages_per_file
         self._is_running = True
+        self.logger = Logger("PdfSplitter")
     
     def run(self):
         """Ejecuta el proceso de división"""
@@ -29,11 +31,14 @@ class PdfSplitterWorker(QThread):
             # Importar aquí para evitar problemas de importación circular
             from PyPDF2 import PdfReader, PdfWriter
             
-            self.log_message.emit("info", "🔍 Validando PDF...")
+            self.logger.info("📄 Validando PDF...")
+            self.log_message.emit("info", "📄 Validando PDF...")
             
             # Validar archivo
             if not os.path.exists(self.pdf_path):
-                self.error.emit(f"El archivo no existe: {self.pdf_path}")
+                error_msg = f"El archivo no existe: {self.pdf_path}"
+                self.logger.error(error_msg)
+                self.error.emit(error_msg)
                 return
             
             # Leer PDF y validar división
@@ -41,7 +46,9 @@ class PdfSplitterWorker(QThread):
                 reader = PdfReader(archivo_pdf)
                 total_pages = len(reader.pages)
             
-            self.log_message.emit("info", f"📄 Total de páginas: {total_pages}")
+            msg = f"📄 Total de páginas: {total_pages}"
+            self.logger.info(msg)
+            self.log_message.emit("info", msg)
             
             # Validar que sea divisible exactamente
             if total_pages % self.pages_per_file != 0:
@@ -51,11 +58,14 @@ class PdfSplitterWorker(QThread):
                     f"por la cantidad deseada ({self.pages_per_file}). "
                     f"Residuo: {residuo} páginas."
                 )
+                self.logger.error(error_msg)
                 self.error.emit(error_msg)
                 return
             
             num_pdfs_to_generate = total_pages // self.pages_per_file
-            self.log_message.emit("success", f"✅ Se generarán {num_pdfs_to_generate} archivos PDF")
+            msg = f"✅ Se generarán {num_pdfs_to_generate} archivos PDF"
+            self.logger.info(msg)
+            self.log_message.emit("success", msg)
             
             # Crear carpeta de salida
             directorio_pdf = os.path.dirname(self.pdf_path)
@@ -69,10 +79,13 @@ class PdfSplitterWorker(QThread):
                 contador += 1
             
             os.makedirs(dir_salida, exist_ok=True)
-            self.log_message.emit("info", f"📁 Carpeta de salida: {os.path.basename(dir_salida)}")
+            msg = f"📁 Carpeta de salida: {os.path.basename(dir_salida)}"
+            self.logger.info(msg)
+            self.log_message.emit("info", msg)
             
             # Procesar división
-            self.log_message.emit("info", "🔄 Iniciando división de PDF...")
+            self.logger.info("📄 Iniciando división de PDF...")
+            self.log_message.emit("info", "📄 Iniciando división de PDF...")
             pdfs_generados = 0
             
             with open(self.pdf_path, 'rb') as archivo_pdf:
@@ -80,6 +93,7 @@ class PdfSplitterWorker(QThread):
                 
                 for i in range(num_pdfs_to_generate):
                     if not self._is_running:
+                        self.logger.warning("⚠️ Proceso cancelado por el usuario")
                         self.log_message.emit("warning", "⚠️ Proceso cancelado por el usuario")
                         return
                     
@@ -102,7 +116,9 @@ class PdfSplitterWorker(QThread):
                     
                     # Emitir progreso
                     self.progress_updated.emit(pdfs_generados, num_pdfs_to_generate)
-                    self.log_message.emit("info", f"✓ Generado: {nombre_archivo}")
+                    msg = f"✓ Generado: {nombre_archivo}"
+                    self.logger.info(msg)
+                    self.log_message.emit("info", msg)
             
             # Calcular tiempo transcurrido
             elapsed_time = (datetime.now() - start_time).total_seconds()
@@ -116,6 +132,11 @@ class PdfSplitterWorker(QThread):
                 'errores': 0
             }
             
+            self.logger.info("🎉 ¡Proceso completado exitosamente!")
+            self.logger.info(f"📊 Total de archivos generados: {pdfs_generados}")
+            self.logger.info(f"⏱️ Tiempo transcurrido: {elapsed_time:.2f}s")
+            self.logger.info(f"📂 Ubicación: {dir_salida}")
+            
             self.log_message.emit("success", f"🎉 ¡Proceso completado exitosamente!")
             self.log_message.emit("info", f"📊 Total de archivos generados: {pdfs_generados}")
             self.log_message.emit("info", f"⏱️ Tiempo transcurrido: {elapsed_time:.2f}s")
@@ -125,9 +146,13 @@ class PdfSplitterWorker(QThread):
             
         except Exception as e:
             error_msg = f"Error durante el procesamiento: {str(e)}"
+            self.logger.error(error_msg)
             self.log_message.emit("error", f"❌ {error_msg}")
+            import traceback
+            self.logger.error(traceback.format_exc())
             self.error.emit(error_msg)
     
     def stop(self):
         """Detiene el worker"""
         self._is_running = False
+        self.logger.warning("⏹️ Worker detenido por el usuario")

@@ -1,0 +1,101 @@
+2025-12-09 19:44:28 | INFO     | main                           | setup_logging        | ================================================================================
+2025-12-09 19:44:28 | INFO     | main                           | setup_logging        | Sistema de logging inicializado correctamente
+2025-12-09 19:44:28 | INFO     | main                           | setup_logging        | Directorio de logs: C:\Users\ricuculm\OneDrive - Metso\Documents\VS Code\7. Matrix_Rework\logs
+2025-12-09 19:44:28 | INFO     | main                           | setup_logging        | ================================================================================
+2025-12-09 19:44:28 | INFO     | main                           | main                 | ================================================================================
+2025-12-09 19:44:28 | INFO     | main                           | main                 | DocFlow Eventuales v4.0 - Iniciando aplicación
+2025-12-09 19:44:28 | INFO     | main                           | main                 | ================================================================================
+2025-12-09 19:44:28 | INFO     | main                           | main                 | Sistema operativo: win32
+2025-12-09 19:44:28 | INFO     | main                           | main                 | Versión Python: 3.13.9
+2025-12-09 19:44:28 | INFO     | main                           | main                 | --------------------------------------------------------------------------------
+2025-12-09 19:44:28 | INFO     | main                           | main                 | Configurando aplicación Qt...
+2025-12-09 19:44:29 | INFO     | main                           | main                 | ✅ Aplicación Qt configurada correctamente
+2025-12-09 19:44:29 | INFO     | main                           | main                 | Mostrando splash screen...
+2025-12-09 19:44:40 | INFO     | main                           | main                 | ✅ Splash screen mostrado
+2025-12-09 19:44:40 | INFO     | main                           | main                 | Iniciando event loop de Qt...
+2025-12-09 19:44:43 | INFO     | main                           | on_splash_finished   | Splash screen completado, cargando ventana principal...
+2025-12-09 19:44:43 | INFO     | ui.main_window                 | __init__             | Inicializando ventana principal...
+2025-12-09 19:44:43 | INFO     | utils.theme_manager            | _load_themes         | ✅ Tema cargado: dark (Tema oscuro con fondo azul nocturno profundo)
+2025-12-09 19:44:43 | INFO     | utils.theme_manager            | _load_themes         | ✅ Tema cargado: light (Tema claro innovador y tecnológico con acentos verde-azulados)
+2025-12-09 19:44:43 | INFO     | utils.theme_manager            | _load_config         | ✅ Configuración cargada: tema 'light'
+2025-12-09 19:44:43 | INFO     | utils.theme_manager            | __init__             | ✅ Theme Manager inicializado - Tema activo: light
+2025-12-09 19:44:43 | INFO     | ui.main_window                 | __init__             | ✅ Tema cargado: light
+2025-12-09 19:44:43 | INFO     | ui.main_window                 | __init__             | ✅ Interfaz de usuario creada
+2025-12-09 19:44:43 | INFO     | ui.main_window                 | __init__             | ✅ Ventana principal inicializada correctamente
+2025-12-09 19:44:43 | INFO     | main                           | on_splash_finished   | ✅ Ventana principal cargada y mostrada
+2025-12-09 19:44:43 | INFO     | main                           | on_splash_finished   | --------------------------------------------------------------------------------
+2025-12-09 19:44:43 | INFO     | main                           | on_splash_finished   | 🚀 Aplicación lista para usar
+2025-12-09 19:44:43 | INFO     | main                           | on_splash_finished   | ================================================================================
+2025-12-09 19:44:43 | INFO     | ui.main_window                 | _load_tabs           | Iniciando carga lazy de tabs...
+2025-12-09 22:11:53 | INFO     | main                           | setup_logging        | ================================================================================
+2025-12-09 22:11:53 | INFO     | main                           | setup_logging        | Sistema de logging inicializado correctamente
+2025-12-09 22:11:53 | INFO     | main                           | setup_logging        | Directorio de logs: C:\Users\ricuculm\OneDrive - Metso\Documents\VS Code\7. Matrix_Rework\logs
+2025-12-09 22:11:53 | INFO     | main                           | setup_logging        | ================================================================================
+2025-12-09 22:11:53 | INFO     | main                           | main                 | ================================================================================
+2025-12-09 22:11:53 | INFO     | main                           | main                 | DocFlow Eventuales v4.0 - Iniciando aplicación
+2025-12-09 22:11:53 | INFO     | main                           | main                 | ================================================================================
+2025-12-09 22:11:53 | INFO     | main                           | main                 | Sistema operativo: win32
+2025-12-09 22:11:53 | INFO     | main                           | main                 | Versión Python: 3.13.9
+2025-12-09 22:11:53 | INFO     | main                           | main                 | --------------------------------------------------------------------------------
+2025-12-09 22:11:53 | INFO     | main                           | main                 | Configurando aplicación Qt...
+2025-12-09 22:11:53 | INFO     | main                           | main                 | ✅ Aplicación Qt configurada correctamente
+2025-12-09 22:11:53 | INFO     | main                           | main                 | Mostrando splash screen...
+2025-12-09 22:12:03 | INFO     | main                           | main                 | ✅ Splash screen mostrado
+2025-12-09 22:12:03 | INFO     | main                           | main                 | Iniciando event loop de Qt...
+2025-12-09 22:12:07 | INFO     | main                           | on_splash_finished   | Splash screen completado, cargando ventana principal...
+2025-12-09 22:12:07 | INFO     | ui.main_window                 | __init__             | Inicializando ventana principal...
+2025-12-09 22:12:07 | INFO     | utils.theme_manager            | _load_themes         | ✅ Tema cargado: dark (Tema oscuro con fondo azul nocturno profundo)
+2025-12-09 22:12:07 | INFO     | utils.theme_manager            | _load_themes         | ✅ Tema cargado: light (Tema claro innovador y tecnológico con acentos verde-azulados)
+2025-12-09 22:12:07 | INFO     | utils.theme_manager            | _load_config         | ✅ Configuración cargada: tema 'light'
+2025-12-09 22:12:07 | INFO     | utils.theme_manager            | __init__             | ✅ Theme Manager inicializado - Tema activo: light
+2025-12-09 22:12:07 | INFO     | ui.main_window                 | __init__             | ✅ Tema cargado: light
+2025-12-09 22:12:07 | INFO     | ui.main_window                 | __init__             | ✅ Interfaz de usuario creada
+2025-12-09 22:12:07 | INFO     | ui.main_window                 | __init__             | ✅ Ventana principal inicializada correctamente
+2025-12-09 22:12:07 | INFO     | main                           | on_splash_finished   | ✅ Ventana principal cargada y mostrada
+2025-12-09 22:12:07 | INFO     | main                           | on_splash_finished   | --------------------------------------------------------------------------------
+2025-12-09 22:12:07 | INFO     | main                           | on_splash_finished   | 🚀 Aplicación lista para usar
+2025-12-09 22:12:07 | INFO     | main                           | on_splash_finished   | ================================================================================
+2025-12-09 22:12:07 | INFO     | ui.main_window                 | _load_tabs           | Iniciando carga lazy de tabs...
+2025-12-09 22:12:11 | INFO     | ui.main_window                 | _load_tabs           | ✅ Todos los tabs cargados correctamente
+2025-12-09 22:12:11 | INFO     | ui.main_window                 | _load_tabs           | ✅ Señales de tabs conectadas
+2025-12-09 22:12:24 | INFO     | ui.main_window                 | closeEvent           | Usuario solicitó cerrar la aplicación
+2025-12-09 22:12:24 | INFO     | ui.main_window                 | closeEvent           | Cerrando ventana principal...
+2025-12-09 22:12:24 | INFO     | main                           | main                 | --------------------------------------------------------------------------------
+2025-12-09 22:12:24 | INFO     | main                           | main                 | Aplicación cerrada con código: 0
+2025-12-09 22:12:24 | INFO     | main                           | main                 | ================================================================================
+2025-12-09 22:55:48 | INFO     | main                           | setup_logging        | ================================================================================
+2025-12-09 22:55:48 | INFO     | main                           | setup_logging        | Sistema de logging inicializado correctamente
+2025-12-09 22:55:48 | INFO     | main                           | setup_logging        | Directorio de logs: C:\Users\ricuculm\OneDrive - Metso\Documents\VS Code\7. Matrix_Rework\logs
+2025-12-09 22:55:48 | INFO     | main                           | setup_logging        | ================================================================================
+2025-12-09 22:55:48 | INFO     | main                           | main                 | ================================================================================
+2025-12-09 22:55:48 | INFO     | main                           | main                 | DocFlow Eventuales v4.0 - Iniciando aplicación
+2025-12-09 22:55:48 | INFO     | main                           | main                 | ================================================================================
+2025-12-09 22:55:48 | INFO     | main                           | main                 | Sistema operativo: win32
+2025-12-09 22:55:48 | INFO     | main                           | main                 | Versión Python: 3.13.9
+2025-12-09 22:55:48 | INFO     | main                           | main                 | --------------------------------------------------------------------------------
+2025-12-09 22:55:48 | INFO     | main                           | main                 | Configurando aplicación Qt...
+2025-12-09 22:55:48 | INFO     | main                           | main                 | ✅ Aplicación Qt configurada correctamente
+2025-12-09 22:55:48 | INFO     | main                           | main                 | Mostrando splash screen...
+2025-12-09 22:55:58 | INFO     | main                           | main                 | ✅ Splash screen mostrado
+2025-12-09 22:55:58 | INFO     | main                           | main                 | Iniciando event loop de Qt...
+2025-12-09 22:56:01 | INFO     | main                           | on_splash_finished   | Splash screen completado, cargando ventana principal...
+2025-12-09 22:56:01 | INFO     | ui.main_window                 | __init__             | Inicializando ventana principal...
+2025-12-09 22:56:01 | INFO     | utils.theme_manager            | _load_themes         | ✅ Tema cargado: dark (Tema oscuro con fondo azul nocturno profundo)
+2025-12-09 22:56:01 | INFO     | utils.theme_manager            | _load_themes         | ✅ Tema cargado: light (Tema claro innovador y tecnológico con acentos verde-azulados)
+2025-12-09 22:56:01 | INFO     | utils.theme_manager            | _load_config         | ✅ Configuración cargada: tema 'light'
+2025-12-09 22:56:01 | INFO     | utils.theme_manager            | __init__             | ✅ Theme Manager inicializado - Tema activo: light
+2025-12-09 22:56:01 | INFO     | ui.main_window                 | __init__             | ✅ Tema cargado: light
+2025-12-09 22:56:01 | INFO     | ui.main_window                 | __init__             | ✅ Interfaz de usuario creada
+2025-12-09 22:56:01 | INFO     | ui.main_window                 | __init__             | ✅ Ventana principal inicializada correctamente
+2025-12-09 22:56:01 | INFO     | main                           | on_splash_finished   | ✅ Ventana principal cargada y mostrada
+2025-12-09 22:56:01 | INFO     | main                           | on_splash_finished   | --------------------------------------------------------------------------------
+2025-12-09 22:56:01 | INFO     | main                           | on_splash_finished   | 🚀 Aplicación lista para usar
+2025-12-09 22:56:01 | INFO     | main                           | on_splash_finished   | ================================================================================
+2025-12-09 22:56:01 | INFO     | ui.main_window                 | _load_tabs           | Iniciando carga lazy de tabs...
+2025-12-09 22:56:05 | INFO     | ui.main_window                 | _load_tabs           | ✅ Todos los tabs cargados correctamente
+2025-12-09 22:56:05 | INFO     | ui.main_window                 | _load_tabs           | ✅ Señales de tabs conectadas
+2025-12-09 22:56:12 | INFO     | ui.main_window                 | closeEvent           | Usuario solicitó cerrar la aplicación
+2025-12-09 22:56:12 | INFO     | ui.main_window                 | closeEvent           | Cerrando ventana principal...
+2025-12-09 22:56:12 | INFO     | main                           | main                 | --------------------------------------------------------------------------------
+2025-12-09 22:56:12 | INFO     | main                           | main                 | Aplicación cerrada con código: 0
+2025-12-09 22:56:12 | INFO     | main                           | main                 | ================================================================================

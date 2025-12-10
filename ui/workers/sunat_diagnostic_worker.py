@@ -3,6 +3,7 @@ Worker para generar diagnóstico SUNAT (Paso 1)
 Ejecuta el proceso en segundo plano sin congelar la UI
 """
 from PySide6.QtCore import QThread, Signal
+from utils.logger import Logger
 import os
 import sys
 
@@ -30,39 +31,52 @@ class SunatDiagnosticWorker(QThread):
         self.folder_path = folder_path
         self.max_workers = max_workers
         self.generator = None
+        self.logger = Logger("SunatDiagnostic")
     
     def run(self):
         """Ejecuta el proceso de generación de diagnóstico"""
         try:
+            self.logger.info(f"🚀 Iniciando análisis SUNAT")
             self.log_signal.emit("info", f"🚀 Iniciando análisis SUNAT")
+            self.logger.info(f"📂 Carpeta: {self.folder_path}")
             self.log_signal.emit("info", f"📂 Carpeta: {self.folder_path}")
+            self.logger.info(f"⚡ Workers: {self.max_workers}")
             self.log_signal.emit("info", f"⚡ Workers: {self.max_workers}")
             
             # Validar carpeta
             if not os.path.isdir(self.folder_path):
-                self.error_signal.emit(f"La carpeta no existe: {self.folder_path}")
+                error_msg = f"La carpeta no existe: {self.folder_path}"
+                self.logger.error(error_msg)
+                self.error_signal.emit(error_msg)
                 return
             
             # Contar PDFs
             pdf_files = [f for f in os.listdir(self.folder_path) if f.lower().endswith('.pdf')]
             if not pdf_files:
-                self.error_signal.emit("No se encontraron archivos PDF en la carpeta")
+                error_msg = "No se encontraron archivos PDF en la carpeta"
+                self.logger.error(error_msg)
+                self.error_signal.emit(error_msg)
                 return
             
-            self.log_signal.emit("success", f"✅ Encontrados {len(pdf_files)} archivos PDF")
+            msg = f"✅ Encontrados {len(pdf_files)} archivos PDF"
+            self.logger.info(msg)
+            self.log_signal.emit("success", msg)
             
             # Crear generador con callback personalizado
             self.generator = SUNATDiagnosticGeneratorWithCallbacks(
                 self.folder_path,
                 self.max_workers,
                 progress_callback=self._on_progress,
-                log_callback=self._on_log
+                log_callback=self._on_log,
+                logger=self.logger
             )
             
             # Ejecutar proceso
             excel_path, stats = self.generator.run()
             
             # Emitir resultado exitoso
+            self.logger.info("✅ Diagnóstico completado")
+            self.logger.info(f"📄 Excel: {os.path.basename(excel_path)}")
             self.log_signal.emit("success", f"✅ Diagnóstico completado")
             self.log_signal.emit("success", f"📄 Excel: {os.path.basename(excel_path)}")
             
@@ -70,7 +84,10 @@ class SunatDiagnosticWorker(QThread):
             
         except Exception as e:
             error_msg = f"Error durante el diagnóstico: {str(e)}"
+            self.logger.error(error_msg)
             self.log_signal.emit("error", error_msg)
+            import traceback
+            self.logger.error(traceback.format_exc())
             self.error_signal.emit(error_msg)
     
     def _on_progress(self, current: int, total: int):
@@ -85,10 +102,11 @@ class SunatDiagnosticWorker(QThread):
 class SUNATDiagnosticGeneratorWithCallbacks(SUNATDiagnosticGenerator):
     """Extensión del generador original con callbacks para la UI"""
     
-    def __init__(self, folder_path, max_workers=4, progress_callback=None, log_callback=None):
+    def __init__(self, folder_path, max_workers=4, progress_callback=None, log_callback=None, logger=None):
         super().__init__(folder_path, max_workers)
         self.progress_callback = progress_callback
         self.log_callback = log_callback
+        self.logger = logger if logger else Logger("SUNATGenerator")
     
     def process_single_pdf(self, filename):
         """Override para emitir progreso"""
@@ -108,18 +126,28 @@ class SUNATDiagnosticGeneratorWithCallbacks(SUNATDiagnosticGenerator):
             else:
                 self.log_callback("error", f"✗ {filename} - Error")
         
+        # Log al archivo
+        if result['status'] == 'OK':
+            self.logger.info(f"✓ {filename}")
+        elif result['status'] == 'SIN_DATOS':
+            self.logger.warning(f"⚠ {filename} - Sin datos")
+        else:
+            self.logger.error(f"✗ {filename} - Error")
+        
         return result
     
     def run(self):
         """Override para emitir logs personalizados"""
         if self.log_callback:
             self.log_callback("info", "🔍 Escaneando documentos...")
+        self.logger.info("🔍 Escaneando documentos...")
         
         # Escanear y procesar
         self.scan_folder()
         
         if self.log_callback:
             self.log_callback("info", "📊 Generando Excel...")
+        self.logger.info("📊 Generando Excel...")
         
         # Generar Excel
         excel_path = self.generate_diagnostic_excel()
@@ -142,3 +170,15 @@ class SUNATDiagnosticGeneratorWithCallbacks(SUNATDiagnosticGenerator):
         self.log_callback("warning", f"⚠️ Sin datos: {self.stats['sin_datos']}")
         self.log_callback("error", f"❌ Errores: {self.stats['errors']}")
         self.log_callback("info", "=" * 50)
+        
+        # Log al archivo
+        self.logger.info("=" * 50)
+        self.logger.info("📊 RESUMEN DEL DIAGNÓSTICO")
+        self.logger.info(f"📄 Total archivos: {self.stats['total_files']}")
+        self.logger.info(f"✅ Procesados: {self.stats['processed']}")
+        self.logger.info(f"   • ALTA: {self.stats['alta']}")
+        self.logger.info(f"   • BAJA: {self.stats['baja']}")
+        self.logger.info(f"   • OTROS: {self.stats['otros']}")
+        self.logger.warning(f"⚠️ Sin datos: {self.stats['sin_datos']}")
+        self.logger.error(f"❌ Errores: {self.stats['errors']}")
+        self.logger.info("=" * 50)

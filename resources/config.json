@@ -1,6 +1,6 @@
 {
-  "theme": "dark",
-  "last_modified": "2025-12-09T11:48:29.397566",
+  "theme": "light",
+  "last_modified": "2025-12-09T18:04:06.091066",
   "preferences": {
     "sounds": {
       "enabled": true,
@@ -34,5 +34,17 @@
     "width": 1400,
     "height": 900,
     "maximized": false
+  },
+  "sunat_workers": {
+    "diagnostic": {
+      "max_workers": 4,
+      "batch_size": 100
+    },
+    "rename": {
+      "encoding": "utf-8"
+    },
+    "duplicates": {
+      "auto_clean": false
+    }
   }
 }

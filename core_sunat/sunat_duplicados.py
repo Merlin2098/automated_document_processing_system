@@ -4,6 +4,13 @@ from typing import Optional, Dict, List, Tuple
 from collections import defaultdict
 from tkinter import Tk, filedialog
 import time
+import traceback
+import sys
+
+from utils.logger import Logger
+
+# Inicializar logger
+logger = Logger("CoreSunat_Duplicados")
 
 # ============================================================
 # CONFIGURACIÓN
@@ -39,6 +46,9 @@ class DuplicateAnalyzer:
         pdf_files = [f for f in os.listdir(self.folder_path) if f.lower().endswith('.pdf')]
         self.total_archivos = len(pdf_files)
         
+        # AGREGAR logging
+        logger.info(f"🔍 Analizando {len(pdf_files)} archivos PDF")
+        
         for filename in pdf_files:
             match = PATRON_CONTRATO.search(filename)
             if match:
@@ -51,6 +61,9 @@ class DuplicateAnalyzer:
             for contrato, files in self.archivos_por_contrato.items() 
             if len(files) > 1
         }
+        
+        # AGREGAR logging
+        logger.info(f"📊 Encontrados {len(duplicados)} contratos con duplicados")
         
         return duplicados
 
@@ -82,10 +95,17 @@ class DuplicateCleaner:
         Returns:
             tuple: (archivos_eliminados, errores)
         """
+        # AGREGAR logging
+        logger.info("🗑️ Iniciando eliminación de duplicados")
+        logger.info(f"   Contratos a procesar: {len(duplicados)}")
+        
         print("\n🔄 Iniciando eliminación de duplicados...\n")
         print("="*70)
         
         for contrato, archivos in duplicados.items():
+            # AGREGAR logging
+            logger.info(f"📋 Procesando contrato {contrato}: {len(archivos)} archivos")
+            
             print(f"\n📋 Contrato duplicado: {contrato}")
             print(f"   Total de archivos: {len(archivos)}")
             
@@ -105,6 +125,10 @@ class DuplicateCleaner:
                     self.errores += 1
         
         print("="*70 + "\n")
+        
+        # AGREGAR logging
+        logger.info(f"✅ Eliminación completada: {self.eliminados} archivos eliminados")
+        
         return self.eliminados, self.errores
     
     def _eliminar_archivo(self, filename):
@@ -121,9 +145,13 @@ class DuplicateCleaner:
             ruta = os.path.join(self.folder_path, filename)
             os.remove(ruta)
             print(f"      ✅ Eliminado exitosamente")
+            # AGREGAR logging
+            logger.info(f"   ✓ {filename}")
             return True
         except Exception as e:
             print(f"      ❌ Error al eliminar: {str(e)}")
+            # AGREGAR logging
+            logger.error(f"   ✗ {filename}: {str(e)}")
             return False
 
 
@@ -146,10 +174,19 @@ class DuplicateReporter:
         print("📊 REPORTE DE DUPLICADOS DETECTADOS")
         print("="*70)
         
+        # AGREGAR logging paralelo
+        logger.info("="*70)
+        logger.info("📊 REPORTE DE DUPLICADOS DETECTADOS")
+        logger.info("="*70)
+        
         if not duplicados:
             print("\n✅ No se encontraron duplicados por número de contrato.")
             print(f"   Total de archivos únicos: {total_archivos}")
             print("="*70)
+            # AGREGAR logging
+            logger.info("✅ No se encontraron duplicados")
+            logger.info(f"📁 Total archivos analizados: {total_archivos}")
+            logger.info("="*70)
             return
         
         print(f"\n📁 Total de archivos analizados: {total_archivos}")
@@ -157,6 +194,11 @@ class DuplicateReporter:
         
         total_duplicados = sum(len(files) - 1 for files in duplicados.values())
         print(f"🗑️  Archivos duplicados a eliminar: {total_duplicados}\n")
+        
+        # AGREGAR logging
+        logger.info(f"📁 Total archivos analizados: {total_archivos}")
+        logger.info(f"🔍 Contratos con duplicados: {len(duplicados)}")
+        logger.info(f"🗑️ Archivos duplicados a eliminar: {total_duplicados}")
         
         for contrato, archivos in duplicados.items():
             print(f"\n📌 Contrato: {contrato} ({len(archivos)} archivos)")
@@ -166,6 +208,7 @@ class DuplicateReporter:
                 print(f"       {archivo}")
         
         print("\n" + "="*70)
+        logger.info("="*70)
     
     @staticmethod
     def mostrar_resumen_final(total_inicial, duplicados_count, eliminados, errores):
@@ -189,6 +232,17 @@ class DuplicateReporter:
         print(f"❌ Errores durante eliminación     : {errores}")
         print(f"📁 Archivos únicos restantes       : {total_final}")
         print("="*70 + "\n")
+        
+        # AGREGAR logging paralelo
+        logger.info("="*70)
+        logger.info("📋 RESUMEN FINAL DE LIMPIEZA")
+        logger.info("="*70)
+        logger.info(f"📂 Archivos iniciales: {total_inicial}")
+        logger.info(f"🔍 Contratos duplicados: {duplicados_count}")
+        logger.info(f"✅ Archivos eliminados: {eliminados}")
+        logger.error(f"❌ Errores: {errores}")
+        logger.info(f"📄 Archivos restantes: {total_inicial - eliminados}")
+        logger.info("="*70)
 
 
 # ============================================================
@@ -219,6 +273,12 @@ class SUNATDuplicateOrchestrator:
         """
         self.start_time = time.time()
         
+        # AGREGAR logging
+        logger.info("="*70)
+        logger.info("🔍 DETECTOR Y LIMPIADOR DE DUPLICADOS SUNAT")
+        logger.info("="*70)
+        logger.info(f"📁 Carpeta: {self.folder_path}")
+        
         print("\n" + "="*70)
         print("🔍 DETECTOR Y LIMPIADOR DE DUPLICADOS SUNAT")
         print("   (Basado en número de contrato)")
@@ -241,6 +301,10 @@ class SUNATDuplicateOrchestrator:
         
         # PASO 4: Mostrar resumen final
         elapsed_time = time.time() - self.start_time
+        
+        # AGREGAR logging
+        logger.info(f"⏱️ Tiempo de ejecución: {elapsed_time:.2f}s")
+        
         self.reporter.mostrar_resumen_final(
             total_inicial, 
             len(duplicados), 
@@ -291,10 +355,17 @@ def procesar_duplicados_sunat(folder_path: Optional[str] = None):
     
     if not folder_path:
         print("❌ No se seleccionó ninguna carpeta. Proceso cancelado.")
+        # AGREGAR logging
+        logger.warning("⚠️ No se seleccionó carpeta")
         return 0, 0, 0, 0
     
     if not os.path.isdir(folder_path):
-        raise ValueError(f"La ruta '{folder_path}' no es una carpeta válida")
+        error_msg = f"La ruta '{folder_path}' no es una carpeta válida"
+        logger.error(error_msg)  # AGREGAR logging
+        raise ValueError(error_msg)
+    
+    # AGREGAR logging
+    logger.info(f"🎬 Iniciando limpieza de duplicados en: {folder_path}")
     
     orchestrator = SUNATDuplicateOrchestrator(folder_path)
     return orchestrator.run()
@@ -304,7 +375,10 @@ def procesar_duplicados_sunat(folder_path: Optional[str] = None):
 # EJECUCIÓN STANDALONE
 # ============================================================
 if __name__ == "__main__":
-    import sys
+    # AGREGAR logging
+    logger.info("="*70)
+    logger.info("📋 MODO STANDALONE - Limpieza de Duplicados")
+    logger.info("="*70)
     
     print("🔍 Selecciona la carpeta con archivos SUNAT renombrados...")
     
@@ -316,6 +390,7 @@ if __name__ == "__main__":
     
     if not folder_path:
         print("❌ No se seleccionó ninguna carpeta. Proceso cancelado.")
+        logger.error("❌ No se seleccionó carpeta - Proceso cancelado")
         sys.exit(1)
     
     try:
@@ -323,13 +398,17 @@ if __name__ == "__main__":
         
         if eliminados > 0 or duplicados == 0:
             print("✅ Proceso completado exitosamente")
+            logger.info("✅ Proceso completado exitosamente")
             sys.exit(0)
         else:
             print("⚠️ No se eliminaron archivos")
+            logger.warning("⚠️ No se eliminaron archivos")
             sys.exit(1)
             
     except Exception as e:
         print(f"❌ Error crítico: {e}")
+        logger.error(f"❌ Error crítico: {e}")
+        logger.error(traceback.format_exc())
         import traceback
         traceback.print_exc()
         sys.exit(1)

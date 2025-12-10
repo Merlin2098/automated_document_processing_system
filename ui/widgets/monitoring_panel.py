@@ -62,6 +62,7 @@ class MonitoringPanel(QWidget):
         self.progress_bar.setTextVisible(True)
         self.progress_bar.setFormat("%p%")
         self.progress_bar.setAlignment(Qt.AlignCenter)
+        self.progress_bar.setFixedHeight(25)  # Aumentado de 24 a 25
         group_layout.addWidget(self.progress_bar)
         
         layout.addWidget(group)
@@ -89,7 +90,7 @@ class MonitoringPanel(QWidget):
             if current == total:
                 self.status_label.setText("✅ Proceso completado")
             else:
-                self.status_label.setText(f"📄 Procesando: {percentage}%")
+                self.status_label.setText(f"🔄 Procesando: {percentage}%")
     
     @Slot(dict)
     def update_stats(self, stats: dict):
@@ -134,7 +135,7 @@ class MonitoringPanel(QWidget):
         self.error_count = 0
         
         self.progress_bar.setValue(0)
-        self.status_label.setText("📄 Procesando...")
+        self.status_label.setText("🔄 Procesando...")
         self.files_label.setText(f"📁 Archivos: 0/{total_files}")
         self.errors_label.setText("⚠️ Errores: 0")
         self.time_label.setText("⏱️ Tiempo: 00:00:00")
@@ -148,7 +149,7 @@ class MonitoringPanel(QWidget):
         """Establece modo indeterminado (sin porcentaje conocido)"""
         self.progress_bar.setMaximum(0)
         self.progress_bar.setMinimum(0)
-        self.status_label.setText("📄 Procesando...")
+        self.status_label.setText("🔄 Procesando...")
     
     def set_determinate(self):
         """Vuelve a modo determinado (con porcentaje)"""

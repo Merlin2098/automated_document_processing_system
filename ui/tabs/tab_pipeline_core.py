@@ -1,6 +1,7 @@
 """
 Tab Pipeline Core - Pipeline de procesamiento completo (5 pasos)
 """
+import os
 from PySide6.QtWidgets import (
     QWidget, QVBoxLayout, QHBoxLayout, QLabel, 
     QPushButton, QGroupBox, QListWidget, QScrollArea
@@ -9,6 +10,11 @@ from PySide6.QtCore import Signal, Slot, Qt
 
 from ui.widgets.file_selector import FileSelector
 from ui.widgets.stepper_widget import StepperWidget
+from ui.workers.core_pipeline_step1_worker import CorePipelineStep1Worker
+from ui.workers.core_pipeline_step2_worker import CorePipelineStep2Worker
+from ui.workers.core_pipeline_step3_worker import CorePipelineStep3Worker
+from ui.workers.core_pipeline_step4_worker import CorePipelineStep4Worker
+from ui.workers.core_pipeline_step5_worker import CorePipelineStep5Worker
 
 
 class TabPipelineCore(QWidget):
@@ -23,6 +29,12 @@ class TabPipelineCore(QWidget):
         super().__init__(parent)
         self.theme_manager = theme_manager
         self.current_step = 0
+        
+        # Worker actual
+        self.current_worker = None
+        
+        # Última carpeta procesada (para propagar entre pasos)
+        self.last_folder_path = None
         
         self._init_ui()
     
@@ -283,6 +295,7 @@ El sistema:
         
         # Botón ejecutar
         btn_execute = QPushButton(f"▶️ Ejecutar Paso {step_index + 1}")
+        btn_execute.setObjectName(f"btn_execute_step{step_index}")
         btn_execute.clicked.connect(lambda: self._execute_step(step_index))
         layout.addWidget(btn_execute)
         
@@ -314,8 +327,353 @@ El sistema:
     def _execute_step(self, step_index: int):
         """Ejecuta el paso actual"""
         self.log_message.emit("info", f"▶️ Ejecutando Paso {step_index + 1}...")
-        self.log_message.emit("warning", "⚠️ Funcionalidad en desarrollo")
         
-        # TODO: Implementar lógica de cada paso
-        # Marcar como completado
-        self.stepper.mark_step_completed(step_index)
+        # Ejecutar según el paso
+        if step_index == 0:
+            self._execute_step1()
+        elif step_index == 1:
+            self._execute_step2()
+        elif step_index == 2:
+            self._execute_step3()
+        elif step_index == 3:
+            self._execute_step4()
+        elif step_index == 4:
+            self._execute_step5()
+    
+    def _execute_step1(self):
+        """Ejecuta el Paso 1: Generar Estructura"""
+        # Resetear contadores
+        main_window = self.window()
+        if hasattr(main_window, 'monitoring_panel'):
+            main_window.monitoring_panel.reset()
+        
+        folder_path = self.step1_folder.get_path()
+        
+        if not folder_path:
+            self.log_message.emit("error", "❌ Debe seleccionar una carpeta de trabajo")
+            return
+        
+        # Deshabilitar botón
+        btn = self.findChild(QPushButton, "btn_execute_step0")
+        if btn:
+            btn.setEnabled(False)
+            btn.setText("⏳ Procesando...")
+        
+        # Crear y configurar worker
+        self.current_worker = CorePipelineStep1Worker(folder_path)
+        
+        # Conectar señales
+        self.current_worker.progress_signal.connect(self.progress_updated.emit)
+        self.current_worker.log_signal.connect(self.log_message.emit)
+        self.current_worker.stats_signal.connect(self.stats_updated.emit)
+        self.current_worker.finished_signal.connect(self._on_step1_completed)
+        self.current_worker.error_signal.connect(self._on_step_error)
+        
+        # Iniciar worker
+        self.current_worker.start()
+    
+    def _execute_step2(self):
+        """Ejecuta el Paso 2: Dividir y Clasificar"""
+        # Resetear contadores
+        main_window = self.window()
+        if hasattr(main_window, 'monitoring_panel'):
+            main_window.monitoring_panel.reset()
+        
+        folder_path = self.step2_folder.get_path()
+        
+        if not folder_path:
+            self.log_message.emit("error", "❌ Debe seleccionar una carpeta de trabajo")
+            return
+        
+        # Validar que existen las subcarpetas requeridas
+        subcarpetas_requeridas = ['1_Boletas', '2_Afp', '3_5ta']
+        carpetas_existentes = []
+        
+        for carpeta in subcarpetas_requeridas:
+            ruta_carpeta = os.path.join(folder_path, carpeta)
+            if os.path.exists(ruta_carpeta):
+                carpetas_existentes.append(carpeta)
+        
+        if not carpetas_existentes:
+            self.log_message.emit("error", "❌ No se encontraron las subcarpetas necesarias (1_Boletas, 2_Afp, 3_5ta)")
+            return
+        
+        # Deshabilitar botón
+        btn = self.findChild(QPushButton, "btn_execute_step1")
+        if btn:
+            btn.setEnabled(False)
+            btn.setText("⏳ Procesando...")
+        
+        # Crear y configurar worker
+        self.current_worker = CorePipelineStep2Worker(folder_path)
+        
+        # Conectar señales
+        self.current_worker.progress_signal.connect(self.progress_updated.emit)
+        self.current_worker.log_signal.connect(self.log_message.emit)
+        self.current_worker.stats_signal.connect(self.stats_updated.emit)
+        self.current_worker.finished_signal.connect(self._on_step2_completed)
+        self.current_worker.error_signal.connect(self._on_step_error)
+        
+        # Iniciar worker
+        self.current_worker.start()
+    
+    def _execute_step3(self):
+        """Ejecuta el Paso 3: Generar Diagnóstico"""
+        # Resetear contadores
+        main_window = self.window()
+        if hasattr(main_window, 'monitoring_panel'):
+            main_window.monitoring_panel.reset()
+        
+        folder_path = self.step3_folder.get_path()
+        
+        if not folder_path:
+            self.log_message.emit("error", "❌ Debe seleccionar una carpeta de trabajo")
+            return
+        
+        # Validar que existen las subcarpetas con datos
+        subcarpetas_requeridas = ['1_Boletas', '2_Afp', '3_5ta']
+        carpetas_existentes = []
+        
+        for carpeta in subcarpetas_requeridas:
+            ruta_carpeta = os.path.join(folder_path, carpeta)
+            if os.path.exists(ruta_carpeta):
+                carpetas_existentes.append(carpeta)
+        
+        if not carpetas_existentes:
+            self.log_message.emit("error", "❌ No se encontraron subcarpetas con datos para procesar")
+            return
+        
+        # Deshabilitar botón
+        btn = self.findChild(QPushButton, "btn_execute_step2")
+        if btn:
+            btn.setEnabled(False)
+            btn.setText("⏳ Procesando...")
+        
+        # Crear y configurar worker
+        self.current_worker = CorePipelineStep3Worker(folder_path)
+        
+        # Conectar señales
+        self.current_worker.progress_signal.connect(self.progress_updated.emit)
+        self.current_worker.log_signal.connect(self.log_message.emit)
+        self.current_worker.stats_signal.connect(self.stats_updated.emit)
+        self.current_worker.finished_signal.connect(self._on_step3_completed)
+        self.current_worker.error_signal.connect(self._on_step_error)
+        
+        # Iniciar worker
+        self.current_worker.start()
+    
+    def _execute_step4(self):
+        """Ejecuta el Paso 4: Renombrar"""
+        # Resetear contadores
+        main_window = self.window()
+        if hasattr(main_window, 'monitoring_panel'):
+            main_window.monitoring_panel.reset()
+        
+        folder_path = self.step4_folder.get_path()
+        
+        if not folder_path:
+            self.log_message.emit("error", "❌ Debe seleccionar una carpeta madre")
+            return
+        
+        # Validar que existen las subcarpetas requeridas
+        carpetas_requeridas = ['1_Boletas', '2_Afp', '3_5ta']
+        carpetas_faltantes = []
+        
+        for carpeta in carpetas_requeridas:
+            ruta_carpeta = os.path.join(folder_path, carpeta)
+            if not os.path.exists(ruta_carpeta):
+                carpetas_faltantes.append(carpeta)
+        
+        if carpetas_faltantes:
+            self.log_message.emit(
+                "warning", 
+                f"⚠️ Carpetas faltantes: {', '.join(carpetas_faltantes)}. Se omitirán."
+            )
+        
+        # Deshabilitar botón
+        btn = self.findChild(QPushButton, "btn_execute_step3")
+        if btn:
+            btn.setEnabled(False)
+            btn.setText("⏳ Procesando...")
+        
+        # Crear y configurar worker
+        self.current_worker = CorePipelineStep4Worker(folder_path)
+        
+        # Conectar señales
+        self.current_worker.progress_signal.connect(self.progress_updated.emit)
+        self.current_worker.log_signal.connect(self.log_message.emit)
+        self.current_worker.stats_signal.connect(self.stats_updated.emit)
+        self.current_worker.finished_signal.connect(self._on_step4_completed)
+        self.current_worker.error_signal.connect(self._on_step_error)
+        
+        # Iniciar worker
+        self.current_worker.start()
+    
+    def _execute_step5(self):
+        """Ejecuta el Paso 5: Unir PDFs"""
+        # Resetear contadores
+        main_window = self.window()
+        if hasattr(main_window, 'monitoring_panel'):
+            main_window.monitoring_panel.reset()
+        
+        folder_path = self.step5_folder.get_path()
+        
+        if not folder_path:
+            self.log_message.emit("error", "❌ Debe seleccionar una carpeta madre")
+            return
+        
+        # Validar que existen subcarpetas
+        subcarpetas_esperadas = ['1_Boletas', '2_Afp', '3_5ta', '4_Convocatoria', '5_CertificadosTrabajo']
+        carpetas_existentes = []
+        
+        for carpeta in subcarpetas_esperadas:
+            ruta_carpeta = os.path.join(folder_path, carpeta)
+            if os.path.exists(ruta_carpeta):
+                carpetas_existentes.append(carpeta)
+        
+        if not carpetas_existentes:
+            self.log_message.emit("error", "❌ No se encontraron las subcarpetas necesarias")
+            return
+        
+        # Deshabilitar botón
+        btn = self.findChild(QPushButton, "btn_execute_step4")
+        if btn:
+            btn.setEnabled(False)
+            btn.setText("⏳ Procesando...")
+        
+        # Crear y configurar worker
+        self.current_worker = CorePipelineStep5Worker(folder_path)
+        
+        # Conectar señales
+        self.current_worker.progress_signal.connect(self.progress_updated.emit)
+        self.current_worker.log_signal.connect(self.log_message.emit)
+        self.current_worker.stats_signal.connect(self.stats_updated.emit)
+        self.current_worker.finished_signal.connect(self._on_step5_completed)
+        self.current_worker.error_signal.connect(self._on_step_error)
+        
+        # Iniciar worker
+        self.current_worker.start()
+    
+    @Slot(dict)
+    def _on_step1_completed(self, resultado: dict):
+        """Handler cuando se completa el Paso 1"""
+        # Re-habilitar botón
+        btn = self.findChild(QPushButton, "btn_execute_step0")
+        if btn:
+            btn.setEnabled(True)
+            btn.setText("▶️ Ejecutar Paso 1")
+        
+        # Marcar paso como completado
+        self.stepper.mark_step_completed(0)
+        
+        # Guardar ruta para próximos pasos
+        if resultado.get('success'):
+            self.last_folder_path = resultado.get('folder_path')
+            
+            # Auto-completar campos de pasos siguientes
+            if self.last_folder_path:
+                self.step2_folder.set_path(self.last_folder_path)
+                self.step3_folder.set_path(self.last_folder_path)
+                self.step4_folder.set_path(self.last_folder_path)
+                self.step5_folder.set_path(self.last_folder_path)
+            
+            self.log_message.emit("success", "✅ Paso 1 completado. Puede continuar al Paso 2")
+    
+    @Slot(dict)
+    def _on_step2_completed(self, resultado: dict):
+        """Handler cuando se completa el Paso 2"""
+        # Re-habilitar botón
+        btn = self.findChild(QPushButton, "btn_execute_step1")
+        if btn:
+            btn.setEnabled(True)
+            btn.setText("▶️ Ejecutar Paso 2")
+        
+        # Marcar paso como completado
+        self.stepper.mark_step_completed(1)
+        
+        if resultado.get('success'):
+            self.log_message.emit("success", "✅ Paso 2 completado. Puede continuar al Paso 3")
+        else:
+            resumen = resultado.get('resumen', {})
+            if resumen.get('pdfs_procesados', 0) > 0:
+                self.log_message.emit("warning", "⚠️ Paso 2 completado con algunos errores")
+    
+    @Slot(dict)
+    def _on_step3_completed(self, resultado: dict):
+        """Handler cuando se completa el Paso 3"""
+        # Re-habilitar botón
+        btn = self.findChild(QPushButton, "btn_execute_step2")
+        if btn:
+            btn.setEnabled(True)
+            btn.setText("▶️ Ejecutar Paso 3")
+        
+        # Marcar paso como completado
+        self.stepper.mark_step_completed(2)
+        
+        if resultado.get('success'):
+            excel_path = resultado.get('excel_path')
+            if excel_path:
+                self.log_message.emit("success", f"✅ Paso 3 completado. Excel: {os.path.basename(excel_path)}")
+                self.log_message.emit("info", "📋 Puede editar el Excel y continuar al Paso 4")
+    
+    @Slot(dict)
+    def _on_step4_completed(self, resultado: dict):
+        """Handler cuando se completa el Paso 4"""
+        # Re-habilitar botón
+        btn = self.findChild(QPushButton, "btn_execute_step3")
+        if btn:
+            btn.setEnabled(True)
+            btn.setText("▶️ Ejecutar Paso 4")
+        
+        # Marcar paso como completado
+        self.stepper.mark_step_completed(3)
+        
+        # Verificar si fue exitoso
+        if resultado.get('success'):
+            self.log_message.emit("success", "✅ Paso 4 completado. Puede continuar al Paso 5")
+        else:
+            totales = resultado.get('totales', {})
+            if totales.get('exitosos', 0) > 0:
+                self.log_message.emit("warning", "⚠️ Paso 4 completado con algunos errores")
+            else:
+                self.log_message.emit("warning", "⚠️ No se renombró ningún archivo")
+    
+    @Slot(dict)
+    def _on_step5_completed(self, resultado: dict):
+        """Handler cuando se completa el Paso 5"""
+        # Re-habilitar botón
+        btn = self.findChild(QPushButton, "btn_execute_step4")
+        if btn:
+            btn.setEnabled(True)
+            btn.setText("▶️ Ejecutar Paso 5")
+        
+        # Marcar paso como completado
+        self.stepper.mark_step_completed(4)
+        
+        if resultado.get('success'):
+            ruta_enviar = resultado.get('ruta_enviar')
+            if ruta_enviar:
+                self.log_message.emit("success", f"✅ Paso 5 completado. Packs en: {os.path.basename(ruta_enviar)}")
+                self.log_message.emit("success", "🎉 ¡Pipeline completo finalizado!")
+        else:
+            if resultado.get('packs_generados', 0) > 0:
+                self.log_message.emit("warning", "⚠️ Paso 5 completado con algunos errores")
+            else:
+                self.log_message.emit("error", "❌ No se generaron packs documentarios")
+        
+        # Activar iluminación intermitente al completar paso final
+        if resultado.get('success') or resultado.get('packs_generados', 0) > 0:
+            main_window = self.window()
+            if hasattr(main_window, 'flash_window'):
+                main_window.flash_window(5)
+    
+    @Slot(str)
+    def _on_step_error(self, error_msg: str):
+        """Handler cuando ocurre un error"""
+        # Re-habilitar botón del paso actual
+        btn = self.findChild(QPushButton, f"btn_execute_step{self.current_step}")
+        if btn:
+            btn.setEnabled(True)
+            btn.setText(f"▶️ Ejecutar Paso {self.current_step + 1}")
+        
+        self.log_message.emit("error", f"❌ Error: {error_msg}")

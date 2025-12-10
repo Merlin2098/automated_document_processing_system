@@ -14,12 +14,16 @@ import re
 from datetime import datetime
 from tkinter import Tk, filedialog
 from typing import List, Dict, Tuple, Optional
+import sys
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+from utils.logger import Logger
+
 try:
     from PyPDF2 import PdfMerger
 except ImportError:
     print("⚠ PyPDF2 no está instalado. Ejecuta: pip install PyPDF2")
     PdfMerger = None
-
+logger = Logger("CorePipeline5_UnirFinal")
 
 # ============================================================
 # MÓDULO 1: INTERFAZ Y SELECCIÓN
@@ -32,12 +36,17 @@ def seleccionar_carpeta_madre() -> Optional[str]:
     Returns:
         str: Ruta de la carpeta madre o None si se cancela
     """
+    logger.info("📂 Abriendo selector de carpeta madre...")
     root = Tk()
     root.withdraw()
     root.attributes('-topmost', True)
     carpeta = filedialog.askdirectory(
         title="Selecciona la carpeta madre que contiene las 5 subcarpetas"
     )
+    if carpeta:
+        logger.info(f"✅ Carpeta seleccionada: {carpeta}")
+    else:
+        logger.warning("⚠️ Usuario canceló la selección")
     root.destroy()
     return carpeta if carpeta else None
 
@@ -107,6 +116,7 @@ def escanear_pdfs_subcarpeta(ruta_subcarpeta: str) -> List[str]:
         return pdfs
     except Exception as e:
         print(f"  ✗ Error al escanear subcarpeta: {e}")
+        logger.error(f"  ✗ Error al escanear subcarpeta: {e}")
         return []
 
 
@@ -130,8 +140,10 @@ def copiar_pdfs_a_procesamiento(carpeta_madre: str, subcarpetas: List[str],
     try:
         os.makedirs(ruta_procesar, exist_ok=True)
         print(f"  ✓ Carpeta creada: {nombre_carpeta}")
+        logger.info(f"  ✓ Carpeta creada: {nombre_carpeta}")
     except Exception as e:
         print(f"  ✗ Error al crear carpeta: {e}")
+        logger.error(f"  ✗ Error al crear carpeta: {e}")
         return "", 0, 0
     
     archivos_copiados = 0
@@ -144,6 +156,8 @@ def copiar_pdfs_a_procesamiento(carpeta_madre: str, subcarpetas: List[str],
         
         print(f"\n  Procesando: {subcarpeta}")
         print(f"  → PDFs encontrados: {len(pdfs)}")
+        logger.info(f"  Procesando: {subcarpeta}")
+        logger.info(f"  → PDFs encontrados: {len(pdfs)}")
         
         copiados_subcarpeta = 0
         for pdf in pdfs:
@@ -156,12 +170,13 @@ def copiar_pdfs_a_procesamiento(carpeta_madre: str, subcarpetas: List[str],
                 copiados_subcarpeta += 1
             except Exception as e:
                 print(f"    ✗ Error copiando '{pdf}': {e}")
+                logger.error(f"    ✗ Error copiando '{pdf}': {e}")
                 errores += 1
         
         print(f"  ✓ Copiados: {copiados_subcarpeta}")
+        logger.info(f"  ✓ Copiados: {copiados_subcarpeta}")
     
     return ruta_procesar, archivos_copiados, errores
-
 
 # ============================================================
 # MÓDULO 3: ANÁLISIS Y DIAGNÓSTICO
@@ -204,6 +219,8 @@ def generar_diagnostico(ruta_procesar: str, timestamp: str) -> Dict:
     Returns:
         Diccionario con estructura del diagnóstico
     """
+    logger.info("📊 Generando diagnóstico de contratos...")
+    
     diagnostico = {
         'timestamp': timestamp,
         'carpeta_procesamiento': os.path.basename(ruta_procesar),
@@ -243,6 +260,7 @@ def generar_diagnostico(ruta_procesar: str, timestamp: str) -> Dict:
                 print(f"  ⚠ Archivo sin identificador válido: {pdf}")
         
         diagnostico['total_contratos_unicos'] = len(diagnostico['contratos'])
+        logger.info(f"✅ Diagnóstico generado: {diagnostico['total_contratos_unicos']} contratos únicos")
         
     except Exception as e:
         print(f"  ✗ Error al generar diagnóstico: {e}")
@@ -293,6 +311,7 @@ def fusionar_pdfs_contrato(archivos: List[str], ruta_procesar: str,
     Returns:
         True si la fusión fue exitosa
     """
+    
     if PdfMerger is None:
         print("  ✗ PyPDF2 no disponible. No se puede fusionar PDFs.")
         return False
@@ -305,9 +324,10 @@ def fusionar_pdfs_contrato(archivos: List[str], ruta_procesar: str,
             ruta_pdf = os.path.join(ruta_procesar, archivo)
             if os.path.exists(ruta_pdf):
                 merger.append(ruta_pdf)
-        
+        logger.info(f"  📄 Fusionando {len(archivos)} documentos...")
         # Guardar PDF fusionado
         ruta_salida = os.path.join(ruta_destino, f"{nombre_salida}.pdf")
+        logger.info(f"  ✅ Pack generado: {nombre_salida}")
         merger.write(ruta_salida)
         merger.close()
         
@@ -315,6 +335,8 @@ def fusionar_pdfs_contrato(archivos: List[str], ruta_procesar: str,
         
     except Exception as e:
         print(f"  ✗ Error al fusionar PDFs: {e}")
+        logger.error(f"  ✗ Error al fusionar '{nombre_salida}': {e}")
+        logger.error(traceback.format_exc())
         return False
 
 
@@ -334,7 +356,8 @@ def generar_packs_documentales(ruta_procesar: str, diagnostico: Dict,
     # Crear carpeta Documentos_Enviar dentro de Documentos_Procesar
     nombre_carpeta = f"Documentos_Enviar_{timestamp}"
     ruta_enviar = os.path.join(ruta_procesar, nombre_carpeta)
-    
+    logger.info("📦 Generando packs documentarios...")
+    logger.info(f"  Carpeta destino: {nombre_carpeta}")
     try:
         os.makedirs(ruta_enviar, exist_ok=True)
         print(f"  ✓ Carpeta creada: {nombre_carpeta}")
@@ -363,8 +386,10 @@ def generar_packs_documentales(ruta_procesar: str, diagnostico: Dict,
         if exito:
             packs_generados += 1
             print(f"  ✓ Pack generado exitosamente")
+            logger.info(f"  ✓ Pack generado exitosamente")
         else:
             errores += 1
+            logger.error(f"  ✗ Error generando pack")
     
     return ruta_enviar, packs_generados, errores
 
@@ -461,6 +486,10 @@ def main():
     print(" GENERADOR DE PACKS DOCUMENTARIOS")
     print(" Matrix File Processor v3.0")
     print("="*60)
+    logger.info("="*60)
+    logger.info(" GENERADOR DE PACKS DOCUMENTARIOS")
+    logger.info(" Matrix File Processor v3.0")
+    logger.info("="*60)
     
     # Verificar PyPDF2
     if PdfMerger is None:
@@ -473,6 +502,7 @@ def main():
     
     # PASO 1: Seleccionar carpeta madre
     print("\n[1/5] Seleccionando carpeta madre...")
+    logger.info("[1/5] Seleccionando carpeta madre...")
     carpeta_madre = seleccionar_carpeta_madre()
     
     if not carpeta_madre:
@@ -483,6 +513,7 @@ def main():
     
     # PASO 2: Validar y copiar PDFs
     print("\n[2/5] Validando estructura y copiando PDFs...")
+    logger.info("[2/5] Validando estructura y copiando PDFs...")
     encontradas, faltantes = validar_y_detectar_subcarpetas(carpeta_madre)
     
     if not encontradas:
@@ -517,6 +548,7 @@ def main():
     
     # PASO 3: Generar diagnóstico
     print("\n[3/5] Generando diagnóstico de criterios...")
+    logger.info("[3/5] Generando diagnóstico de criterios...")
     diagnostico = generar_diagnostico(ruta_procesar, timestamp)
     
     if diagnostico['total_contratos_unicos'] == 0:
@@ -528,6 +560,7 @@ def main():
     
     # PASO 4: Confirmar operación
     print("\n[4/5] Confirmación de operación...")
+    logger.info("[4/5] Confirmación de operación...")
     if not confirmar_continuacion(diagnostico['total_contratos_unicos'], 
                                   diagnostico['total_archivos']):
         print("\n⚠ Operación cancelada por el usuario.")
@@ -536,6 +569,7 @@ def main():
     
     # PASO 5: Generar packs documentarios
     print("\n[5/5] Generando packs documentarios...")
+    logger.info("[5/5] Generando packs documentarios...")
     print(f"{'='*60}")
     
     ruta_enviar, packs, errores_fusion = generar_packs_documentales(
@@ -549,6 +583,9 @@ def main():
         print("\n" + "="*60)
         print(" PROCESO COMPLETADO EXITOSAMENTE")
         print("="*60)
+        logger.info("="*60)
+        logger.info(" PROCESO COMPLETADO EXITOSAMENTE")
+        logger.info("="*60)
         print(f"\n  📂 Estructura generada:")
         print(f"     {os.path.basename(ruta_procesar)}/")
         print(f"     ├── [PDFs originales copiados]")

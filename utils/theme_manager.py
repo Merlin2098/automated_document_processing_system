@@ -9,6 +9,12 @@ from datetime import datetime
 from PySide6.QtGui import QPalette, QColor
 from PySide6.QtCore import QObject, Signal
 
+# Importar sistema de logging
+from utils.logger import get_logger, log_exception
+
+# Obtener logger para este módulo
+logger = get_logger('utils.theme_manager')
+
 
 class ThemeManager(QObject):
     """Gestor de temas de la aplicación"""
@@ -18,9 +24,14 @@ class ThemeManager(QObject):
     def __init__(self):
         super().__init__()
         
+        logger.debug("Inicializando Theme Manager...")
+        
         # Rutas de recursos
         self.themes_dir = self._get_resource_path("resources/themes")
         self.config_file = self._get_resource_path("resources/config.json")
+        
+        logger.debug(f"Directorio de temas: {self.themes_dir}")
+        logger.debug(f"Archivo de configuración: {self.config_file}")
         
         # Estado
         self.available_themes = {}
@@ -30,6 +41,8 @@ class ThemeManager(QObject):
         # Inicialización
         self._load_themes()
         self._load_config()
+        
+        logger.info(f"✅ Theme Manager inicializado - Tema activo: {self.current_theme_name}")
     
     def _get_resource_path(self, relative_path: str) -> Path:
         """
@@ -44,17 +57,21 @@ class ThemeManager(QObject):
         if getattr(sys, 'frozen', False):
             # Ejecutable empaquetado con PyInstaller
             base_path = Path(sys._MEIPASS)
+            logger.debug(f"Modo PyInstaller - Base path: {base_path}")
         else:
             # Modo desarrollo
             base_path = Path(__file__).parent.parent
+            logger.debug(f"Modo desarrollo - Base path: {base_path}")
         
         return base_path / relative_path
     
     def _load_themes(self):
         """Carga todos los temas disponibles desde resources/themes/"""
         try:
+            logger.debug("Cargando temas desde disco...")
+            
             if not self.themes_dir.exists():
-                print(f"⚠️ Directorio de temas no encontrado: {self.themes_dir}")
+                logger.warning(f"⚠️  Directorio de temas no encontrado: {self.themes_dir}")
                 self._create_default_themes()
                 return
             
@@ -62,9 +79,11 @@ class ThemeManager(QObject):
             theme_files = list(self.themes_dir.glob("theme_*.json"))
             
             if not theme_files:
-                print("⚠️ No se encontraron archivos de tema")
+                logger.warning("⚠️  No se encontraron archivos de tema")
                 self._create_default_themes()
                 return
+            
+            logger.debug(f"Encontrados {len(theme_files)} archivos de tema")
             
             for theme_file in theme_files:
                 try:
@@ -72,21 +91,23 @@ class ThemeManager(QObject):
                         theme_data = json.load(f)
                         theme_name = theme_data['name']
                         self.available_themes[theme_name] = theme_data
-                        print(f"✅ Tema cargado: {theme_name} ({theme_data['description']})")
+                        logger.info(f"✅ Tema cargado: {theme_name} ({theme_data['description']})")
                 except Exception as e:
-                    print(f"❌ Error cargando tema {theme_file.name}: {e}")
+                    logger.error(f"❌ Error cargando tema {theme_file.name}: {e}")
             
             # Verificar que se cargó al menos un tema
             if not self.available_themes:
-                print("⚠️ No se pudo cargar ningún tema, usando valores por defecto")
+                logger.warning("⚠️  No se pudo cargar ningún tema, usando valores por defecto")
                 self._create_default_themes()
                 
         except Exception as e:
-            print(f"❌ Error al cargar temas: {e}")
+            log_exception(logger, e, "carga de temas")
             self._create_default_themes()
     
     def _create_default_themes(self):
         """Crea temas por defecto en memoria si no se pueden cargar desde archivos"""
+        logger.info("Creando temas por defecto en memoria...")
+        
         self.available_themes = {
             'dark': {
                 'name': 'dark',
@@ -100,33 +121,41 @@ class ThemeManager(QObject):
                 'pyqt5': {'stylesheet': 'QWidget { background-color: #0D0F22; color: #E2E8F0; }'}
             }
         }
+        
+        logger.info("✅ Tema por defecto creado: dark")
     
     def _load_config(self):
         """Carga la configuración del usuario desde config.json"""
         try:
+            logger.debug("Cargando configuración de usuario...")
+            
             if self.config_file.exists():
                 with open(self.config_file, 'r', encoding='utf-8') as f:
                     config = json.load(f)
                     self.current_theme_name = config.get('theme', 'dark')
-                    print(f"✅ Configuración cargada: tema '{self.current_theme_name}'")
+                    logger.info(f"✅ Configuración cargada: tema '{self.current_theme_name}'")
             else:
-                print(f"ℹ️ Archivo de configuración no encontrado, usando tema por defecto")
+                logger.info(f"ℹ️  Archivo de configuración no encontrado, usando tema por defecto")
                 self.current_theme_name = 'dark'
+                
         except Exception as e:
-            print(f"❌ Error cargando configuración: {e}")
+            logger.error(f"❌ Error cargando configuración: {e}")
             self.current_theme_name = 'dark'
         
         # Establecer tema actual
         if self.current_theme_name in self.available_themes:
             self.current_theme_data = self.available_themes[self.current_theme_name]
+            logger.debug(f"Tema actual establecido: {self.current_theme_name}")
         else:
-            print(f"⚠️ Tema '{self.current_theme_name}' no encontrado, usando primer tema disponible")
+            logger.warning(f"⚠️  Tema '{self.current_theme_name}' no encontrado, usando primer tema disponible")
             self.current_theme_name = list(self.available_themes.keys())[0]
             self.current_theme_data = self.available_themes[self.current_theme_name]
     
     def _save_config(self):
         """Guarda la configuración del usuario en config.json"""
         try:
+            logger.debug(f"Guardando configuración: tema '{self.current_theme_name}'")
+            
             # Leer configuración existente
             config = {}
             if self.config_file.exists():
@@ -142,9 +171,10 @@ class ThemeManager(QObject):
             with open(self.config_file, 'w', encoding='utf-8') as f:
                 json.dump(config, f, indent=2, ensure_ascii=False)
             
-            print(f"✅ Configuración guardada: tema '{self.current_theme_name}'")
+            logger.info(f"✅ Configuración guardada: tema '{self.current_theme_name}'")
+            
         except Exception as e:
-            print(f"❌ Error guardando configuración: {e}")
+            log_exception(logger, e, "guardado de configuración")
     
     def get_current_theme(self) -> str:
         """Retorna el nombre del tema actual"""
@@ -207,10 +237,14 @@ class ThemeManager(QObject):
                     else:
                         break
             
-            return value if isinstance(value, str) and value.startswith('#') else '#000000'
+            if isinstance(value, str) and value.startswith('#'):
+                return value
+            else:
+                logger.warning(f"⚠️  Color '{color_path}' no encontrado, usando negro por defecto")
+                return '#000000'
         
         except Exception as e:
-            print(f"⚠️ Error obteniendo color '{color_path}': {e}")
+            logger.warning(f"⚠️  Error obteniendo color '{color_path}': {e}")
             return '#000000'
     
     def set_theme(self, theme_name: str):
@@ -221,13 +255,16 @@ class ThemeManager(QObject):
             theme_name: Nombre del tema a activar
         """
         if theme_name in self.available_themes:
+            logger.info(f"Cambiando tema a: {theme_name}")
+            
             self.current_theme_name = theme_name
             self.current_theme_data = self.available_themes[theme_name]
             self._save_config()
             self.theme_changed.emit(theme_name)
-            print(f"✅ Tema cambiado a: {theme_name}")
+            
+            logger.info(f"✅ Tema cambiado exitosamente: {theme_name}")
         else:
-            print(f"❌ Tema '{theme_name}' no encontrado")
+            logger.error(f"❌ Tema '{theme_name}' no encontrado")
     
     def get_stylesheet(self) -> str:
         """
@@ -237,9 +274,11 @@ class ThemeManager(QObject):
             String con código QSS
         """
         try:
-            return self.current_theme_data.get('pyqt5', {}).get('stylesheet', '')
+            stylesheet = self.current_theme_data.get('pyqt5', {}).get('stylesheet', '')
+            logger.debug(f"Stylesheet obtenido ({len(stylesheet)} caracteres)")
+            return stylesheet
         except Exception as e:
-            print(f"❌ Error obteniendo stylesheet: {e}")
+            logger.error(f"❌ Error obteniendo stylesheet: {e}")
             return ''
     
     def get_palette(self) -> QPalette:
@@ -273,14 +312,17 @@ class ThemeManager(QObject):
             palette.setColor(QPalette.Highlight, QColor(primary))
             palette.setColor(QPalette.HighlightedText, QColor(button_text))
             
+            logger.debug("Paleta de colores generada correctamente")
+            
         except Exception as e:
-            print(f"⚠️ Error generando paleta: {e}")
+            logger.warning(f"⚠️  Error generando paleta: {e}")
         
         return palette
     
     def reload_themes(self):
         """Recarga todos los temas desde disco"""
-        print("🔄 Recargando temas...")
+        logger.info("🔄 Recargando temas desde disco...")
+        
         self.available_themes.clear()
         self._load_themes()
         
@@ -288,9 +330,12 @@ class ThemeManager(QObject):
         if self.current_theme_name in self.available_themes:
             self.current_theme_data = self.available_themes[self.current_theme_name]
             self.theme_changed.emit(self.current_theme_name)
+            logger.info(f"✅ Tema actual re-establecido: {self.current_theme_name}")
         else:
             # Si el tema actual ya no existe, usar el primero disponible
+            logger.warning(f"⚠️  Tema actual '{self.current_theme_name}' ya no existe")
             self.current_theme_name = list(self.available_themes.keys())[0]
             self.current_theme_data = self.available_themes[self.current_theme_name]
             self._save_config()
             self.theme_changed.emit(self.current_theme_name)
+            logger.info(f"Tema cambiado automáticamente a: {self.current_theme_name}")

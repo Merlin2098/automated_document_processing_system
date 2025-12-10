@@ -8,13 +8,19 @@ Descripción: Clasifica y divide PDFs de carpeta madre en subcarpetas específic
 import os
 import sys
 import re
-import logging
 from datetime import datetime
 from pathlib import Path
 import tkinter as tk
 from tkinter import messagebox
 import PyPDF2
 from PyPDF2 import PdfReader, PdfWriter
+
+# Importar logger
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+from utils.logger import Logger
+
+# Inicializar logger
+logger = Logger("CorePipeline2_Mover")
 
 # Configuración de palabras clave
 PALABRAS_CLAVE = {
@@ -29,47 +35,6 @@ NOMBRES_BASE = {
     "2_Afp": "afp", 
     "3_5ta": "quinta"
 }
-
-def configurar_logging(carpeta_madre):
-    """
-    Configura el sistema de logging.
-    
-    Args:
-        carpeta_madre (str): Carpeta donde se guardará el archivo de log.
-    
-    Returns:
-        logging.Logger: Logger configurado.
-    """
-    # Crear nombre de archivo de log con timestamp
-    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-    log_filename = os.path.join(carpeta_madre, f"procesamiento_pdf_{timestamp}.log")
-    
-    # Configurar logging
-    logger = logging.getLogger('pdf_processor')
-    logger.setLevel(logging.INFO)
-    
-    # Evitar duplicación de handlers
-    if logger.handlers:
-        logger.handlers.clear()
-    
-    # Handler para archivo
-    file_handler = logging.FileHandler(log_filename, encoding='utf-8')
-    file_handler.setLevel(logging.INFO)
-    
-    # Handler para consola
-    console_handler = logging.StreamHandler()
-    console_handler.setLevel(logging.INFO)
-    
-    # Formato
-    formatter = logging.Formatter('%(asctime)s - %(levelname)s - %(message)s', 
-                                  datefmt='%Y-%m-%d %H:%M:%S')
-    file_handler.setFormatter(formatter)
-    console_handler.setFormatter(formatter)
-    
-    logger.addHandler(file_handler)
-    logger.addHandler(console_handler)
-    
-    return logger, log_filename
 
 def verificar_archivos_en_carpetas(carpetas):
     """
@@ -114,11 +79,16 @@ def preguntar_sobrescribir(carpetas_con_archivos):
     mensaje += "\n¿Desea continuar y sobrescribir los archivos existentes?"
     
     # Mostrar en consola
+    logger.warning("="*60)
+    logger.warning("ADVERTENCIA: Carpetas con archivos existentes")
+    logger.warning("="*60)
+    
     print("\n" + "="*60)
     print("ADVERTENCIA: Carpetas con archivos existentes")
     print("="*60)
     for carpeta, cantidad in carpetas_con_archivos.items():
         nombre_carpeta = os.path.basename(carpeta)
+        logger.warning(f"  {nombre_carpeta}: {cantidad} archivo(s)")
         print(f"  {nombre_carpeta}: {cantidad} archivo(s)")
     print("="*60)
     
@@ -140,13 +110,12 @@ def preguntar_sobrescribir(carpetas_con_archivos):
     
     return respuesta
 
-def buscar_pdfs_por_tipo(carpeta_madre, logger):
+def buscar_pdfs_por_tipo(carpeta_madre):
     """
     Busca PDFs en la carpeta madre y los clasifica por tipo.
     
     Args:
         carpeta_madre (str): Ruta de la carpeta madre.
-        logger: Logger para registrar actividad.
     
     Returns:
         dict: Diccionario con {tipo_carpeta: [lista_de_archivos]}.
@@ -185,13 +154,12 @@ def buscar_pdfs_por_tipo(carpeta_madre, logger):
     
     return pdfs_por_tipo, pdfs_no_clasificados
 
-def validar_unico_archivo_por_tipo(pdfs_por_tipo, logger):
+def validar_unico_archivo_por_tipo(pdfs_por_tipo):
     """
     Valida que haya solo un archivo PDF por cada tipo.
     
     Args:
         pdfs_por_tipo (dict): Diccionario con PDFs clasificados por tipo.
-        logger: Logger para registrar actividad.
     
     Returns:
         bool: True si hay máximo 1 archivo por tipo, False si hay múltiples.
@@ -216,12 +184,17 @@ def validar_unico_archivo_por_tipo(pdfs_por_tipo, logger):
         mensaje += "Solo se permite un archivo por tipo. Por favor, revise los archivos."
         
         # Mostrar en consola
+        logger.error("="*60)
+        logger.error("ERROR: Múltiples archivos encontrados")
+        logger.error("="*60)
         print("\n" + "="*60)
         print("ERROR: Múltiples archivos encontrados")
         print("="*60)
         for tipo, archivos in tipos_problematicos:
+            logger.error(f"\n{tipo}:")
             print(f"\n{tipo}:")
             for archivo in archivos:
+                logger.error(f"  • {archivo}")
                 print(f"  • {archivo}")
         print("="*60)
         
@@ -229,104 +202,86 @@ def validar_unico_archivo_por_tipo(pdfs_por_tipo, logger):
         root = tk.Tk()
         root.withdraw()
         root.attributes('-topmost', True)
-        messagebox.showerror(
-            "Error - Múltiples Archivos",
-            mensaje
-        )
+        messagebox.showerror("Error - Múltiples Archivos", mensaje)
         
         return False
     
     return True
 
-def dividir_pdf(ruta_pdf, carpeta_destino, nombre_base, logger):
-    """
-    Divide un PDF en páginas individuales.
-    
-    Args:
-        ruta_pdf (str): Ruta del PDF a dividir.
-        carpeta_destino (str): Carpeta donde guardar las páginas.
-        nombre_base (str): Nombre base para los archivos resultantes.
-        logger: Logger para registrar actividad.
-    
-    Returns:
-        tuple: (éxito, páginas_procesadas, mensaje_error)
-    """
-    try:
-        # Verificar que el PDF existe
-        if not os.path.exists(ruta_pdf):
-            return False, 0, f"Archivo no encontrado: {ruta_pdf}"
-        
-        # Leer PDF
-        with open(ruta_pdf, 'rb') as file:
-            reader = PdfReader(file)
-            
-            # Verificar si está encriptado
-            if reader.is_encrypted:
-                return False, 0, f"PDF protegido con contraseña: {os.path.basename(ruta_pdf)}"
-            
-            num_paginas = len(reader.pages)
-            logger.info(f"  Dividiendo '{os.path.basename(ruta_pdf)}' ({num_paginas} páginas)")
-            
-            # Crear carpeta destino si no existe
-            os.makedirs(carpeta_destino, exist_ok=True)
-            
-            # Dividir en páginas individuales
-            paginas_procesadas = 0
-            for i, page in enumerate(reader.pages):
-                # Crear nombre de archivo
-                nombre_archivo = f"{nombre_base}_{i+1}.pdf"
-                ruta_salida = os.path.join(carpeta_destino, nombre_archivo)
-                
-                # Crear PDF de una sola página
-                writer = PdfWriter()
-                writer.add_page(page)
-                
-                # Guardar página individual
-                with open(ruta_salida, 'wb') as output_file:
-                    writer.write(output_file)
-                
-                paginas_procesadas += 1
-            
-            logger.info(f"  ✓ {paginas_procesadas} páginas creadas en {carpeta_destino}")
-            return True, paginas_procesadas, None
-            
-    except PyPDF2.errors.PdfReadError as e:
-        return False, 0, f"Error al leer PDF (posiblemente corrupto): {str(e)}"
-    except Exception as e:
-        return False, 0, f"Error inesperado: {str(e)}"
-
-def limpiar_carpeta_destino(carpeta_destino, logger):
+def limpiar_carpeta_destino(carpeta):
     """
     Elimina todos los archivos de una carpeta destino.
     
     Args:
-        carpeta_destino (str): Ruta de la carpeta a limpiar.
-        logger: Logger para registrar actividad.
+        carpeta (str): Ruta de la carpeta a limpiar.
     """
-    if os.path.exists(carpeta_destino):
-        archivos = [f for f in os.listdir(carpeta_destino) 
-                   if os.path.isfile(os.path.join(carpeta_destino, f))]
-        
-        for archivo in archivos:
-            try:
-                os.remove(os.path.join(carpeta_destino, archivo))
-            except Exception as e:
-                logger.error(f"Error al eliminar {archivo}: {str(e)}")
-        
-        if archivos:
-            logger.info(f"  Limpiada carpeta: {carpeta_destino} ({len(archivos)} archivos eliminados)")
+    if not os.path.exists(carpeta):
+        return
+    
+    archivos = [f for f in os.listdir(carpeta) if os.path.isfile(os.path.join(carpeta, f))]
+    
+    for archivo in archivos:
+        try:
+            ruta_archivo = os.path.join(carpeta, archivo)
+            os.remove(ruta_archivo)
+            logger.info(f"    Eliminado: {archivo}")
+        except Exception as e:
+            logger.error(f"    Error al eliminar '{archivo}': {e}")
 
-def procesar_pdfs(carpeta_madre, logger, sobrescribir=False):
+def dividir_pdf(ruta_pdf, carpeta_destino, nombre_base):
     """
-    Procesa todos los PDFs según las reglas establecidas.
+    Divide un PDF en páginas individuales.
+    
+    Args:
+        ruta_pdf (str): Ruta del archivo PDF a dividir.
+        carpeta_destino (str): Carpeta donde guardar las páginas.
+        nombre_base (str): Nombre base para los archivos de salida.
+    
+    Returns:
+        tuple: (exito, numero_paginas, mensaje_error)
+    """
+    try:
+        # Crear carpeta destino si no existe
+        os.makedirs(carpeta_destino, exist_ok=True)
+        
+        # Leer PDF
+        with open(ruta_pdf, 'rb') as archivo:
+            reader = PdfReader(archivo)
+            total_paginas = len(reader.pages)
+            
+            logger.info(f"  Total de páginas: {total_paginas}")
+            
+            # Dividir en páginas individuales
+            for num_pagina in range(total_paginas):
+                writer = PdfWriter()
+                writer.add_page(reader.pages[num_pagina])
+                
+                # Generar nombre de archivo
+                nombre_archivo = f"{nombre_base}_{num_pagina + 1}.pdf"
+                ruta_salida = os.path.join(carpeta_destino, nombre_archivo)
+                
+                # Guardar página
+                with open(ruta_salida, 'wb') as archivo_salida:
+                    writer.write(archivo_salida)
+            
+            logger.info(f"  ✓ Dividido en {total_paginas} páginas")
+            return True, total_paginas, ""
+            
+    except Exception as e:
+        error_msg = f"Error al dividir PDF: {str(e)}"
+        logger.error(f"  ✗ {error_msg}")
+        return False, 0, error_msg
+
+def procesar_pdfs(carpeta_madre, sobrescribir):
+    """
+    Procesa todos los PDFs encontrados en la carpeta madre.
     
     Args:
         carpeta_madre (str): Ruta de la carpeta madre.
-        logger: Logger para registrar actividad.
-        sobrescribir (bool): Si es True, sobrescribe archivos existentes.
+        sobrescribir (bool): Si se deben sobrescribir archivos existentes.
     
     Returns:
-        dict: Resumen del procesamiento.
+        dict: Resumen del procesamiento con estadísticas.
     """
     logger.info("="*60)
     logger.info("INICIANDO PROCESAMIENTO DE PDFs")
@@ -334,11 +289,11 @@ def procesar_pdfs(carpeta_madre, logger, sobrescribir=False):
     
     # 1. Buscar y clasificar PDFs
     logger.info("Buscando y clasificando PDFs...")
-    pdfs_por_tipo, pdfs_no_clasificados = buscar_pdfs_por_tipo(carpeta_madre, logger)
+    pdfs_por_tipo, pdfs_no_clasificados = buscar_pdfs_por_tipo(carpeta_madre)
     
     # 2. Validar un solo archivo por tipo
     logger.info("Validando un solo archivo por tipo...")
-    if not validar_unico_archivo_por_tipo(pdfs_por_tipo, logger):
+    if not validar_unico_archivo_por_tipo(pdfs_por_tipo):
         return {"error": "Múltiples archivos por tipo encontrados"}
     
     # 3. Verificar carpetas destino
@@ -353,7 +308,7 @@ def procesar_pdfs(carpeta_madre, logger, sobrescribir=False):
     if sobrescribir:
         logger.info("Limpiando carpetas destino...")
         for carpeta in carpetas_destino:
-            limpiar_carpeta_destino(carpeta, logger)
+            limpiar_carpeta_destino(carpeta)
     
     # 5. Procesar cada tipo de PDF
     logger.info("\nProcesando PDFs...")
@@ -378,7 +333,7 @@ def procesar_pdfs(carpeta_madre, logger, sobrescribir=False):
         logger.info(f"\nProcesando {tipo}: {archivo}")
         
         # Dividir PDF
-        exito, paginas, mensaje_error = dividir_pdf(ruta_pdf, carpeta_destino, nombre_base, logger)
+        exito, paginas, mensaje_error = dividir_pdf(ruta_pdf, carpeta_destino, nombre_base)
         
         if exito:
             resumen["total_paginas"] += paginas
@@ -411,26 +366,36 @@ def procesar_pdfs(carpeta_madre, logger, sobrescribir=False):
     
     return resumen
 
-def mostrar_resumen_final(resumen, carpeta_madre, log_filename):
+def mostrar_resumen_final(resumen, carpeta_madre):
     """
     Muestra un resumen final del procesamiento.
     
     Args:
         resumen (dict): Resumen del procesamiento.
         carpeta_madre (str): Ruta de la carpeta madre.
-        log_filename (str): Ruta del archivo de log.
     """
+    logger.info("="*60)
+    logger.info("RESUMEN DEL PROCESAMIENTO")
+    logger.info("="*60)
+    
     print("\n" + "="*60)
     print("RESUMEN DEL PROCESAMIENTO")
     print("="*60)
     
     if "error" in resumen:
+        logger.error(f"ERROR: {resumen['error']}")
         print(f"ERROR: {resumen['error']}")
         return
     
     if "cancelado" in resumen:
+        logger.warning("PROCESAMIENTO CANCELADO")
         print("PROCESAMIENTO CANCELADO")
         return
+    
+    logger.info(f"PDFs procesados exitosamente: {resumen['pdfs_procesados']}")
+    logger.info(f"PDFs con errores: {resumen['pdfs_con_error']}")
+    logger.info(f"Total de páginas generadas: {resumen['total_paginas']}")
+    logger.info(f"PDFs no clasificados: {resumen.get('pdfs_no_clasificados', 0)}")
     
     print(f"PDFs procesados exitosamente: {resumen['pdfs_procesados']}")
     print(f"PDFs con errores: {resumen['pdfs_con_error']}")
@@ -438,23 +403,33 @@ def mostrar_resumen_final(resumen, carpeta_madre, log_filename):
     print(f"PDFs no clasificados: {resumen.get('pdfs_no_clasificados', 0)}")
     
     print("\nDetalle por tipo:")
+    logger.info("Detalle por tipo:")
     for tipo, detalle in resumen.get("detalle_por_tipo", {}).items():
         nombre_base = NOMBRES_BASE.get(tipo, tipo)
         if detalle.get("procesado"):
-            print(f"  • {nombre_base.upper()}: {detalle['archivo']} → {detalle['paginas']} páginas")
+            msg = f"  • {nombre_base.upper()}: {detalle['archivo']} → {detalle['paginas']} páginas"
+            logger.info(msg)
+            print(msg)
         else:
             if "error" in detalle:
-                print(f"  • {nombre_base.upper()}: ERROR - {detalle['error']}")
+                msg = f"  • {nombre_base.upper()}: ERROR - {detalle['error']}"
+                logger.error(msg)
+                print(msg)
             else:
-                print(f"  • {nombre_base.upper()}: No procesado")
+                msg = f"  • {nombre_base.upper()}: No procesado"
+                logger.warning(msg)
+                print(msg)
     
     if resumen.get("errores"):
         print("\nErrores encontrados:")
+        logger.error("Errores encontrados:")
         for error in resumen["errores"]:
-            print(f"  • {error['tipo']} - {error['archivo']}: {error['error']}")
+            msg = f"  • {error['tipo']} - {error['archivo']}: {error['error']}"
+            logger.error(msg)
+            print(msg)
     
-    print(f"\nLog guardado en: {log_filename}")
     print("="*60)
+    logger.info("="*60)
     
     # Mostrar mensaje gráfico
     if resumen["pdfs_procesados"] > 0:
@@ -466,7 +441,6 @@ def mostrar_resumen_final(resumen, carpeta_madre, log_filename):
         mensaje += f"• PDFs procesados: {resumen['pdfs_procesados']}\n"
         mensaje += f"• Páginas generadas: {resumen['total_paginas']}\n"
         mensaje += f"• PDFs con errores: {resumen['pdfs_con_error']}\n"
-        mensaje += f"\nDetalles en: {os.path.basename(log_filename)}"
         
         messagebox.showinfo("Procesamiento Completado", mensaje)
 
@@ -474,6 +448,10 @@ def main():
     """
     Función principal del script.
     """
+    logger.info("="*60)
+    logger.info("DIVISOR DE PDFs POR PALABRAS CLAVE")
+    logger.info("="*60)
+    
     print("="*60)
     print("DIVISOR DE PDFs POR PALABRAS CLAVE")
     print("="*60)
@@ -490,19 +468,20 @@ def main():
         root = tk.Tk()
         root.withdraw()
         root.attributes('-topmost', True)
-        carpeta_madre = filedialog.askdirectory(
+        carpeta_madre = tk.filedialog.askdirectory(
             title="Selecciona la carpeta madre con los PDFs"
         )
     
     if not carpeta_madre:
+        logger.warning("Operación cancelada por el usuario")
         print("\nOperación cancelada por el usuario.")
         return
     
+    logger.info(f"Carpeta madre seleccionada: {carpeta_madre}")
     print(f"\nCarpeta madre seleccionada: {carpeta_madre}")
     
-    # Configurar logging
-    logger, log_filename = configurar_logging(carpeta_madre)
-    logger.info(f"Iniciando procesamiento en carpeta: {carpeta_madre}")
+    # Iniciar logging
+    logger.info(f"🚀 Iniciando procesamiento en carpeta: {carpeta_madre}")
     
     # Verificar archivos en carpetas destino
     carpetas_destino = [os.path.join(carpeta_madre, tipo) for tipo in PALABRAS_CLAVE.keys()]
@@ -525,10 +504,10 @@ def main():
         return
     
     # Procesar PDFs
-    resumen = procesar_pdfs(carpeta_madre, logger, sobrescribir)
+    resumen = procesar_pdfs(carpeta_madre, sobrescribir)
     
-    # Mostrar resumen final
-    mostrar_resumen_final(resumen, carpeta_madre, log_filename)
+    # Mostrar resumen final (SIN log_filename)
+    mostrar_resumen_final(resumen, carpeta_madre)
     
     logger.info("="*60)
     logger.info("PROCESAMIENTO FINALIZADO")

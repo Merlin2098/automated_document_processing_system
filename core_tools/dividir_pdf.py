@@ -1,5 +1,14 @@
 import os
+import sys
 from PyPDF2 import PdfReader, PdfWriter
+import traceback
+
+# Importar logger
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+from utils.logger import Logger
+
+# Inicializar logger
+logger = Logger("CoreTools_DividirPDF")
 
 # --- 1. Obtener Parámetros del Usuario ---
 def obtener_parametros(ruta_pdf=None, hojas_por_pdf=None):
@@ -9,6 +18,8 @@ def obtener_parametros(ruta_pdf=None, hojas_por_pdf=None):
     Si no se pasan, mantiene el comportamiento interactivo por consola.
     Retorna: (ruta_pdf, hojas_por_pdf) o (None, None) en caso de error/validación fallida.
     """
+    logger.info("📝 Obteniendo parámetros de división")
+    
     # ruta
     if ruta_pdf is None:
         ruta_pdf = input("➡️ Ingrese la ruta del archivo PDF a procesar (puede arrastrarlo aquí): ").strip()
@@ -17,7 +28,9 @@ def obtener_parametros(ruta_pdf=None, hojas_por_pdf=None):
     ruta_pdf = os.path.normpath(ruta_pdf)
 
     if not os.path.isfile(ruta_pdf):
-        print(f"⚠️ No se encontró ningún archivo en la ruta: {ruta_pdf}")
+        error_msg = f"No se encontró ningún archivo en la ruta: {ruta_pdf}"
+        logger.error(f"❌ {error_msg}")
+        print(f"⚠️ {error_msg}")
         return None, None
 
     # hojas
@@ -37,37 +50,64 @@ def obtener_parametros(ruta_pdf=None, hojas_por_pdf=None):
         try:
             hojas = int(hojas_por_pdf)
             if hojas <= 0:
+                logger.error("❌ La cantidad de hojas debe ser positiva")
                 print("⚠️ Error: La cantidad de hojas debe ser un número entero positivo.")
                 return None, None
         except Exception:
+            logger.error("❌ El parámetro 'hojas_por_pdf' no es válido")
             print("⚠️ Error: el parámetro 'hojas_por_pdf' no es un número válido.")
             return None, None
 
+    logger.info(f"✅ PDF: {os.path.basename(ruta_pdf)}")
+    logger.info(f"✅ Hojas por PDF: {hojas}")
+    
     return ruta_pdf, hojas
 
 # --- 2. Validar la División ---
 def validar_division(ruta_pdf: str, hojas_por_pdf: int):
+    """
+    Valida que el PDF pueda dividirse exactamente.
+    
+    Args:
+        ruta_pdf: Ruta del archivo PDF
+        hojas_por_pdf: Número de páginas por archivo
+        
+    Returns:
+        int: Número de PDFs a generar, o None si la validación falla
+    """
+    logger.info("🔍 Validando división de PDF...")
+    
     try:
         with open(ruta_pdf, 'rb') as archivo_pdf:
             reader = PdfReader(archivo_pdf)
             total_hojas = len(reader.pages)
 
+        logger.info(f"   Total de páginas: {total_hojas}")
+        logger.info(f"   Páginas por archivo: {hojas_por_pdf}")
+
         if total_hojas == 0:
+            logger.error("❌ El PDF no contiene páginas")
             print("❌ Error: El PDF no contiene páginas.")
             return None
 
         if total_hojas % hojas_por_pdf == 0:
             num_pdfs_a_generar = total_hojas // hojas_por_pdf
+            logger.info(f"✅ Validación OK: Se generarán {num_pdfs_a_generar} archivos")
             return num_pdfs_a_generar
         else:
+            residuo = total_hojas % hojas_por_pdf
+            logger.error(f"❌ División inexacta: residuo de {residuo} páginas")
             print(f"❌ Error: El total de hojas ({total_hojas}) no es divisible exactamente por la cantidad deseada ({hojas_por_pdf}).")
-            print(f"   El residuo es: {total_hojas % hojas_por_pdf}. El proceso ha sido abortado.")
+            print(f"   El residuo es: {residuo}. El proceso ha sido abortado.")
             return None
 
     except FileNotFoundError:
+        logger.error(f"❌ Archivo no encontrado: {ruta_pdf}")
         print(f"❌ Error: El archivo en la ruta '{ruta_pdf}' no fue encontrado. Verifique la ruta.")
         return None
     except Exception as e:
+        logger.error(f"❌ Error al leer PDF: {e}")
+        logger.error(traceback.format_exc())
         print(f"❌ Error al intentar leer el PDF: {e}")
         return None
 
@@ -85,6 +125,12 @@ def dividir_pdf(ruta_pdf: str, hojas_por_pdf: int, num_pdfs_a_generar: int, prog
     Returns:
         dict: Diccionario con resultado del proceso
     """
+    logger.info("="*60)
+    logger.info("📄 INICIANDO DIVISIÓN DE PDF")
+    logger.info("="*60)
+    logger.info(f"   Archivo: {os.path.basename(ruta_pdf)}")
+    logger.info(f"   PDFs a generar: {num_pdfs_a_generar}")
+    
     # 📁 Crear la carpeta dentro de la misma ubicación del PDF original
     directorio_pdf = os.path.dirname(ruta_pdf)
     BASE_DIR_SALIDA = os.path.join(directorio_pdf, "Archivos_Divididos")
@@ -97,6 +143,8 @@ def dividir_pdf(ruta_pdf: str, hojas_por_pdf: int, num_pdfs_a_generar: int, prog
         contador += 1
 
     os.makedirs(DIR_SALIDA, exist_ok=True)
+    logger.info(f"📁 Carpeta de salida: {os.path.basename(DIR_SALIDA)}")
+    
     pdfs_generados = 0
     errores = 0
 
@@ -121,13 +169,22 @@ def dividir_pdf(ruta_pdf: str, hojas_por_pdf: int, num_pdfs_a_generar: int, prog
 
                     pdfs_generados += 1
                     
+                    # Log de progreso cada 10 archivos o al final
+                    if pdfs_generados % 10 == 0 or pdfs_generados == num_pdfs_a_generar:
+                        logger.info(f"   Progreso: {pdfs_generados}/{num_pdfs_a_generar}")
+                    
                     # Llamar callback de progreso si existe
                     if progress_callback:
                         progress_callback(pdfs_generados, num_pdfs_a_generar)
                         
                 except Exception as e:
+                    logger.error(f"⚠️ Error generando {nombre_archivo}: {e}")
                     print(f"⚠️ Error generando {nombre_archivo}: {e}")
                     errores += 1
+
+        logger.info(f"✅ División completada: {pdfs_generados} archivos generados")
+        if errores > 0:
+            logger.warning(f"⚠️ {errores} errores durante el proceso")
 
         return {
             'success': True,
@@ -137,6 +194,8 @@ def dividir_pdf(ruta_pdf: str, hojas_por_pdf: int, num_pdfs_a_generar: int, prog
         }
 
     except Exception as e:
+        logger.error(f"❌ Error durante la división: {e}")
+        logger.error(traceback.format_exc())
         print(f"❌ Error durante el proceso de división: {e}")
         return {
             'success': False,
@@ -157,13 +216,19 @@ def procesar_pdfs(ruta_pdf=None, hojas_por_pdf=None, progress_callback=None):
     Returns:
         dict: Resultado del procesamiento (para uso desde GUI)
     """
+    logger.info("="*70)
+    logger.info("🚀 DIVISOR DE PDFs - INICIO")
+    logger.info("="*70)
+    
     print("=========================================")
     print("🚀 Divisor de PDFs")
     print("=========================================")
 
     ruta, hojas = obtener_parametros(ruta_pdf, hojas_por_pdf)
+    
     # validar retorno
     if not ruta or not hojas:
+        logger.error("❌ Parámetros inválidos")
         print("\n❌ Proceso abortado (parámetros inválidos o no proporcionados).")
         return {
             'success': False,
@@ -175,6 +240,14 @@ def procesar_pdfs(ruta_pdf=None, hojas_por_pdf=None, progress_callback=None):
     if num_pdfs is not None:
         resultado = dividir_pdf(ruta, hojas, num_pdfs, progress_callback)
 
+        logger.info("="*70)
+        logger.info("📊 RESUMEN FINAL")
+        logger.info("="*70)
+        logger.info(f"✅ PDFs generados: {resultado['pdfs_generados']}")
+        logger.error(f"❌ Errores: {resultado['errores']}")
+        logger.info(f"📁 Ubicación: {resultado['carpeta_salida']}")
+        logger.info("="*70)
+
         print("\n=========================================")
         print("🎉 ¡PROCESO COMPLETADO!")
         print("=========================================")
@@ -185,6 +258,7 @@ def procesar_pdfs(ruta_pdf=None, hojas_por_pdf=None, progress_callback=None):
         
         return resultado
     else:
+        logger.error("❌ Validación fallida")
         print("\n❌ Proceso abortado.")
         return {
             'success': False,
@@ -193,4 +267,13 @@ def procesar_pdfs(ruta_pdf=None, hojas_por_pdf=None, progress_callback=None):
 
 # --- Ejecución del Programa ---
 if __name__ == "__main__":
-    procesar_pdfs()
+    logger.info("="*70)
+    logger.info("📋 MODO STANDALONE - Divisor de PDFs")
+    logger.info("="*70)
+    
+    try:
+        procesar_pdfs()
+        logger.info("✅ Proceso completado exitosamente")
+    except Exception as e:
+        logger.error(f"❌ Error crítico: {e}")
+        logger.error(traceback.format_exc())

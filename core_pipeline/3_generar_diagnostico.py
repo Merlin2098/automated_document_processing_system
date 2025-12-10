@@ -6,7 +6,7 @@ import os
 import sys
 import time
 from typing import List, Dict, Optional
-
+from utils.logger import Logger
 # Agregar el directorio padre al path para importar módulos
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
@@ -14,7 +14,7 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from extractores.extractor_afp import extraer_datos_afp
 from extractores.extractor_boleta import extraer_datos_boleta
 from extractores.extractor_quinta import extraer_datos_quinta
-
+logger = Logger("CorePipeline3_Diagnostico")
 # ============================================
 # CONFIGURACIÓN DE CARPETAS Y TIPOS
 # ============================================
@@ -54,8 +54,11 @@ def procesar_carpeta(ruta_carpeta: str, config: Dict) -> List[Dict]:
     archivos_pdf = [f for f in os.listdir(ruta_carpeta) if f.lower().endswith('.pdf')]
 
     print(f"\n📂 Procesando carpeta: {os.path.basename(ruta_carpeta)}")
+    logger.info(f"📂 Procesando carpeta: {os.path.basename(ruta_carpeta)}")
     print(f"   Tipo de documento: {tipo_documento}")
+    logger.info(f"   Tipo: {tipo_documento}")
     print(f"   Total de PDFs encontrados: {len(archivos_pdf)}")
+    logger.info(f"   PDFs: {len(archivos_pdf)}")
 
     for idx, archivo in enumerate(archivos_pdf, 1):
         ruta_completa = os.path.join(ruta_carpeta, archivo)
@@ -78,10 +81,12 @@ def procesar_carpeta(ruta_carpeta: str, config: Dict) -> List[Dict]:
         # Mostrar progreso cada 100 archivos
         if idx % 100 == 0:
             print(f"   Procesados: {idx}/{len(archivos_pdf)}")
+            logger.info(f"   Procesados: {idx}/{len(archivos_pdf)}")
 
     fin = time.time()
     tiempo_total = fin - inicio
     print(f"   ✅ Completado: {len(registros)} registros en {int(tiempo_total // 60)}m {int(tiempo_total % 60)}s")
+    logger.info(f"   ✅ Completado: {len(registros)} registros en {int(tiempo_total // 60)}m {int(tiempo_total % 60)}s")
 
     return registros
 
@@ -155,12 +160,15 @@ def generar_excel_multihoja(datos_por_hoja: Dict[str, List[Dict]], ruta_excel: s
 
         wb.save(ruta_excel)
         print(f"   ✅ Excel generado: {ruta_excel}")
+        logger.info(f"   ✅ Excel generado: {ruta_excel}")
         return True
 
     except Exception as e:
         print(f"   ❌ Error al generar Excel: {e}")
+        logger.error(f"   ❌ Error al generar Excel: {e}")
         import traceback
         traceback.print_exc()
+        logger.error(traceback.format_exc())
         return False
 
 # ============================================
@@ -175,9 +183,13 @@ def procesar_diagnostico_a_excel(ruta_carpeta_trabajo: str, ruta_excel_final: st
     print("="*60)
     print("🚀 PROCESO DE DIAGNÓSTICO DIRECTO A EXCEL")
     print("="*60)
+    logger.info("="*60)
+    logger.info("🚀 PROCESO DE DIAGNÓSTICO DIRECTO A EXCEL")
+    logger.info("="*60)
 
     if not os.path.isdir(ruta_carpeta_trabajo):
         print(f"❌ Carpeta '{ruta_carpeta_trabajo}' no existe")
+        logger.error(f"❌ Carpeta '{ruta_carpeta_trabajo}' no existe")
         return
 
     datos_por_hoja = {}
@@ -186,6 +198,7 @@ def procesar_diagnostico_a_excel(ruta_carpeta_trabajo: str, ruta_excel_final: st
         ruta_subcarpeta = os.path.join(ruta_carpeta_trabajo, nombre_carpeta)
         if not os.path.isdir(ruta_subcarpeta):
             print(f"⚠️ Carpeta '{nombre_carpeta}' no encontrada, omitiendo...")
+            logger.warning(f"⚠️ Carpeta '{nombre_carpeta}' no encontrada, omitiendo...")
             continue
 
         registros = procesar_carpeta(ruta_subcarpeta, config)
@@ -197,6 +210,7 @@ def procesar_diagnostico_a_excel(ruta_carpeta_trabajo: str, ruta_excel_final: st
             with open(ruta_json, 'w', encoding='utf-8') as f:
                 json.dump(registros, f, ensure_ascii=False, indent=2)
             print(f"   💾 JSON opcional guardado: {ruta_json}")
+            logger.info(f"   💾 JSON opcional guardado: {ruta_json}")
 
     if datos_por_hoja:
         generar_excel_multihoja(datos_por_hoja, ruta_excel_final)

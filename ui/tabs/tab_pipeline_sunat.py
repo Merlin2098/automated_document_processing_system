@@ -7,6 +7,7 @@ from PySide6.QtWidgets import (
     QMessageBox, QDialog, QTextEdit, QDialogButtonBox
 )
 from PySide6.QtCore import Signal, Slot, Qt
+import json
 from PySide6.QtGui import QCursor
 
 from ui.widgets.file_selector import FileSelector
@@ -40,7 +41,21 @@ class TabPipelineSunat(QWidget):
         # Estado de botones
         self.execute_buttons = []
         
+        # Cargar configuración
+        self.config = self._load_config()
+        
         self._init_ui()
+    
+
+    
+    def _load_config(self):
+        """Carga configuración desde config.json"""
+        try:
+            with open("resources/config.json", "r", encoding="utf-8") as f:
+                return json.load(f)
+        except Exception as e:
+            print(f"Error cargando config: {e}")
+            return {"sunat_workers": {"diagnostic": {"max_workers": 4}}}
     
     def _init_ui(self):
         """Inicializa la interfaz"""

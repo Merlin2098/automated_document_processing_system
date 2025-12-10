@@ -5,6 +5,12 @@ import sys
 from tkinter import Tk, filedialog, messagebox
 import time
 import json
+import traceback
+
+from utils.logger import Logger
+
+# Inicializar logger
+logger = Logger("CoreSunat_Rename")
 
 
 class FileRenamer:
@@ -41,8 +47,12 @@ class FileRenamer:
         
         try:
             os.rename(old_path, new_path)
+            # AGREGAR logging
+            logger.info(f"✓ {original_filename} → {final_filename}")
             return f"✅ {original_filename} → {final_filename}", True
         except Exception as e:
+            # AGREGAR logging
+            logger.error(f"✗ {original_filename}: {str(e)}")
             return f"❌ Error: {original_filename} - {str(e)}", False
     
     def _resolve_duplicate(self, file_path):
@@ -74,6 +84,9 @@ class JSONReader:
         """
         rename_data = {}
         
+        # AGREGAR logging
+        logger.info(f"📖 Leyendo JSON: {os.path.basename(json_path)}")
+        
         # Lista de codificaciones a probar
         encodings = ['utf-8', 'latin-1', 'iso-8859-1', 'cp1252', 'utf-16']
         
@@ -89,7 +102,9 @@ class JSONReader:
                 raise Exception(f"Error al leer JSON: {str(e)}")
         
         if data is None:
-            raise Exception("No se pudo decodificar el archivo JSON con ninguna codificación conocida")
+            error_msg = "No se pudo decodificar el archivo JSON con ninguna codificación conocida"
+            logger.error(error_msg)  # AGREGAR logging
+            raise Exception(error_msg)
         
         try:
             # Procesar cada entrada del JSON
@@ -100,10 +115,14 @@ class JSONReader:
                 if original and nuevo:
                     rename_data[original] = nuevo
             
+            # AGREGAR logging
+            logger.info(f"✅ JSON cargado: {len(rename_data)} registros")
             return rename_data
             
         except Exception as e:
-            raise Exception(f"Error al procesar datos del JSON: {str(e)}")
+            error_msg = f"Error al procesar datos del JSON: {str(e)}"
+            logger.error(error_msg)  # AGREGAR logging
+            raise Exception(error_msg)
 
 
 class FolderScanner:
@@ -123,11 +142,17 @@ class FolderScanner:
                      if f.endswith('.json') and 'rename' in f.lower()]
         
         if not json_files:
+            # AGREGAR logging
+            logger.warning("⚠️ No se encontró JSON de renombrado")
             return None
         
         # Si hay múltiples, tomar el más reciente
         json_files.sort(reverse=True)
-        return os.path.join(folder_path, json_files[0])
+        json_file = json_files[0]
+        
+        # AGREGAR logging
+        logger.info(f"✅ JSON encontrado: {json_file}")
+        return os.path.join(folder_path, json_file)
     
     def get_pdf_files(self, folder_path):
         """
@@ -139,7 +164,12 @@ class FolderScanner:
         Returns:
             list: Lista de nombres de archivos PDF
         """
-        return [f for f in os.listdir(folder_path) if f.lower().endswith('.pdf')]
+        pdf_files = [f for f in os.listdir(folder_path) if f.lower().endswith('.pdf')]
+        
+        # AGREGAR logging
+        logger.info(f"📄 PDFs encontrados: {len(pdf_files)}")
+        
+        return pdf_files
 
 
 class SUNATRenameOrchestrator:
@@ -167,6 +197,12 @@ class SUNATRenameOrchestrator:
         """
         self.start_time = time.time()
         
+        # AGREGAR logging
+        logger.info("="*70)
+        logger.info("🚀 INICIANDO RENOMBRADO SUNAT")
+        logger.info("="*70)
+        logger.info(f"📁 Carpeta: {self.folder_path}")
+        
         print(f"🚀 Iniciando proceso de renombrado SUNAT")
         print(f"📁 Carpeta: {self.folder_path}\n")
         
@@ -190,50 +226,79 @@ class SUNATRenameOrchestrator:
         
         # PASO 5: Mostrar resumen
         elapsed_time = time.time() - self.start_time
+        
+        # AGREGAR logging
+        logger.info(f"⏱️ Tiempo de ejecución: {elapsed_time:.2f}s")
+        
         self._print_summary(elapsed_time)
         
         return self.renamer.stats
     
     def _locate_json(self):
         """Localiza el archivo JSON de renombrado."""
+        # AGREGAR logging
+        logger.info("🔍 Buscando archivo JSON de renombrado...")
+        
         print("🔍 Buscando archivo JSON de renombrado...")
         json_path = self.scanner.find_json_file(self.folder_path)
         
         if not json_path:
             print("❌ No se encontró archivo JSON de renombrado en la carpeta.")
             print("   El archivo debe contener 'rename' en su nombre.\n")
+            # AGREGAR logging
+            logger.error("❌ No se encontró JSON de renombrado")
             return None
         
         print(f"✅ JSON encontrado: {os.path.basename(json_path)}\n")
+        # AGREGAR logging
+        logger.info(f"✅ JSON: {os.path.basename(json_path)}")
         return json_path
     
     def _read_json_data(self, json_path):
         """Lee los datos del archivo JSON."""
+        # AGREGAR logging
+        logger.info("📖 Leyendo datos del JSON...")
+        
         print("📖 Leyendo datos del JSON...")
         
         try:
             rename_data = self.reader.read_rename_json(json_path)
             print(f"✅ Se cargaron {len(rename_data)} registros del JSON\n")
+            # AGREGAR logging
+            logger.info(f"✅ {len(rename_data)} registros cargados")
             return rename_data
         except Exception as e:
             print(f"❌ Error al leer JSON: {str(e)}\n")
+            # AGREGAR logging
+            logger.error(f"❌ Error al leer JSON: {str(e)}")
             return None
     
     def _get_pdf_files(self):
         """Obtiene la lista de archivos PDF."""
+        # AGREGAR logging
+        logger.info("📄 Escaneando archivos PDF...")
+        
         print("📄 Escaneando archivos PDF...")
         pdf_files = self.scanner.get_pdf_files(self.folder_path)
         
         if not pdf_files:
             print("⚠️ No se encontraron archivos PDF en la carpeta.\n")
+            # AGREGAR logging
+            logger.warning("⚠️ No se encontraron PDFs")
             return None
         
         print(f"✅ Se encontraron {len(pdf_files)} archivos PDF\n")
+        # AGREGAR logging
+        logger.info(f"✅ {len(pdf_files)} archivos encontrados")
         self.renamer.stats['total_files'] = len(pdf_files)
         return pdf_files
     
     def _execute_rename(self, pdf_files, rename_data):
         """Ejecuta el renombrado de archivos."""
+        # AGREGAR logging
+        logger.info("📄 Iniciando renombrado de archivos...")
+        logger.info(f"   Total: {len(pdf_files)} archivos")
+        
         print("🔄 Iniciando renombrado de archivos...\n")
         print("="*70)
         
@@ -241,6 +306,8 @@ class SUNATRenameOrchestrator:
             # Verificar si el archivo está en el JSON de renombrado
             if pdf_file not in rename_data:
                 print(f"⏭️  Omitido (no en JSON): {pdf_file}")
+                # AGREGAR logging
+                logger.warning(f"⏭️ Omitido: {pdf_file}")
                 self.renamer.stats['skipped'] += 1
                 continue
             
@@ -273,6 +340,17 @@ class SUNATRenameOrchestrator:
         print(f"❌ Errores: {stats['errors']}")
         print(f"⏱️  Tiempo de ejecución: {elapsed_time:.2f} segundos")
         print("="*70 + "\n")
+        
+        # AGREGAR logging paralelo
+        logger.info("="*70)
+        logger.info("📊 RESUMEN DEL RENOMBRADO")
+        logger.info("="*70)
+        logger.info(f"📄 Total PDFs: {stats['total_files']}")
+        logger.info(f"✅ Renombrados: {stats['renamed']}")
+        logger.warning(f"⏭️ Omitidos: {stats['skipped']}")
+        logger.error(f"❌ Errores: {stats['errors']}")
+        logger.info(f"⏱️ Tiempo: {elapsed_time:.2f}s")
+        logger.info("="*70)
 
 
 def seleccionar_carpeta():
@@ -306,7 +384,12 @@ def ejecutar_renombrado_sunat(folder_path: str):
         dict: Estadísticas del proceso
     """
     if not os.path.isdir(folder_path):
-        raise ValueError(f"La ruta '{folder_path}' no es una carpeta válida")
+        error_msg = f"La ruta '{folder_path}' no es una carpeta válida"
+        logger.error(error_msg)  # AGREGAR logging
+        raise ValueError(error_msg)
+    
+    # AGREGAR logging
+    logger.info(f"🎬 Iniciando renombrado SUNAT en: {folder_path}")
     
     orchestrator = SUNATRenameOrchestrator(folder_path)
     return orchestrator.run()
@@ -314,6 +397,11 @@ def ejecutar_renombrado_sunat(folder_path: str):
 
 # Punto de entrada para uso standalone
 if __name__ == "__main__":
+    # AGREGAR logging
+    logger.info("="*70)
+    logger.info("📋 MODO STANDALONE - Renombrado SUNAT")
+    logger.info("="*70)
+    
     print("🔍 Selecciona la carpeta con los PDFs y el JSON de renombrado...")
     
     # Permitir pasar ruta por argumento o usar selector
@@ -324,6 +412,7 @@ if __name__ == "__main__":
     
     if not folder_path:
         print("❌ No se seleccionó ninguna carpeta. Proceso cancelado.")
+        logger.warning("⚠️ No se seleccionó carpeta - Proceso cancelado")
         sys.exit(1)
     
     try:
@@ -331,13 +420,17 @@ if __name__ == "__main__":
         
         if stats:
             print("✅ Proceso completado exitosamente")
+            logger.info("✅ Proceso completado exitosamente")
             sys.exit(0)
         else:
             print("⚠️ El proceso no se completó correctamente")
+            logger.warning("⚠️ El proceso no se completó correctamente")
             sys.exit(1)
             
     except Exception as e:
         print(f"❌ Error crítico: {e}")
+        logger.error(f"❌ Error crítico: {e}")
+        logger.error(traceback.format_exc())
         import traceback
         traceback.print_exc()
         sys.exit(1)

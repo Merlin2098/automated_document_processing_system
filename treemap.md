@@ -38,7 +38,15 @@
 │   │   ├── monitoring_panel.py
 │   │   └── stepper_widget.py
 │   └── workers/
-│       └── pdf_splitter_worker.py
+│       ├── core_pipeline_step1_worker.py
+│       ├── core_pipeline_step2_worker.py
+│       ├── core_pipeline_step3_worker.py
+│       ├── core_pipeline_step4_worker.py
+│       ├── core_pipeline_step5_worker.py
+│       ├── pdf_splitter_worker.py
+│       ├── sunat_diagnostic_worker.py
+│       ├── sunat_duplicates_worker.py
+│       └── sunat_rename_worker.py
 └── utils/
     ├── excel_converter.py
     └── theme_manager.py
