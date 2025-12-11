@@ -91,8 +91,6 @@ class CorePipelineStep2Worker(QThread):
                 self.log_signal.emit("warning", msg)
                 self.logger.warning(msg)
             
-            self.progress_signal.emit(1, 5)
-            
             # ============================================================
             # FASE 2: Validar un solo archivo por tipo (USA EL CORE)
             # ============================================================
@@ -112,8 +110,6 @@ class CorePipelineStep2Worker(QThread):
             
             self.log_signal.emit("success", "✅ Validación correcta: un archivo por tipo")
             self.logger.info("✅ Validación correcta")
-            
-            self.progress_signal.emit(2, 5)
             
             # ============================================================
             # FASE 3: Verificar y limpiar carpetas destino (USA EL CORE)
@@ -146,8 +142,6 @@ class CorePipelineStep2Worker(QThread):
                     self.error_signal.emit(error_msg)
                     return
             
-            self.progress_signal.emit(3, 5)
-            
             # ============================================================
             # FASE 4: Dividir PDFs (USA EL CORE)
             # ============================================================
@@ -168,6 +162,7 @@ class CorePipelineStep2Worker(QThread):
             }
             
             tipos_con_archivos = [tipo for tipo, archivos in pdfs_por_tipo.items() if archivos]
+            total_pdfs = len(tipos_con_archivos)
             
             for idx, tipo in enumerate(tipos_con_archivos, 1):
                 if not self._is_running:
@@ -216,12 +211,8 @@ class CorePipelineStep2Worker(QThread):
                     self.log_signal.emit("error", msg)
                     self.logger.error(msg)
                 
-                # Actualizar progreso proporcional
-                progreso_actual = 3 + idx
-                progreso_total = 3 + len(tipos_con_archivos)
-                self.progress_signal.emit(progreso_actual, progreso_total)
-            
-            self.progress_signal.emit(4, 5)
+                # Actualizar progreso: solo PDFs procesados
+                self.progress_signal.emit(idx, total_pdfs)
             
             # ============================================================
             # FASE 5: Resumen final
@@ -255,8 +246,6 @@ class CorePipelineStep2Worker(QThread):
                 self.logger.warning(f"⚠️ PDFs no clasificados: {len(pdfs_no_clasificados)}")
             
             self.logger.info("=" * 50)
-            
-            self.progress_signal.emit(5, 5)
             
             # Emitir estadísticas
             stats = {

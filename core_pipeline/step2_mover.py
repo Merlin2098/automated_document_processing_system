@@ -26,14 +26,18 @@ logger = Logger("CorePipeline2_Mover")
 PALABRAS_CLAVE = {
     "1_Boletas": ["boleta", "boletas"],
     "2_Afp": ["afp"],
-    "3_5ta": ["quinta"]
+    "3_5ta": ["quinta"],
+    "4_Convocatoria": ["convocatoria", "convocatorias"],
+    "5_CertificadosTrabajo": ["certificado de trabajo", "certificados de trabajo"]
 }
 
 # Nombres base para archivos resultantes
 NOMBRES_BASE = {
     "1_Boletas": "boleta",
     "2_Afp": "afp", 
-    "3_5ta": "quinta"
+    "3_5ta": "quinta",
+    "4_Convocatoria": "convocatoria",
+    "5_CertificadosTrabajo": "certif_trabajo"
 }
 
 def verificar_archivos_en_carpetas(carpetas):
@@ -57,9 +61,10 @@ def verificar_archivos_en_carpetas(carpetas):
     
     return carpetas_con_archivos
 
-def preguntar_sobrescribir(carpetas_con_archivos):
+def preguntar_sobrescribir_cli(carpetas_con_archivos):
     """
-    Pregunta al usuario si desea sobrescribir archivos existentes.
+    Pregunta al usuario si desea sobrescribir archivos existentes (solo para CLI).
+    El worker maneja esto desde la UI directamente.
     
     Args:
         carpetas_con_archivos (dict): Diccionario con carpetas que tienen archivos.
@@ -69,14 +74,6 @@ def preguntar_sobrescribir(carpetas_con_archivos):
     """
     if not carpetas_con_archivos:
         return True
-    
-    # Crear mensaje detallado
-    mensaje = "Las siguientes carpetas destino contienen archivos:\n\n"
-    for carpeta, cantidad in carpetas_con_archivos.items():
-        nombre_carpeta = os.path.basename(carpeta)
-        mensaje += f"• {nombre_carpeta}: {cantidad} archivo(s)\n"
-    
-    mensaje += "\n¿Desea continuar y sobrescribir los archivos existentes?"
     
     # Mostrar en consola
     logger.warning("="*60)
@@ -102,6 +99,14 @@ def preguntar_sobrescribir(carpetas_con_archivos):
     root = tk.Tk()
     root.withdraw()
     root.attributes('-topmost', True)
+    
+    # Crear mensaje detallado
+    mensaje = "Las siguientes carpetas destino contienen archivos:\n\n"
+    for carpeta, cantidad in carpetas_con_archivos.items():
+        nombre_carpeta = os.path.basename(carpeta)
+        mensaje += f"• {nombre_carpeta}: {cantidad} archivo(s)\n"
+    
+    mensaje += "\n¿Desea continuar y sobrescribir los archivos existentes?"
     
     respuesta = messagebox.askyesno(
         "Advertencia - Archivos Existentes",
@@ -172,37 +177,17 @@ def validar_unico_archivo_por_tipo(pdfs_por_tipo):
             logger.warning(f"Múltiples archivos para {tipo}: {len(archivos)} encontrados")
     
     if tipos_problematicos:
-        # Crear mensaje de error
-        mensaje = "Se encontraron múltiples archivos para los siguientes tipos:\n\n"
-        for tipo, archivos in tipos_problematicos:
-            nombre_base = NOMBRES_BASE.get(tipo, tipo)
-            mensaje += f"• {nombre_base.upper()} ({tipo}):\n"
-            for archivo in archivos:
-                mensaje += f"    - {archivo}\n"
-            mensaje += "\n"
-        
-        mensaje += "Solo se permite un archivo por tipo. Por favor, revise los archivos."
-        
-        # Mostrar en consola
+        # Loggear detalles del error
         logger.error("="*60)
         logger.error("ERROR: Múltiples archivos encontrados")
         logger.error("="*60)
-        print("\n" + "="*60)
-        print("ERROR: Múltiples archivos encontrados")
-        print("="*60)
+        
         for tipo, archivos in tipos_problematicos:
             logger.error(f"\n{tipo}:")
-            print(f"\n{tipo}:")
             for archivo in archivos:
                 logger.error(f"  • {archivo}")
-                print(f"  • {archivo}")
-        print("="*60)
         
-        # Mostrar diálogo gráfico
-        root = tk.Tk()
-        root.withdraw()
-        root.attributes('-topmost', True)
-        messagebox.showerror("Error - Múltiples Archivos", mensaje)
+        logger.error("="*60)
         
         return False
     
@@ -233,75 +218,83 @@ def dividir_pdf(ruta_pdf, carpeta_destino, nombre_base):
     Divide un PDF en páginas individuales.
     
     Args:
-        ruta_pdf (str): Ruta del archivo PDF a dividir.
-        carpeta_destino (str): Carpeta donde guardar las páginas.
-        nombre_base (str): Nombre base para los archivos de salida.
+        ruta_pdf (str): Ruta del PDF a dividir.
+        carpeta_destino (str): Carpeta donde se guardarán las páginas.
+        nombre_base (str): Nombre base para los archivos resultantes.
     
     Returns:
-        tuple: (exito, numero_paginas, mensaje_error)
+        tuple: (exito: bool, paginas: int, mensaje_error: str o None)
     """
     try:
         # Crear carpeta destino si no existe
         os.makedirs(carpeta_destino, exist_ok=True)
         
-        # Leer PDF
+        # Abrir el PDF
         with open(ruta_pdf, 'rb') as archivo:
-            reader = PdfReader(archivo)
-            total_paginas = len(reader.pages)
+            lector = PdfReader(archivo)
+            total_paginas = len(lector.pages)
             
-            logger.info(f"  Total de páginas: {total_paginas}")
+            logger.info(f"  Procesando {total_paginas} página(s)...")
             
-            # Dividir en páginas individuales
-            for num_pagina in range(total_paginas):
-                writer = PdfWriter()
-                writer.add_page(reader.pages[num_pagina])
+            # Dividir cada página
+            for i, pagina in enumerate(lector.pages, start=1):
+                escritor = PdfWriter()
+                escritor.add_page(pagina)
                 
-                # Generar nombre de archivo
-                nombre_archivo = f"{nombre_base}_{num_pagina + 1}.pdf"
-                ruta_salida = os.path.join(carpeta_destino, nombre_archivo)
+                # Nombre del archivo resultante
+                nombre_salida = f"{nombre_base}_{i}.pdf"
+                ruta_salida = os.path.join(carpeta_destino, nombre_salida)
                 
                 # Guardar página
                 with open(ruta_salida, 'wb') as archivo_salida:
-                    writer.write(archivo_salida)
+                    escritor.write(archivo_salida)
+                
+                logger.info(f"    ✓ Generado: {nombre_salida}")
             
-            logger.info(f"  ✓ Dividido en {total_paginas} páginas")
-            return True, total_paginas, ""
+            logger.info(f"  ✓ Completado: {total_paginas} páginas generadas")
+            return True, total_paginas, None
             
     except Exception as e:
-        error_msg = f"Error al dividir PDF: {str(e)}"
-        logger.error(f"  ✗ {error_msg}")
+        error_msg = str(e)
+        logger.error(f"  ✗ Error al procesar PDF: {error_msg}")
         return False, 0, error_msg
 
-def procesar_pdfs(carpeta_madre, sobrescribir):
+def procesar_pdfs(carpeta_madre, sobrescribir=True):
     """
-    Procesa todos los PDFs encontrados en la carpeta madre.
+    Procesa todos los PDFs de la carpeta madre.
     
     Args:
         carpeta_madre (str): Ruta de la carpeta madre.
-        sobrescribir (bool): Si se deben sobrescribir archivos existentes.
+        sobrescribir (bool): Si True, sobrescribe archivos existentes.
     
     Returns:
-        dict: Resumen del procesamiento con estadísticas.
+        dict: Resumen del procesamiento.
     """
-    logger.info("="*60)
-    logger.info("INICIANDO PROCESAMIENTO DE PDFs")
-    logger.info("="*60)
-    
     # 1. Buscar y clasificar PDFs
-    logger.info("Buscando y clasificando PDFs...")
+    logger.info("Buscando PDFs...")
     pdfs_por_tipo, pdfs_no_clasificados = buscar_pdfs_por_tipo(carpeta_madre)
     
+    total_clasificados = sum(len(archivos) for archivos in pdfs_por_tipo.values())
+    
+    if total_clasificados == 0:
+        error_msg = "No se encontraron PDFs clasificables en la carpeta"
+        logger.error(error_msg)
+        return {"error": error_msg}
+    
+    logger.info(f"Total PDFs clasificados: {total_clasificados}")
+    if pdfs_no_clasificados:
+        logger.info(f"PDFs no clasificados: {len(pdfs_no_clasificados)}")
+    
     # 2. Validar un solo archivo por tipo
-    logger.info("Validando un solo archivo por tipo...")
+    logger.info("Validando archivos únicos...")
     if not validar_unico_archivo_por_tipo(pdfs_por_tipo):
-        return {"error": "Múltiples archivos por tipo encontrados"}
+        return {"error": "Se encontraron múltiples archivos para un mismo tipo"}
     
     # 3. Verificar carpetas destino
     carpetas_destino = [os.path.join(carpeta_madre, tipo) for tipo in PALABRAS_CLAVE.keys()]
     carpetas_con_archivos = verificar_archivos_en_carpetas(carpetas_destino)
     
     if carpetas_con_archivos and not sobrescribir:
-        logger.warning("Procesamiento cancelado por el usuario (archivos existentes)")
         return {"cancelado": "Usuario no aceptó sobrescribir"}
     
     # 4. Limpiar carpetas destino si se aceptó sobrescribir
@@ -459,6 +452,8 @@ def main():
     print("  • 'boleta(s)' → Carpeta 1_Boletas (archivos: boleta_1.pdf, boleta_2.pdf, ...)")
     print("  • 'afp' → Carpeta 2_Afp (archivos: afp_1.pdf, afp_2.pdf, ...)")
     print("  • 'quinta' → Carpeta 3_5ta (archivos: quinta_1.pdf, quinta_2.pdf, ...)")
+    print("  • 'convocatoria(s)' → Carpeta 4_Convocatoria (archivos: convocatoria_1.pdf, ...)")
+    print("  • 'certificado de trabajo' → Carpeta 5_CertificadosTrabajo (archivos: certif_trabajo_1.pdf, ...)")
     print("="*60)
     
     # Seleccionar carpeta madre (usando tkinter o argumento)
@@ -488,7 +483,7 @@ def main():
     carpetas_con_archivos = verificar_archivos_en_carpetas(carpetas_destino)
     
     # Preguntar si se desea sobrescribir
-    sobrescribir = preguntar_sobrescribir(carpetas_con_archivos)
+    sobrescribir = preguntar_sobrescribir_cli(carpetas_con_archivos)
     if not sobrescribir:
         logger.info("Procesamiento cancelado por el usuario (no sobrescribir)")
         print("\nProcesamiento cancelado por el usuario.")

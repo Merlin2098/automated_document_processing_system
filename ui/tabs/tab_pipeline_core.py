@@ -374,6 +374,8 @@ El sistema:
     
     def _execute_step2(self):
         """Ejecuta el Paso 2: Dividir y Clasificar"""
+        from PySide6.QtWidgets import QMessageBox
+        
         # Resetear contadores
         main_window = self.window()
         if hasattr(main_window, 'monitoring_panel'):
@@ -386,7 +388,7 @@ El sistema:
             return
         
         # Validar que existen las subcarpetas requeridas
-        subcarpetas_requeridas = ['1_Boletas', '2_Afp', '3_5ta']
+        subcarpetas_requeridas = ['1_Boletas', '2_Afp', '3_5ta', '4_Convocatoria', '5_CertificadosTrabajo']
         carpetas_existentes = []
         
         for carpeta in subcarpetas_requeridas:
@@ -395,8 +397,47 @@ El sistema:
                 carpetas_existentes.append(carpeta)
         
         if not carpetas_existentes:
-            self.log_message.emit("error", "❌ No se encontraron las subcarpetas necesarias (1_Boletas, 2_Afp, 3_5ta)")
+            self.log_message.emit("error", "❌ No se encontraron las subcarpetas necesarias")
             return
+        
+        # VALIDACIÓN PREVIA: Verificar si hay archivos en las carpetas destino
+        carpetas_con_archivos = {}
+        for carpeta in carpetas_existentes:
+            ruta_carpeta = os.path.join(folder_path, carpeta)
+            archivos = [f for f in os.listdir(ruta_carpeta) 
+                       if os.path.isfile(os.path.join(ruta_carpeta, f))]
+            if archivos:
+                carpetas_con_archivos[carpeta] = len(archivos)
+        
+        # Si hay archivos, preguntar al usuario
+        if carpetas_con_archivos:
+            total_archivos = sum(carpetas_con_archivos.values())
+            carpetas_str = ", ".join(carpetas_con_archivos.keys())
+            
+            msg = QMessageBox(self)
+            msg.setIcon(QMessageBox.Warning)
+            msg.setWindowTitle("⚠️ Carpetas con archivos existentes")
+            msg.setText(f"Se encontraron {total_archivos} archivo(s) en las carpetas destino:")
+            msg.setInformativeText(
+                f"{carpetas_str}\n\n"
+                "Para ejecutar el Paso 2, las carpetas deben estar vacías.\n"
+                "Los archivos existentes serán eliminados antes de procesar.\n\n"
+                "¿Desea continuar?"
+            )
+            msg.setStandardButtons(QMessageBox.Yes | QMessageBox.No)
+            msg.setDefaultButton(QMessageBox.No)
+            
+            respuesta = msg.exec()
+            
+            if respuesta == QMessageBox.No:
+                self.log_message.emit("warning", "⚠️ Operación cancelada por el usuario")
+                return
+            
+            # Usuario aceptó sobrescribir
+            sobrescribir = True
+            self.log_message.emit("info", f"🗑️ Se eliminarán {total_archivos} archivos existentes")
+        else:
+            sobrescribir = False
         
         # Deshabilitar botón
         btn = self.findChild(QPushButton, "btn_execute_step1")
@@ -404,8 +445,8 @@ El sistema:
             btn.setEnabled(False)
             btn.setText("⏳ Procesando...")
         
-        # Crear y configurar worker
-        self.current_worker = CorePipelineStep2Worker(folder_path)
+        # Crear y configurar worker CON parámetro sobrescribir
+        self.current_worker = CorePipelineStep2Worker(folder_path, sobrescribir=sobrescribir)
         
         # Conectar señales
         self.current_worker.progress_signal.connect(self.progress_updated.emit)

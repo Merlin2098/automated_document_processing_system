@@ -23,17 +23,32 @@ CARPETAS_CONFIG = {
     "1_Boletas": {
         "tipo": "BOLETA",
         "extractor": extraer_datos_boleta,
-        "campos_extra": ["fecha_extraida"]
+        "campos_extra": ["fecha_extraida"],
+        "nombre_hoja": "1_Boletas"
     },
     "2_Afp": {
         "tipo": "AFP",
         "extractor": extraer_datos_afp,
-        "campos_extra": []
+        "campos_extra": [],
+        "nombre_hoja": "2_Afp"
     },
     "3_5ta": {
         "tipo": "QUINTA",
         "extractor": extraer_datos_quinta,
-        "campos_extra": []
+        "campos_extra": [],
+        "nombre_hoja": "3_5ta"
+    },
+    "4_Convocatoria": {
+        "tipo": "CONVOCATORIA",
+        "extractor": None,  # Solo listado de archivos
+        "campos_extra": [],
+        "nombre_hoja": "1ERA"
+    },
+    "5_CertificadosTrabajo": {
+        "tipo": "CERTIFICADO_TRABAJO",
+        "extractor": None,  # Solo listado de archivos
+        "campos_extra": [],
+        "nombre_hoja": "CTRA"
     }
 }
 
@@ -44,14 +59,24 @@ CARPETAS_CONFIG = {
 def procesar_carpeta(ruta_carpeta: str, config: Dict) -> List[Dict]:
     """
     Procesa todos los PDFs en una carpeta y genera registros.
+    Si no hay extractor, solo lista archivos ordenados numéricamente.
     Progreso mostrado por lotes de 100 archivos.
     """
+    import re
     inicio = time.time()
     registros = []
     tipo_documento = config["tipo"]
-    extractor = config["extractor"]
+    extractor = config.get("extractor")
 
     archivos_pdf = [f for f in os.listdir(ruta_carpeta) if f.lower().endswith('.pdf')]
+    
+    # Ordenar archivos numéricamente por el número después del guión bajo
+    def extraer_numero(filename):
+        """Extrae el número del nombre de archivo para ordenamiento correcto"""
+        match = re.search(r'_(\d+)', filename)
+        return int(match.group(1)) if match else 0
+    
+    archivos_pdf.sort(key=extraer_numero)
 
     print(f"\n📂 Procesando carpeta: {os.path.basename(ruta_carpeta)}")
     logger.info(f"📂 Procesando carpeta: {os.path.basename(ruta_carpeta)}")
@@ -60,6 +85,27 @@ def procesar_carpeta(ruta_carpeta: str, config: Dict) -> List[Dict]:
     print(f"   Total de PDFs encontrados: {len(archivos_pdf)}")
     logger.info(f"   PDFs: {len(archivos_pdf)}")
 
+    # Si no hay extractor, solo listar archivos
+    if extractor is None:
+        for idx, archivo in enumerate(archivos_pdf, 1):
+            registro = {
+                "archivo": archivo
+            }
+            registros.append(registro)
+            
+            # Mostrar progreso cada 100 archivos
+            if idx % 100 == 0:
+                print(f"   Listados: {idx}/{len(archivos_pdf)}")
+                logger.info(f"   Listados: {idx}/{len(archivos_pdf)}")
+        
+        fin = time.time()
+        tiempo_total = fin - inicio
+        print(f"   ✅ Completado: {len(registros)} archivos listados en {int(tiempo_total // 60)}m {int(tiempo_total % 60)}s")
+        logger.info(f"   ✅ Completado: {len(registros)} archivos listados en {int(tiempo_total // 60)}m {int(tiempo_total % 60)}s")
+        
+        return registros
+
+    # Si hay extractor, procesar normalmente con extracción de datos
     for idx, archivo in enumerate(archivos_pdf, 1):
         ruta_completa = os.path.join(ruta_carpeta, archivo)
         resultado = extractor(ruta_completa)
@@ -68,9 +114,7 @@ def procesar_carpeta(ruta_carpeta: str, config: Dict) -> List[Dict]:
             "archivo_original": archivo,
             "tipo_documento": tipo_documento,
             "nombre_extraido": resultado.get("nombre"),
-            "dni_extraido": resultado.get("dni"),
-            "exito_extraccion": resultado.get("exito", False),
-            "observaciones": resultado.get("observaciones", "")
+            "dni_extraido": resultado.get("dni")
         }
 
         if "fecha" in resultado and resultado["fecha"]:
@@ -97,6 +141,7 @@ def procesar_carpeta(ruta_carpeta: str, config: Dict) -> List[Dict]:
 def generar_excel_multihoja(datos_por_hoja: Dict[str, List[Dict]], ruta_excel: str) -> bool:
     """
     Genera Excel con múltiples hojas directamente desde los datos extraídos.
+    Maneja tanto hojas con extracción de datos como hojas de solo listado.
     """
     try:
         import openpyxl
@@ -109,15 +154,26 @@ def generar_excel_multihoja(datos_por_hoja: Dict[str, List[Dict]], ruta_excel: s
         header_fill = PatternFill(start_color="4472C4", end_color="4472C4", fill_type="solid")
         header_alignment = Alignment(horizontal="center", vertical="center")
 
-        for nombre_hoja, registros in datos_por_hoja.items():
+        for nombre_carpeta, registros in datos_por_hoja.items():
+            # Obtener nombre de hoja personalizado del config
+            config = CARPETAS_CONFIG.get(nombre_carpeta, {})
+            nombre_hoja = config.get("nombre_hoja", nombre_carpeta)
+            
             ws = wb.create_sheet(title=nombre_hoja)
             if not registros:
                 continue
 
             encabezados = list(registros[0].keys())
+            
+            # Detectar si es una hoja de solo listado (solo tiene columna "archivo")
+            es_listado_simple = len(encabezados) == 1 and "archivo" in encabezados
+            
             for col_idx, encabezado in enumerate(encabezados, 1):
                 cell = ws.cell(row=1, column=col_idx)
-                cell.value = encabezado.replace("_", " ").upper()
+                if es_listado_simple:
+                    cell.value = "ARCHIVO"
+                else:
+                    cell.value = encabezado.replace("_", " ").upper()
                 cell.font = header_font
                 cell.fill = header_fill
                 cell.alignment = header_alignment
@@ -128,33 +184,32 @@ def generar_excel_multihoja(datos_por_hoja: Dict[str, List[Dict]], ruta_excel: s
                     cell = ws.cell(row=row_idx, column=col_idx)
                     cell.value = valor
 
-                    if encabezado in ["tipo_documento", "exito_extraccion", "dni_extraido"]:
-                        cell.alignment = Alignment(horizontal="center")
+                    # Solo aplicar formato especial si NO es listado simple
+                    if not es_listado_simple:
+                        if encabezado in ["tipo_documento", "dni_extraido"]:
+                            cell.alignment = Alignment(horizontal="center")
 
-                    if encabezado == "exito_extraccion":
-                        if valor:
-                            cell.fill = PatternFill(start_color="C6EFCE", end_color="C6EFCE", fill_type="solid")
-                        else:
-                            cell.fill = PatternFill(start_color="FFC7CE", end_color="FFC7CE", fill_type="solid")
-
+            # Ajustar anchos de columna
             for col_idx, encabezado in enumerate(encabezados, 1):
                 column_letter = openpyxl.utils.get_column_letter(col_idx)
-                if encabezado == "archivo_original":
+                
+                if es_listado_simple:
+                    # Para hojas de listado simple, ancho fijo
                     ws.column_dimensions[column_letter].width = 40
-                elif encabezado == "observaciones":
-                    ws.column_dimensions[column_letter].width = 35
-                elif encabezado == "nombre_extraido":
-                    ws.column_dimensions[column_letter].width = 30
-                elif encabezado == "tipo_documento":
-                    ws.column_dimensions[column_letter].width = 15
-                elif encabezado == "dni_extraido":
-                    ws.column_dimensions[column_letter].width = 12
-                elif encabezado == "fecha_extraida":
-                    ws.column_dimensions[column_letter].width = 15
-                elif encabezado == "exito_extraccion":
-                    ws.column_dimensions[column_letter].width = 18
                 else:
-                    ws.column_dimensions[column_letter].width = 20
+                    # Para hojas con extracción de datos, anchos específicos
+                    if encabezado == "archivo_original":
+                        ws.column_dimensions[column_letter].width = 40
+                    elif encabezado == "nombre_extraido":
+                        ws.column_dimensions[column_letter].width = 30
+                    elif encabezado == "tipo_documento":
+                        ws.column_dimensions[column_letter].width = 15
+                    elif encabezado == "dni_extraido":
+                        ws.column_dimensions[column_letter].width = 12
+                    elif encabezado == "fecha_extraida":
+                        ws.column_dimensions[column_letter].width = 15
+                    else:
+                        ws.column_dimensions[column_letter].width = 20
 
             ws.freeze_panes = "A2"
 
