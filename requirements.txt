@@ -2,6 +2,7 @@ altgraph
 cffi
 charset-normalizer
 cryptography
+duckdb
 et_xmlfile
 openpyxl
 packaging
@@ -11,6 +12,7 @@ pdfplumber
 pefile
 pillow
 psutil
+pyarrow
 pycparser
 pyinstaller
 pyinstaller-hooks-contrib

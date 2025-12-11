@@ -46,9 +46,10 @@ class MonitoringPanel(QWidget):
         # Estadísticas en línea
         self.time_label = QLabel("⏱️ Tiempo: 00:00:00")
         self.files_label = QLabel("📁 Archivos: 0/0")
+        self.folders_label = QLabel("📂 Carpetas: 0/0")
         self.errors_label = QLabel("⚠️ Errores: 0")
         
-        for label in [self.time_label, self.files_label, self.errors_label]:
+        for label in [self.time_label, self.files_label, self.folders_label, self.errors_label]:
             label.setProperty("labelStyle", "secondary")
             header_layout.addWidget(label)
         
@@ -98,10 +99,13 @@ class MonitoringPanel(QWidget):
         Actualiza las estadísticas
         
         Args:
-            stats: Diccionario con estadísticas (time, errors, etc)
+            stats: Diccionario con estadísticas (time, errors, carpetas, etc)
         """
         # Actualizar tiempo
-        if 'time' in stats:
+        if 'time_elapsed' in stats:
+            time_str = stats['time_elapsed']
+            self.time_label.setText(f"⏱️ Tiempo: {time_str}")
+        elif 'time' in stats:
             elapsed = stats['time']
             if isinstance(elapsed, (int, float)):
                 # Convertir segundos a formato HH:MM:SS
@@ -112,6 +116,12 @@ class MonitoringPanel(QWidget):
                 self.time_label.setText(f"⏱️ Tiempo: {time_str}")
             else:
                 self.time_label.setText(f"⏱️ Tiempo: {elapsed}")
+        
+        # Actualizar carpetas
+        if 'carpetas_procesadas' in stats and 'total_carpetas' in stats:
+            carpetas_proc = stats['carpetas_procesadas']
+            carpetas_total = stats['total_carpetas']
+            self.folders_label.setText(f"📂 Carpetas: {carpetas_proc}/{carpetas_total}")
         
         # Actualizar errores
         if 'errors' in stats:
@@ -166,5 +176,6 @@ class MonitoringPanel(QWidget):
         self.progress_bar.setValue(0)
         self.status_label.setText("⚡ Sistema listo")
         self.files_label.setText("📁 Archivos: 0/0")
+        self.folders_label.setText("📂 Carpetas: 0/0")
         self.errors_label.setText("⚠️ Errores: 0")
         self.time_label.setText("⏱️ Tiempo: 00:00:00")

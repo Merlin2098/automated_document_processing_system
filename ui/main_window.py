@@ -149,8 +149,8 @@ class MainWindow(QMainWindow):
             
             # Agregar tabs
             self.tab_widget.addTab(self.tab_quick_tools, "📄 Herramientas")
-            self.tab_widget.addTab(self.tab_pipeline_core, "📋 Pipeline Core")
-            self.tab_widget.addTab(self.tab_pipeline_sunat, "💼 Pipeline SUNAT")
+            self.tab_widget.addTab(self.tab_pipeline_core, "📋 Boletas")
+            self.tab_widget.addTab(self.tab_pipeline_sunat, "💼 SUNAT")
             self.tab_widget.addTab(self.tab_settings, "⚙️ Configuración")
             
             logger.info("✅ Todos los tabs cargados correctamente")

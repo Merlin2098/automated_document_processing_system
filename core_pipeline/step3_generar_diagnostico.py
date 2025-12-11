@@ -52,6 +52,9 @@ CARPETAS_CONFIG = {
     }
 }
 
+# Tamaño del lote para progreso
+BATCH_SIZE = 100
+
 # ============================================
 # FUNCIONES DE PROCESAMIENTO
 # ============================================
@@ -60,7 +63,7 @@ def procesar_carpeta(ruta_carpeta: str, config: Dict) -> List[Dict]:
     """
     Procesa todos los PDFs en una carpeta y genera registros.
     Si no hay extractor, solo lista archivos ordenados numéricamente.
-    Progreso mostrado por lotes de 100 archivos.
+    Progreso mostrado por lotes según BATCH_SIZE.
     """
     import re
     inicio = time.time()
@@ -93,8 +96,8 @@ def procesar_carpeta(ruta_carpeta: str, config: Dict) -> List[Dict]:
             }
             registros.append(registro)
             
-            # Mostrar progreso cada 100 archivos
-            if idx % 100 == 0:
+            # Mostrar progreso cada BATCH_SIZE archivos
+            if idx % BATCH_SIZE == 0:
                 print(f"   Listados: {idx}/{len(archivos_pdf)}")
                 logger.info(f"   Listados: {idx}/{len(archivos_pdf)}")
         
@@ -122,8 +125,8 @@ def procesar_carpeta(ruta_carpeta: str, config: Dict) -> List[Dict]:
 
         registros.append(registro)
 
-        # Mostrar progreso cada 100 archivos
-        if idx % 100 == 0:
+        # Mostrar progreso cada BATCH_SIZE archivos
+        if idx % BATCH_SIZE == 0:
             print(f"   Procesados: {idx}/{len(archivos_pdf)}")
             logger.info(f"   Procesados: {idx}/{len(archivos_pdf)}")
 
@@ -134,19 +137,49 @@ def procesar_carpeta(ruta_carpeta: str, config: Dict) -> List[Dict]:
 
     return registros
 
+
+def escribir_parquet(registros: List[Dict], ruta_parquet: str) -> bool:
+    """
+    Escribe registros a archivo Parquet para procesamiento incremental.
+    """
+    try:
+        import pandas as pd
+        
+        if not registros:
+            logger.warning(f"No hay registros para escribir en {ruta_parquet}")
+            return False
+        
+        df = pd.DataFrame(registros)
+        df.to_parquet(ruta_parquet, engine='pyarrow', compression='snappy', index=False)
+        
+        logger.info(f"   💾 Parquet escrito: {os.path.basename(ruta_parquet)}")
+        return True
+        
+    except ImportError:
+        logger.error("pyarrow no está instalado. Instale con: pip install pyarrow")
+        return False
+    except Exception as e:
+        logger.error(f"Error escribiendo Parquet: {e}")
+        import traceback
+        logger.error(traceback.format_exc())
+        return False
+
 # ============================================
 # FUNCIONES DE EXCEL
 # ============================================
 
-def generar_excel_multihoja(datos_por_hoja: Dict[str, List[Dict]], ruta_excel: str) -> bool:
+def generar_excel_desde_parquets(rutas_parquet: Dict[str, str], ruta_excel: str) -> bool:
     """
-    Genera Excel con múltiples hojas directamente desde los datos extraídos.
-    Maneja tanto hojas con extracción de datos como hojas de solo listado.
+    Genera Excel con múltiples hojas desde archivos Parquet.
+    Optimizado con DuckDB y dataframe_to_rows para máximo rendimiento.
     """
     try:
+        import duckdb
         import openpyxl
         from openpyxl.styles import Font, PatternFill, Alignment
+        from openpyxl.utils.dataframe import dataframe_to_rows
 
+        # Crear workbook
         wb = openpyxl.Workbook()
         wb.remove(wb.active)
 
@@ -154,70 +187,77 @@ def generar_excel_multihoja(datos_por_hoja: Dict[str, List[Dict]], ruta_excel: s
         header_fill = PatternFill(start_color="4472C4", end_color="4472C4", fill_type="solid")
         header_alignment = Alignment(horizontal="center", vertical="center")
 
-        for nombre_carpeta, registros in datos_por_hoja.items():
+        for nombre_carpeta, ruta_parquet in rutas_parquet.items():
+            # Leer Parquet con DuckDB (más rápido que pandas)
+            if not os.path.exists(ruta_parquet):
+                logger.warning(f"Archivo Parquet no encontrado: {ruta_parquet}")
+                continue
+            
+            df = duckdb.read_parquet(ruta_parquet).df()
+            
+            if df.empty:
+                logger.warning(f"DataFrame vacío para {nombre_carpeta}")
+                continue
+            
             # Obtener nombre de hoja personalizado del config
             config = CARPETAS_CONFIG.get(nombre_carpeta, {})
             nombre_hoja = config.get("nombre_hoja", nombre_carpeta)
             
             ws = wb.create_sheet(title=nombre_hoja)
-            if not registros:
-                continue
-
-            encabezados = list(registros[0].keys())
             
-            # Detectar si es una hoja de solo listado (solo tiene columna "archivo")
-            es_listado_simple = len(encabezados) == 1 and "archivo" in encabezados
+            # Detectar si es una hoja de solo listado
+            es_listado_simple = len(df.columns) == 1 and "archivo" in df.columns
             
-            for col_idx, encabezado in enumerate(encabezados, 1):
+            # Escribir encabezados con formato
+            for col_idx, col_name in enumerate(df.columns, 1):
                 cell = ws.cell(row=1, column=col_idx)
                 if es_listado_simple:
                     cell.value = "ARCHIVO"
                 else:
-                    cell.value = encabezado.replace("_", " ").upper()
+                    cell.value = col_name.replace("_", " ").upper()
                 cell.font = header_font
                 cell.fill = header_fill
                 cell.alignment = header_alignment
-
-            for row_idx, registro in enumerate(registros, 2):
-                for col_idx, encabezado in enumerate(encabezados, 1):
-                    valor = registro.get(encabezado, "")
-                    cell = ws.cell(row=row_idx, column=col_idx)
-                    cell.value = valor
-
-                    # Solo aplicar formato especial si NO es listado simple
-                    if not es_listado_simple:
-                        if encabezado in ["tipo_documento", "dni_extraido"]:
-                            cell.alignment = Alignment(horizontal="center")
-
+            
+            # Escribir datos usando dataframe_to_rows (más rápido)
+            for r_idx, row in enumerate(dataframe_to_rows(df, index=False, header=False), 2):
+                for c_idx, value in enumerate(row, 1):
+                    ws.cell(row=r_idx, column=c_idx, value=value)
+            
             # Ajustar anchos de columna
-            for col_idx, encabezado in enumerate(encabezados, 1):
+            for col_idx, col_name in enumerate(df.columns, 1):
                 column_letter = openpyxl.utils.get_column_letter(col_idx)
                 
                 if es_listado_simple:
-                    # Para hojas de listado simple, ancho fijo
                     ws.column_dimensions[column_letter].width = 40
                 else:
-                    # Para hojas con extracción de datos, anchos específicos
-                    if encabezado == "archivo_original":
+                    if col_name == "archivo_original":
                         ws.column_dimensions[column_letter].width = 40
-                    elif encabezado == "nombre_extraido":
+                    elif col_name == "nombre_extraido":
                         ws.column_dimensions[column_letter].width = 30
-                    elif encabezado == "tipo_documento":
+                    elif col_name == "tipo_documento":
                         ws.column_dimensions[column_letter].width = 15
-                    elif encabezado == "dni_extraido":
+                    elif col_name == "dni_extraido":
                         ws.column_dimensions[column_letter].width = 12
-                    elif encabezado == "fecha_extraida":
+                    elif col_name == "fecha_extraida":
                         ws.column_dimensions[column_letter].width = 15
                     else:
                         ws.column_dimensions[column_letter].width = 20
-
+            
             ws.freeze_panes = "A2"
+            
+            logger.info(f"   ✅ Hoja '{nombre_hoja}' agregada al Excel ({len(df)} registros)")
 
         wb.save(ruta_excel)
         print(f"   ✅ Excel generado: {ruta_excel}")
         logger.info(f"   ✅ Excel generado: {ruta_excel}")
         return True
 
+    except ImportError as e:
+        print(f"   ❌ Dependencia faltante: {e}")
+        logger.error(f"   ❌ Dependencia faltante: {e}")
+        logger.error("   Instale con: pip install duckdb")
+        return False
     except Exception as e:
         print(f"   ❌ Error al generar Excel: {e}")
         logger.error(f"   ❌ Error al generar Excel: {e}")
@@ -232,22 +272,26 @@ def generar_excel_multihoja(datos_por_hoja: Dict[str, List[Dict]], ruta_excel: s
 
 def procesar_diagnostico_a_excel(ruta_carpeta_trabajo: str, ruta_excel_final: str, guardar_json_opcional: bool = False):
     """
-    Procesa PDFs y genera Excel directamente. 
-    Opción de guardar JSON para debugging.
+    Procesa PDFs y genera Excel usando Parquet como formato intermedio.
+    Escritura incremental para mejor rendimiento y menor uso de memoria.
+    Los archivos Parquet se guardan en la carpeta de trabajo con el mismo nombre base que el Excel.
     """
     print("="*60)
-    print("🚀 PROCESO DE DIAGNÓSTICO DIRECTO A EXCEL")
+    print("🚀 PROCESO DE DIAGNÓSTICO CON PARQUET INCREMENTAL")
     print("="*60)
     logger.info("="*60)
-    logger.info("🚀 PROCESO DE DIAGNÓSTICO DIRECTO A EXCEL")
+    logger.info("🚀 PROCESO DE DIAGNÓSTICO CON PARQUET INCREMENTAL")
     logger.info("="*60)
 
     if not os.path.isdir(ruta_carpeta_trabajo):
         print(f"❌ Carpeta '{ruta_carpeta_trabajo}' no existe")
         logger.error(f"❌ Carpeta '{ruta_carpeta_trabajo}' no existe")
         return
-
-    datos_por_hoja = {}
+    
+    # Extraer nombre base del Excel (sin extensión)
+    nombre_base_excel = os.path.splitext(os.path.basename(ruta_excel_final))[0]
+    
+    rutas_parquet = {}
 
     for nombre_carpeta, config in CARPETAS_CONFIG.items():
         ruta_subcarpeta = os.path.join(ruta_carpeta_trabajo, nombre_carpeta)
@@ -256,19 +300,35 @@ def procesar_diagnostico_a_excel(ruta_carpeta_trabajo: str, ruta_excel_final: st
             logger.warning(f"⚠️ Carpeta '{nombre_carpeta}' no encontrada, omitiendo...")
             continue
 
+        # Procesar carpeta
         registros = procesar_carpeta(ruta_subcarpeta, config)
-        datos_por_hoja[nombre_carpeta] = registros
-
-        if guardar_json_opcional:
+        
+        # Escribir Parquet con el mismo nombre base que el Excel
+        nombre_parquet = f"{nombre_base_excel}_{nombre_carpeta}.parquet"
+        ruta_parquet = os.path.join(ruta_carpeta_trabajo, nombre_parquet)
+        if escribir_parquet(registros, ruta_parquet):
+            rutas_parquet[nombre_carpeta] = ruta_parquet
+        
+        # Opcional: Guardar JSON para debugging
+        if guardar_json_opcional and registros:
             import json
             ruta_json = os.path.join(ruta_carpeta_trabajo, f"diagnostico_{nombre_carpeta}.json")
             with open(ruta_json, 'w', encoding='utf-8') as f:
                 json.dump(registros, f, ensure_ascii=False, indent=2)
             print(f"   💾 JSON opcional guardado: {ruta_json}")
             logger.info(f"   💾 JSON opcional guardado: {ruta_json}")
+        
+        # Liberar memoria
+        del registros
 
-    if datos_por_hoja:
-        generar_excel_multihoja(datos_por_hoja, ruta_excel_final)
+    # Generar Excel desde Parquets
+    if rutas_parquet:
+        print("\n📊 Generando Excel desde archivos Parquet...")
+        logger.info("📊 Generando Excel desde archivos Parquet...")
+        generar_excel_desde_parquets(rutas_parquet, ruta_excel_final)
+        
+        print("\n✅ Proceso completado. Los archivos .parquet pueden ser eliminados manualmente.")
+        logger.info("✅ Archivos .parquet guardados en carpeta de trabajo (pueden eliminarse)")
 
 # ============================================
 # OBTENER RUTA DE CARPETA
