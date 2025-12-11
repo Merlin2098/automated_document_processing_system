@@ -21045,3 +21045,143 @@ FileNotFoundError: [Errno 2] No such file or directory: 'C:/Users/ricuculm/OneDr
 2025-12-11 14:21:26 | INFO     | main                           | main                 | --------------------------------------------------------------------------------
 2025-12-11 14:21:26 | INFO     | main                           | main                 | Aplicación cerrada con código: 0
 2025-12-11 14:21:26 | INFO     | main                           | main                 | ================================================================================
+2025-12-11 14:38:52 | INFO     | main                           | setup_logging        | ================================================================================
+2025-12-11 14:38:52 | INFO     | main                           | setup_logging        | Sistema de logging inicializado correctamente
+2025-12-11 14:38:52 | INFO     | main                           | setup_logging        | Directorio de logs: C:\Users\ricuculm\OneDrive - Metso\Documents\VS Code\7. Matrix_Rework\logs
+2025-12-11 14:38:52 | INFO     | main                           | setup_logging        | ================================================================================
+2025-12-11 14:38:52 | INFO     | main                           | main                 | ================================================================================
+2025-12-11 14:38:52 | INFO     | main                           | main                 | DocFlow Eventuales v4.0 - Iniciando aplicación
+2025-12-11 14:38:52 | INFO     | main                           | main                 | ================================================================================
+2025-12-11 14:38:52 | INFO     | main                           | main                 | Sistema operativo: win32
+2025-12-11 14:38:52 | INFO     | main                           | main                 | Versión Python: 3.13.9
+2025-12-11 14:38:52 | INFO     | main                           | main                 | --------------------------------------------------------------------------------
+2025-12-11 14:38:52 | INFO     | main                           | main                 | Configurando aplicación Qt...
+2025-12-11 14:38:53 | INFO     | main                           | main                 | ✅ Aplicación Qt configurada correctamente
+2025-12-11 14:38:53 | INFO     | main                           | main                 | Mostrando splash screen...
+2025-12-11 14:39:03 | INFO     | main                           | main                 | ✅ Splash screen mostrado
+2025-12-11 14:39:03 | INFO     | main                           | main                 | Iniciando event loop de Qt...
+2025-12-11 14:39:07 | INFO     | main                           | on_splash_finished   | Splash screen completado, cargando ventana principal...
+2025-12-11 14:39:07 | INFO     | ui.main_window                 | __init__             | Inicializando ventana principal...
+2025-12-11 14:39:07 | INFO     | utils.theme_manager            | _load_themes         | ✅ Tema cargado: dark (Tema oscuro con fondo azul nocturno profundo)
+2025-12-11 14:39:07 | INFO     | utils.theme_manager            | _load_themes         | ✅ Tema cargado: light (Tema claro innovador y tecnológico con acentos verde-azulados)
+2025-12-11 14:39:07 | INFO     | utils.theme_manager            | _load_config         | ✅ Configuración cargada: tema 'dark'
+2025-12-11 14:39:07 | INFO     | utils.theme_manager            | __init__             | ✅ Theme Manager inicializado - Tema activo: dark
+2025-12-11 14:39:07 | INFO     | ui.main_window                 | __init__             | ✅ Tema cargado: dark
+2025-12-11 14:39:07 | INFO     | ui.main_window                 | __init__             | ✅ Interfaz de usuario creada
+2025-12-11 14:39:07 | INFO     | ui.main_window                 | __init__             | ✅ Ventana principal inicializada correctamente
+2025-12-11 14:39:07 | INFO     | main                           | on_splash_finished   | ✅ Ventana principal cargada y mostrada
+2025-12-11 14:39:07 | INFO     | main                           | on_splash_finished   | --------------------------------------------------------------------------------
+2025-12-11 14:39:07 | INFO     | main                           | on_splash_finished   | 🚀 Aplicación lista para usar
+2025-12-11 14:39:07 | INFO     | main                           | on_splash_finished   | ================================================================================
+2025-12-11 14:39:07 | INFO     | ui.main_window                 | _load_tabs           | Iniciando carga lazy de tabs...
+2025-12-11 14:39:11 | INFO     | ui.main_window                 | _load_tabs           | ✅ Todos los tabs cargados correctamente
+2025-12-11 14:39:11 | INFO     | ui.main_window                 | _load_tabs           | ✅ Señales de tabs conectadas
+2025-12-11 14:41:29 | INFO     | ui.main_window                 | closeEvent           | Usuario solicitó cerrar la aplicación
+2025-12-11 14:41:29 | INFO     | ui.main_window                 | closeEvent           | Cerrando ventana principal...
+2025-12-11 14:41:29 | INFO     | main                           | main                 | --------------------------------------------------------------------------------
+2025-12-11 14:41:29 | INFO     | main                           | main                 | Aplicación cerrada con código: 0
+2025-12-11 14:41:29 | INFO     | main                           | main                 | ================================================================================
+2025-12-11 14:43:53 | INFO     | main                           | setup_logging        | ================================================================================
+2025-12-11 14:43:53 | INFO     | main                           | setup_logging        | Sistema de logging inicializado correctamente
+2025-12-11 14:43:53 | INFO     | main                           | setup_logging        | Directorio de logs: C:\Users\ricuculm\OneDrive - Metso\Documents\VS Code\7. Matrix_Rework\logs
+2025-12-11 14:43:53 | INFO     | main                           | setup_logging        | ================================================================================
+2025-12-11 14:43:53 | INFO     | main                           | main                 | ================================================================================
+2025-12-11 14:43:53 | INFO     | main                           | main                 | DocFlow Eventuales v4.0 - Iniciando aplicación
+2025-12-11 14:43:53 | INFO     | main                           | main                 | ================================================================================
+2025-12-11 14:43:53 | INFO     | main                           | main                 | Sistema operativo: win32
+2025-12-11 14:43:53 | INFO     | main                           | main                 | Versión Python: 3.13.9
+2025-12-11 14:43:53 | INFO     | main                           | main                 | --------------------------------------------------------------------------------
+2025-12-11 14:43:53 | INFO     | main                           | main                 | Configurando aplicación Qt...
+2025-12-11 14:43:53 | INFO     | main                           | main                 | ✅ Aplicación Qt configurada correctamente
+2025-12-11 14:43:53 | INFO     | main                           | main                 | Mostrando splash screen...
+2025-12-11 14:43:54 | INFO     | main                           | main                 | ✅ Splash screen mostrado
+2025-12-11 14:43:54 | INFO     | main                           | main                 | Iniciando event loop de Qt...
+2025-12-11 14:43:57 | INFO     | main                           | on_splash_finished   | Splash screen completado, cargando ventana principal...
+2025-12-11 14:43:57 | INFO     | ui.main_window                 | __init__             | Inicializando ventana principal...
+2025-12-11 14:43:57 | INFO     | utils.theme_manager            | _load_themes         | ✅ Tema cargado: dark (Tema oscuro con fondo azul nocturno profundo)
+2025-12-11 14:43:57 | INFO     | utils.theme_manager            | _load_themes         | ✅ Tema cargado: light (Tema claro innovador y tecnológico con acentos verde-azulados)
+2025-12-11 14:43:57 | INFO     | utils.theme_manager            | _load_config         | ✅ Configuración cargada: tema 'dark'
+2025-12-11 14:43:57 | INFO     | utils.theme_manager            | __init__             | ✅ Theme Manager inicializado - Tema activo: dark
+2025-12-11 14:43:57 | INFO     | ui.main_window                 | __init__             | ✅ Tema cargado: dark
+2025-12-11 14:43:57 | INFO     | ui.main_window                 | __init__             | ✅ Interfaz de usuario creada
+2025-12-11 14:43:57 | INFO     | ui.main_window                 | __init__             | ✅ Ventana principal inicializada correctamente
+2025-12-11 14:43:57 | INFO     | main                           | on_splash_finished   | ✅ Ventana principal cargada y mostrada
+2025-12-11 14:43:57 | INFO     | main                           | on_splash_finished   | --------------------------------------------------------------------------------
+2025-12-11 14:43:57 | INFO     | main                           | on_splash_finished   | 🚀 Aplicación lista para usar
+2025-12-11 14:43:57 | INFO     | main                           | on_splash_finished   | ================================================================================
+2025-12-11 14:43:57 | INFO     | ui.main_window                 | _load_tabs           | Iniciando carga lazy de tabs...
+2025-12-11 14:43:58 | INFO     | ui.main_window                 | _load_tabs           | ✅ Todos los tabs cargados correctamente
+2025-12-11 14:43:58 | INFO     | ui.main_window                 | _load_tabs           | ✅ Señales de tabs conectadas
+2025-12-11 14:44:13 | INFO     | workers.CorePipelineStep3Worker | info                 | 🚀 Worker: Iniciando diagnóstico optimizado
+2025-12-11 14:44:13 | INFO     | workers.CorePipelineStep3Worker | info                 | 📂 Total: 2509 archivos en 5 carpetas
+2025-12-11 14:44:13 | INFO     | workers.CorePipeline3_Diagnostico | info                 | ============================================================
+2025-12-11 14:44:13 | INFO     | workers.CorePipeline3_Diagnostico | info                 | 🚀 DIAGNÓSTICO OPTIMIZADO - MODO PARALELO
+2025-12-11 14:44:13 | INFO     | workers.CorePipeline3_Diagnostico | info                 | ============================================================
+2025-12-11 14:44:13 | INFO     | workers.CorePipeline3_Diagnostico | info                 | 🚀 Iniciando procesamiento paralelo de 5 carpetas
+2025-12-11 14:44:29 | INFO     | workers.CorePipeline3_Diagnostico | info                 | 📂 Procesando: 4_Convocatoria
+2025-12-11 14:44:29 | INFO     | workers.CorePipeline3_Diagnostico | info                 |    Tipo: CONVOCATORIA | PDFs: 587
+2025-12-11 14:44:29 | INFO     | workers.CorePipeline3_Diagnostico | info                 |    Listados: 100/587
+2025-12-11 14:44:29 | INFO     | workers.CorePipeline3_Diagnostico | info                 |    Listados: 200/587
+2025-12-11 14:44:29 | INFO     | workers.CorePipeline3_Diagnostico | info                 |    Listados: 300/587
+2025-12-11 14:44:29 | INFO     | workers.CorePipeline3_Diagnostico | info                 |    Listados: 400/587
+2025-12-11 14:44:29 | INFO     | workers.CorePipeline3_Diagnostico | info                 |    Listados: 500/587
+2025-12-11 14:44:29 | INFO     | workers.CorePipeline3_Diagnostico | info                 |    💾 Parquet: diagnostico_consolidado_11.12.2025_14.44.13_4_Convocatoria.parquet
+2025-12-11 14:44:29 | INFO     | workers.CorePipeline3_Diagnostico | info                 |    ✅ 587 registros en 0m 13s
+2025-12-11 14:44:29 | INFO     | workers.CorePipelineStep3Worker | info                 | 📊 Progreso: 1/5 carpetas | 00:00:16
+2025-12-11 14:44:29 | INFO     | workers.CorePipeline3_Diagnostico | info                 | 📊 Progreso: 1/5 carpetas
+2025-12-11 14:44:29 | INFO     | workers.CorePipeline3_Diagnostico | info                 | 📂 Procesando: 5_CertificadosTrabajo
+2025-12-11 14:44:29 | INFO     | workers.CorePipeline3_Diagnostico | info                 |    Tipo: CERTIFICADO_TRABAJO | PDFs: 586
+2025-12-11 14:44:29 | INFO     | workers.CorePipeline3_Diagnostico | info                 |    Listados: 100/586
+2025-12-11 14:44:29 | INFO     | workers.CorePipeline3_Diagnostico | info                 |    Listados: 200/586
+2025-12-11 14:44:29 | INFO     | workers.CorePipeline3_Diagnostico | info                 |    Listados: 300/586
+2025-12-11 14:44:29 | INFO     | workers.CorePipeline3_Diagnostico | info                 |    Listados: 400/586
+2025-12-11 14:44:29 | INFO     | workers.CorePipeline3_Diagnostico | info                 |    Listados: 500/586
+2025-12-11 14:44:29 | INFO     | workers.CorePipeline3_Diagnostico | info                 |    💾 Parquet: diagnostico_consolidado_11.12.2025_14.44.13_5_CertificadosTrabajo.parquet
+2025-12-11 14:44:29 | INFO     | workers.CorePipeline3_Diagnostico | info                 |    ✅ 586 registros en 0m 13s
+2025-12-11 14:44:29 | INFO     | workers.CorePipelineStep3Worker | info                 | 📊 Progreso: 2/5 carpetas | 00:00:16
+2025-12-11 14:44:29 | INFO     | workers.CorePipeline3_Diagnostico | info                 | 📊 Progreso: 2/5 carpetas
+2025-12-11 14:45:12 | INFO     | workers.CorePipeline3_Diagnostico | info                 | 📂 Procesando: 1_Boletas
+2025-12-11 14:45:12 | INFO     | workers.CorePipeline3_Diagnostico | info                 |    Tipo: BOLETA | PDFs: 588
+2025-12-11 14:45:12 | INFO     | workers.CorePipeline3_Diagnostico | info                 |    Procesados: 100/588
+2025-12-11 14:45:12 | INFO     | workers.CorePipeline3_Diagnostico | info                 |    Procesados: 200/588
+2025-12-11 14:45:12 | INFO     | workers.CorePipeline3_Diagnostico | info                 |    Procesados: 300/588
+2025-12-11 14:45:12 | INFO     | workers.CorePipeline3_Diagnostico | info                 |    Procesados: 400/588
+2025-12-11 14:45:12 | INFO     | workers.CorePipeline3_Diagnostico | info                 |    Procesados: 500/588
+2025-12-11 14:45:12 | INFO     | workers.CorePipeline3_Diagnostico | info                 |    💾 Parquet: diagnostico_consolidado_11.12.2025_14.44.13_1_Boletas.parquet
+2025-12-11 14:45:12 | INFO     | workers.CorePipeline3_Diagnostico | info                 |    ✅ 588 registros en 0m 56s
+2025-12-11 14:45:12 | INFO     | workers.CorePipelineStep3Worker | info                 | 📊 Progreso: 3/5 carpetas | 00:00:59
+2025-12-11 14:45:12 | INFO     | workers.CorePipeline3_Diagnostico | info                 | 📊 Progreso: 3/5 carpetas
+2025-12-11 14:45:43 | INFO     | workers.CorePipeline3_Diagnostico | info                 | 📂 Procesando: 2_Afp
+2025-12-11 14:45:43 | INFO     | workers.CorePipeline3_Diagnostico | info                 |    Tipo: AFP | PDFs: 374
+2025-12-11 14:45:43 | INFO     | workers.CorePipeline3_Diagnostico | info                 |    Procesados: 100/374
+2025-12-11 14:45:43 | INFO     | workers.CorePipeline3_Diagnostico | info                 |    Procesados: 200/374
+2025-12-11 14:45:43 | INFO     | workers.CorePipeline3_Diagnostico | info                 |    Procesados: 300/374
+2025-12-11 14:45:43 | INFO     | workers.CorePipeline3_Diagnostico | info                 |    💾 Parquet: diagnostico_consolidado_11.12.2025_14.44.13_2_Afp.parquet
+2025-12-11 14:45:43 | INFO     | workers.CorePipeline3_Diagnostico | info                 |    ✅ 374 registros en 1m 26s
+2025-12-11 14:45:43 | INFO     | workers.CorePipelineStep3Worker | info                 | 📊 Progreso: 4/5 carpetas | 00:01:29
+2025-12-11 14:45:43 | INFO     | workers.CorePipeline3_Diagnostico | info                 | 📊 Progreso: 4/5 carpetas
+2025-12-11 14:45:56 | INFO     | workers.CorePipeline3_Diagnostico | info                 | 📂 Procesando: 3_5ta
+2025-12-11 14:45:56 | INFO     | workers.CorePipeline3_Diagnostico | info                 |    Tipo: QUINTA | PDFs: 374
+2025-12-11 14:45:56 | INFO     | workers.CorePipeline3_Diagnostico | info                 |    Procesados: 100/374
+2025-12-11 14:45:56 | INFO     | workers.CorePipeline3_Diagnostico | info                 |    Procesados: 200/374
+2025-12-11 14:45:56 | INFO     | workers.CorePipeline3_Diagnostico | info                 |    Procesados: 300/374
+2025-12-11 14:45:56 | INFO     | workers.CorePipeline3_Diagnostico | info                 |    💾 Parquet: diagnostico_consolidado_11.12.2025_14.44.13_3_5ta.parquet
+2025-12-11 14:45:56 | INFO     | workers.CorePipeline3_Diagnostico | info                 |    ✅ 374 registros en 1m 40s
+2025-12-11 14:45:56 | INFO     | workers.CorePipelineStep3Worker | info                 | 📊 Progreso: 5/5 carpetas | 00:01:43
+2025-12-11 14:45:56 | INFO     | workers.CorePipeline3_Diagnostico | info                 | 📊 Progreso: 5/5 carpetas
+2025-12-11 14:45:56 | INFO     | workers.CorePipeline3_Diagnostico | info                 | ✅ Procesamiento paralelo completado en 1m 43s
+2025-12-11 14:45:57 | INFO     | workers.CorePipeline3_Diagnostico | info                 | 📊 Generando Excel en modo streaming...
+2025-12-11 14:45:58 | INFO     | workers.CorePipeline3_Diagnostico | info                 |    ✅ Hoja '1ERA' escrita (587 registros)
+2025-12-11 14:45:59 | INFO     | workers.CorePipeline3_Diagnostico | info                 |    ✅ Hoja 'CTRA' escrita (586 registros)
+2025-12-11 14:45:59 | INFO     | workers.CorePipeline3_Diagnostico | info                 |    ✅ Hoja '1_Boletas' escrita (588 registros)
+2025-12-11 14:45:59 | INFO     | workers.CorePipeline3_Diagnostico | info                 |    ✅ Hoja '2_Afp' escrita (374 registros)
+2025-12-11 14:45:59 | INFO     | workers.CorePipeline3_Diagnostico | info                 |    ✅ Hoja '3_5ta' escrita (374 registros)
+2025-12-11 14:45:59 | INFO     | workers.CorePipeline3_Diagnostico | info                 | ✅ Excel generado en 1s
+2025-12-11 14:45:59 | INFO     | workers.CorePipeline3_Diagnostico | info                 | ✅ Proceso completado
+2025-12-11 14:45:59 | INFO     | workers.CorePipeline3_Diagnostico | info                 | 📁 Archivos .parquet mantenidos en carpeta de trabajo (política empresarial)
+2025-12-11 14:45:59 | INFO     | workers.CorePipelineStep3Worker | info                 | ✅ Worker completado en 00:01:46
+2025-12-11 14:47:02 | INFO     | ui.main_window                 | closeEvent           | Usuario solicitó cerrar la aplicación
+2025-12-11 14:47:02 | INFO     | ui.main_window                 | closeEvent           | Cerrando ventana principal...
+2025-12-11 14:47:02 | INFO     | main                           | main                 | --------------------------------------------------------------------------------
+2025-12-11 14:47:02 | INFO     | main                           | main                 | Aplicación cerrada con código: 0
+2025-12-11 14:47:02 | INFO     | main                           | main                 | ================================================================================

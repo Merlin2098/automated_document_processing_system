@@ -1,12 +1,16 @@
 """
 Flujo combinado: Extracción de PDFs y generación directa de Excel
+OPTIMIZADO: write_only + numpy + DuckDB + multiprocessing
 """
 
 import os
 import sys
 import time
-from typing import List, Dict, Optional
+import gc
+from typing import List, Dict, Optional, Tuple
+from multiprocessing import Pool, cpu_count
 from utils.logger import Logger
+
 # Agregar el directorio padre al path para importar módulos
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
@@ -14,7 +18,9 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from extractores.extractor_afp import extraer_datos_afp
 from extractores.extractor_boleta import extraer_datos_boleta
 from extractores.extractor_quinta import extraer_datos_quinta
+
 logger = Logger("CorePipeline3_Diagnostico")
+
 # ============================================
 # CONFIGURACIÓN DE CARPETAS Y TIPOS
 # ============================================
@@ -56,18 +62,20 @@ CARPETAS_CONFIG = {
 BATCH_SIZE = 100
 
 # ============================================
-# FUNCIONES DE PROCESAMIENTO
+# FUNCIONES DE PROCESAMIENTO (MULTIPROCESSING)
 # ============================================
 
-def procesar_carpeta(ruta_carpeta: str, config: Dict) -> List[Dict]:
+def procesar_carpeta_mp(args: Tuple[str, str, Dict, str]) -> Tuple[str, List[Dict], float, List[str]]:
     """
-    Procesa todos los PDFs en una carpeta y genera registros.
-    Si no hay extractor, solo lista archivos ordenados numéricamente.
-    Progreso mostrado por lotes según BATCH_SIZE.
+    Procesa una carpeta completa en un proceso separado.
+    Retorna: (nombre_carpeta, registros, tiempo_procesamiento, logs)
     """
+    nombre_carpeta, ruta_carpeta, config, ruta_parquet = args
     import re
+    
     inicio = time.time()
     registros = []
+    logs = []
     tipo_documento = config["tipo"]
     extractor = config.get("extractor")
 
@@ -75,142 +83,182 @@ def procesar_carpeta(ruta_carpeta: str, config: Dict) -> List[Dict]:
     
     # Ordenar archivos numéricamente por el número después del guión bajo
     def extraer_numero(filename):
-        """Extrae el número del nombre de archivo para ordenamiento correcto"""
         match = re.search(r'_(\d+)', filename)
         return int(match.group(1)) if match else 0
     
     archivos_pdf.sort(key=extraer_numero)
 
-    print(f"\n📂 Procesando carpeta: {os.path.basename(ruta_carpeta)}")
-    logger.info(f"📂 Procesando carpeta: {os.path.basename(ruta_carpeta)}")
-    print(f"   Tipo de documento: {tipo_documento}")
-    logger.info(f"   Tipo: {tipo_documento}")
-    print(f"   Total de PDFs encontrados: {len(archivos_pdf)}")
-    logger.info(f"   PDFs: {len(archivos_pdf)}")
+    logs.append(f"📂 Procesando: {nombre_carpeta}")
+    logs.append(f"   Tipo: {tipo_documento} | PDFs: {len(archivos_pdf)}")
 
     # Si no hay extractor, solo listar archivos
     if extractor is None:
         for idx, archivo in enumerate(archivos_pdf, 1):
-            registro = {
-                "archivo": archivo
-            }
+            registro = {"archivo": archivo}
             registros.append(registro)
             
-            # Mostrar progreso cada BATCH_SIZE archivos
             if idx % BATCH_SIZE == 0:
-                print(f"   Listados: {idx}/{len(archivos_pdf)}")
-                logger.info(f"   Listados: {idx}/{len(archivos_pdf)}")
-        
-        fin = time.time()
-        tiempo_total = fin - inicio
-        print(f"   ✅ Completado: {len(registros)} archivos listados en {int(tiempo_total // 60)}m {int(tiempo_total % 60)}s")
-        logger.info(f"   ✅ Completado: {len(registros)} archivos listados en {int(tiempo_total // 60)}m {int(tiempo_total % 60)}s")
-        
-        return registros
+                logs.append(f"   Listados: {idx}/{len(archivos_pdf)}")
+    else:
+        # Procesar con extractor
+        for idx, archivo in enumerate(archivos_pdf, 1):
+            ruta_completa = os.path.join(ruta_carpeta, archivo)
+            resultado = extractor(ruta_completa)
 
-    # Si hay extractor, procesar normalmente con extracción de datos
-    for idx, archivo in enumerate(archivos_pdf, 1):
-        ruta_completa = os.path.join(ruta_carpeta, archivo)
-        resultado = extractor(ruta_completa)
+            registro = {
+                "archivo_original": archivo,
+                "tipo_documento": tipo_documento,
+                "nombre_extraido": resultado.get("nombre"),
+                "dni_extraido": resultado.get("dni")
+            }
 
-        registro = {
-            "archivo_original": archivo,
-            "tipo_documento": tipo_documento,
-            "nombre_extraido": resultado.get("nombre"),
-            "dni_extraido": resultado.get("dni")
-        }
+            if "fecha" in resultado and resultado["fecha"]:
+                registro["fecha_extraida"] = resultado["fecha"]
 
-        if "fecha" in resultado and resultado["fecha"]:
-            registro["fecha_extraida"] = resultado["fecha"]
+            registros.append(registro)
 
-        registros.append(registro)
+            if idx % BATCH_SIZE == 0:
+                logs.append(f"   Procesados: {idx}/{len(archivos_pdf)}")
 
-        # Mostrar progreso cada BATCH_SIZE archivos
-        if idx % BATCH_SIZE == 0:
-            print(f"   Procesados: {idx}/{len(archivos_pdf)}")
-            logger.info(f"   Procesados: {idx}/{len(archivos_pdf)}")
+    # Escribir Parquet inmediatamente
+    try:
+        import pandas as pd
+        if registros:
+            df = pd.DataFrame(registros)
+            df.to_parquet(ruta_parquet, engine='pyarrow', compression='snappy', index=False)
+            logs.append(f"   💾 Parquet: {os.path.basename(ruta_parquet)}")
+            del df
+    except Exception as e:
+        logs.append(f"   ⚠️ Error Parquet: {e}")
 
     fin = time.time()
     tiempo_total = fin - inicio
-    print(f"   ✅ Completado: {len(registros)} registros en {int(tiempo_total // 60)}m {int(tiempo_total % 60)}s")
-    logger.info(f"   ✅ Completado: {len(registros)} registros en {int(tiempo_total // 60)}m {int(tiempo_total % 60)}s")
+    logs.append(f"   ✅ {len(registros)} registros en {int(tiempo_total // 60)}m {int(tiempo_total % 60)}s")
+    
+    # Liberar memoria explícitamente
+    del registros
+    gc.collect()
+    
+    return (nombre_carpeta, ruta_parquet, tiempo_total, logs)
 
-    return registros
 
-
-def escribir_parquet(registros: List[Dict], ruta_parquet: str) -> bool:
+def procesar_carpetas_paralelo(ruta_carpeta_trabajo: str, nombre_base_excel: str, 
+                               progress_callback=None) -> Dict[str, str]:
     """
-    Escribe registros a archivo Parquet para procesamiento incremental.
+    Procesa todas las carpetas en paralelo usando multiprocessing.
+    Retorna diccionario con rutas de Parquets generados.
     """
-    try:
-        import pandas as pd
+    # Preparar argumentos para cada carpeta
+    tareas = []
+    carpetas_validas = []
+    
+    for nombre_carpeta, config in CARPETAS_CONFIG.items():
+        ruta_subcarpeta = os.path.join(ruta_carpeta_trabajo, nombre_carpeta)
+        if not os.path.isdir(ruta_subcarpeta):
+            logger.warning(f"⚠️ Carpeta '{nombre_carpeta}' no encontrada, omitiendo...")
+            continue
         
-        if not registros:
-            logger.warning(f"No hay registros para escribir en {ruta_parquet}")
-            return False
+        nombre_parquet = f"{nombre_base_excel}_{nombre_carpeta}.parquet"
+        ruta_parquet = os.path.join(ruta_carpeta_trabajo, nombre_parquet)
         
-        df = pd.DataFrame(registros)
-        df.to_parquet(ruta_parquet, engine='pyarrow', compression='snappy', index=False)
-        
-        logger.info(f"   💾 Parquet escrito: {os.path.basename(ruta_parquet)}")
-        return True
-        
-    except ImportError:
-        logger.error("pyarrow no está instalado. Instale con: pip install pyarrow")
-        return False
-    except Exception as e:
-        logger.error(f"Error escribiendo Parquet: {e}")
-        import traceback
-        logger.error(traceback.format_exc())
-        return False
+        tareas.append((nombre_carpeta, ruta_subcarpeta, config, ruta_parquet))
+        carpetas_validas.append(nombre_carpeta)
+    
+    if not tareas:
+        logger.error("No hay carpetas válidas para procesar")
+        return {}
+    
+    total_carpetas = len(tareas)
+    logger.info(f"🚀 Iniciando procesamiento paralelo de {total_carpetas} carpetas")
+    print(f"\n🚀 Procesando {total_carpetas} carpetas en paralelo...")
+    
+    # Determinar número de workers (máximo 5 carpetas)
+    num_workers = min(cpu_count(), total_carpetas)
+    
+    rutas_parquet = {}
+    carpetas_completadas = 0
+    inicio_global = time.time()
+    
+    # Procesar en paralelo
+    with Pool(processes=num_workers) as pool:
+        for resultado in pool.imap_unordered(procesar_carpeta_mp, tareas):
+            nombre_carpeta, ruta_parquet, tiempo_carpeta, logs = resultado
+            
+            # Consolidar logs
+            for log_line in logs:
+                logger.info(log_line)
+                print(log_line)
+            
+            rutas_parquet[nombre_carpeta] = ruta_parquet
+            carpetas_completadas += 1
+            
+            # Reportar progreso global
+            if progress_callback:
+                progress_callback(carpetas_completadas, total_carpetas, tiempo_carpeta)
+            
+            print(f"\n📊 Progreso global: {carpetas_completadas}/{total_carpetas} carpetas completadas")
+            logger.info(f"📊 Progreso: {carpetas_completadas}/{total_carpetas} carpetas")
+    
+    tiempo_total_global = time.time() - inicio_global
+    print(f"\n✅ Todas las carpetas procesadas en {int(tiempo_total_global // 60)}m {int(tiempo_total_global % 60)}s")
+    logger.info(f"✅ Procesamiento paralelo completado en {int(tiempo_total_global // 60)}m {int(tiempo_total_global % 60)}s")
+    
+    return rutas_parquet
+
 
 # ============================================
-# FUNCIONES DE EXCEL
+# FUNCIONES DE EXCEL OPTIMIZADAS
 # ============================================
 
-def generar_excel_desde_parquets(rutas_parquet: Dict[str, str], ruta_excel: str) -> bool:
+def generar_excel_streaming(rutas_parquet: Dict[str, str], ruta_excel: str) -> bool:
     """
-    Genera Excel con múltiples hojas desde archivos Parquet.
-    Optimizado con DuckDB y dataframe_to_rows para máximo rendimiento.
+    Genera Excel con modo write_only para máximo rendimiento.
+    Usa DuckDB para leer Parquet y numpy para escritura rápida.
     """
     try:
         import duckdb
         import openpyxl
         from openpyxl.styles import Font, PatternFill, Alignment
-        from openpyxl.utils.dataframe import dataframe_to_rows
+        
+        inicio = time.time()
+        logger.info("📊 Generando Excel en modo streaming...")
+        print("\n📊 Generando Excel optimizado...")
 
-        # Crear workbook
-        wb = openpyxl.Workbook()
-        wb.remove(wb.active)
-
+        # Crear workbook en modo write_only
+        wb = openpyxl.Workbook(write_only=True)
+        
+        # Estilos para encabezado
         header_font = Font(bold=True, color="FFFFFF")
         header_fill = PatternFill(start_color="4472C4", end_color="4472C4", fill_type="solid")
         header_alignment = Alignment(horizontal="center", vertical="center")
 
         for nombre_carpeta, ruta_parquet in rutas_parquet.items():
-            # Leer Parquet con DuckDB (más rápido que pandas)
             if not os.path.exists(ruta_parquet):
-                logger.warning(f"Archivo Parquet no encontrado: {ruta_parquet}")
+                logger.warning(f"⚠️ Parquet no encontrado: {ruta_parquet}")
                 continue
             
+            # Leer con DuckDB (más rápido que pandas)
             df = duckdb.read_parquet(ruta_parquet).df()
             
             if df.empty:
-                logger.warning(f"DataFrame vacío para {nombre_carpeta}")
+                logger.warning(f"⚠️ DataFrame vacío para {nombre_carpeta}")
+                del df
+                gc.collect()
                 continue
             
-            # Obtener nombre de hoja personalizado del config
+            # Obtener nombre de hoja
             config = CARPETAS_CONFIG.get(nombre_carpeta, {})
             nombre_hoja = config.get("nombre_hoja", nombre_carpeta)
             
             ws = wb.create_sheet(title=nombre_hoja)
             
-            # Detectar si es una hoja de solo listado
+            # Detectar tipo de hoja
             es_listado_simple = len(df.columns) == 1 and "archivo" in df.columns
             
-            # Escribir encabezados con formato
-            for col_idx, col_name in enumerate(df.columns, 1):
-                cell = ws.cell(row=1, column=col_idx)
+            # Escribir encabezado con estilo
+            header_row = []
+            for col_name in df.columns:
+                cell = openpyxl.cell.cell.WriteOnlyCell(ws)
                 if es_listado_simple:
                     cell.value = "ARCHIVO"
                 else:
@@ -218,117 +266,106 @@ def generar_excel_desde_parquets(rutas_parquet: Dict[str, str], ruta_excel: str)
                 cell.font = header_font
                 cell.fill = header_fill
                 cell.alignment = header_alignment
+                header_row.append(cell)
             
-            # Escribir datos usando dataframe_to_rows (más rápido)
-            for r_idx, row in enumerate(dataframe_to_rows(df, index=False, header=False), 2):
-                for c_idx, value in enumerate(row, 1):
-                    ws.cell(row=r_idx, column=c_idx, value=value)
+            ws.append(header_row)
             
-            # Ajustar anchos de columna
-            for col_idx, col_name in enumerate(df.columns, 1):
-                column_letter = openpyxl.utils.get_column_letter(col_idx)
-                
-                if es_listado_simple:
-                    ws.column_dimensions[column_letter].width = 40
-                else:
-                    if col_name == "archivo_original":
-                        ws.column_dimensions[column_letter].width = 40
-                    elif col_name == "nombre_extraido":
-                        ws.column_dimensions[column_letter].width = 30
-                    elif col_name == "tipo_documento":
-                        ws.column_dimensions[column_letter].width = 15
-                    elif col_name == "dni_extraido":
-                        ws.column_dimensions[column_letter].width = 12
-                    elif col_name == "fecha_extraida":
-                        ws.column_dimensions[column_letter].width = 15
-                    else:
-                        ws.column_dimensions[column_letter].width = 20
+            # Establecer anchos de columna fijos (Opción B)
+            if es_listado_simple:
+                ws.column_dimensions['A'].width = 25
+            else:
+                anchos_estandar = {
+                    'A': 25,  # archivo_original
+                    'B': 20,  # tipo_documento o nombre
+                    'C': 20,  # nombre_extraido o dni
+                    'D': 15,  # dni_extraido
+                    'E': 15   # fecha_extraida
+                }
+                for col_letter, ancho in anchos_estandar.items():
+                    ws.column_dimensions[col_letter].width = ancho
             
-            ws.freeze_panes = "A2"
+            # Convertir a numpy y escribir por lotes (MUCHO más rápido)
+            datos_numpy = df.to_numpy().tolist()
+            for row in datos_numpy:
+                ws.append(row)
             
-            logger.info(f"   ✅ Hoja '{nombre_hoja}' agregada al Excel ({len(df)} registros)")
-
+            logger.info(f"   ✅ Hoja '{nombre_hoja}' escrita ({len(df)} registros)")
+            print(f"   ✅ Hoja '{nombre_hoja}': {len(df)} registros")
+            
+            # Liberar memoria inmediatamente
+            del df
+            del datos_numpy
+            gc.collect()
+        
+        # Guardar workbook
         wb.save(ruta_excel)
-        print(f"   ✅ Excel generado: {ruta_excel}")
-        logger.info(f"   ✅ Excel generado: {ruta_excel}")
+        
+        tiempo_excel = time.time() - inicio
+        print(f"\n✅ Excel generado en {int(tiempo_excel)}s: {ruta_excel}")
+        logger.info(f"✅ Excel generado en {int(tiempo_excel)}s")
+        
         return True
 
     except ImportError as e:
-        print(f"   ❌ Dependencia faltante: {e}")
-        logger.error(f"   ❌ Dependencia faltante: {e}")
-        logger.error("   Instale con: pip install duckdb")
+        logger.error(f"⚠️ Dependencia faltante: {e}")
+        print(f"⚠️ Instale: pip install duckdb openpyxl pyarrow")
         return False
     except Exception as e:
-        print(f"   ❌ Error al generar Excel: {e}")
-        logger.error(f"   ❌ Error al generar Excel: {e}")
+        logger.error(f"❌ Error generando Excel: {e}")
         import traceback
-        traceback.print_exc()
         logger.error(traceback.format_exc())
+        print(f"❌ Error: {e}")
         return False
 
+
 # ============================================
-# FUNCIÓN PRINCIPAL
+# FUNCIÓN PRINCIPAL OPTIMIZADA
 # ============================================
 
-def procesar_diagnostico_a_excel(ruta_carpeta_trabajo: str, ruta_excel_final: str, guardar_json_opcional: bool = False):
+def procesar_diagnostico_a_excel(ruta_carpeta_trabajo: str, ruta_excel_final: str, 
+                                progress_callback=None, guardar_json_opcional: bool = False):
     """
-    Procesa PDFs y genera Excel usando Parquet como formato intermedio.
-    Escritura incremental para mejor rendimiento y menor uso de memoria.
-    Los archivos Parquet se guardan en la carpeta de trabajo con el mismo nombre base que el Excel.
+    Procesa PDFs en paralelo y genera Excel optimizado.
+    Usa multiprocessing + write_only + numpy + DuckDB para máximo rendimiento.
     """
     print("="*60)
-    print("🚀 PROCESO DE DIAGNÓSTICO CON PARQUET INCREMENTAL")
+    print("🚀 DIAGNÓSTICO OPTIMIZADO - MODO PARALELO")
     print("="*60)
     logger.info("="*60)
-    logger.info("🚀 PROCESO DE DIAGNÓSTICO CON PARQUET INCREMENTAL")
+    logger.info("🚀 DIAGNÓSTICO OPTIMIZADO - MODO PARALELO")
     logger.info("="*60)
 
     if not os.path.isdir(ruta_carpeta_trabajo):
-        print(f"❌ Carpeta '{ruta_carpeta_trabajo}' no existe")
         logger.error(f"❌ Carpeta '{ruta_carpeta_trabajo}' no existe")
+        print(f"❌ Carpeta no encontrada")
         return
     
-    # Extraer nombre base del Excel (sin extensión)
+    # Extraer nombre base del Excel
     nombre_base_excel = os.path.splitext(os.path.basename(ruta_excel_final))[0]
     
-    rutas_parquet = {}
+    # FASE 1: Procesamiento paralelo de carpetas
+    rutas_parquet = procesar_carpetas_paralelo(
+        ruta_carpeta_trabajo, 
+        nombre_base_excel,
+        progress_callback
+    )
+    
+    if not rutas_parquet:
+        logger.error("❌ No se generaron Parquets")
+        print("❌ Sin datos para procesar")
+        return
+    
+    # FASE 2: Generar Excel streaming
+    exito = generar_excel_streaming(rutas_parquet, ruta_excel_final)
+    
+    if exito:
+        print("\n✅ Proceso completado exitosamente")
+        logger.info("✅ Proceso completado")
+        logger.info("📁 Archivos .parquet mantenidos en carpeta de trabajo (política empresarial)")
+    else:
+        logger.error("❌ Error en generación de Excel")
+        print("❌ Fallo en generación de Excel")
 
-    for nombre_carpeta, config in CARPETAS_CONFIG.items():
-        ruta_subcarpeta = os.path.join(ruta_carpeta_trabajo, nombre_carpeta)
-        if not os.path.isdir(ruta_subcarpeta):
-            print(f"⚠️ Carpeta '{nombre_carpeta}' no encontrada, omitiendo...")
-            logger.warning(f"⚠️ Carpeta '{nombre_carpeta}' no encontrada, omitiendo...")
-            continue
-
-        # Procesar carpeta
-        registros = procesar_carpeta(ruta_subcarpeta, config)
-        
-        # Escribir Parquet con el mismo nombre base que el Excel
-        nombre_parquet = f"{nombre_base_excel}_{nombre_carpeta}.parquet"
-        ruta_parquet = os.path.join(ruta_carpeta_trabajo, nombre_parquet)
-        if escribir_parquet(registros, ruta_parquet):
-            rutas_parquet[nombre_carpeta] = ruta_parquet
-        
-        # Opcional: Guardar JSON para debugging
-        if guardar_json_opcional and registros:
-            import json
-            ruta_json = os.path.join(ruta_carpeta_trabajo, f"diagnostico_{nombre_carpeta}.json")
-            with open(ruta_json, 'w', encoding='utf-8') as f:
-                json.dump(registros, f, ensure_ascii=False, indent=2)
-            print(f"   💾 JSON opcional guardado: {ruta_json}")
-            logger.info(f"   💾 JSON opcional guardado: {ruta_json}")
-        
-        # Liberar memoria
-        del registros
-
-    # Generar Excel desde Parquets
-    if rutas_parquet:
-        print("\n📊 Generando Excel desde archivos Parquet...")
-        logger.info("📊 Generando Excel desde archivos Parquet...")
-        generar_excel_desde_parquets(rutas_parquet, ruta_excel_final)
-        
-        print("\n✅ Proceso completado. Los archivos .parquet pueden ser eliminados manualmente.")
-        logger.info("✅ Archivos .parquet guardados en carpeta de trabajo (pueden eliminarse)")
 
 # ============================================
 # OBTENER RUTA DE CARPETA
@@ -350,6 +387,7 @@ def obtener_ruta_carpeta(ruta: Optional[str] = None) -> str:
         print(f"❌ Error al abrir explorador: {e}")
         return None
 
+
 # ============================================
 # EJECUCIÓN PRINCIPAL
 # ============================================
@@ -357,10 +395,9 @@ def obtener_ruta_carpeta(ruta: Optional[str] = None) -> str:
 if __name__ == "__main__":
     ruta_trabajo = obtener_ruta_carpeta()
     if ruta_trabajo:
-        # Generar timestamp para el nombre del archivo
         timestamp = time.strftime("%d.%m.%Y_%H.%M.%S")
         nombre_excel = f"diagnostico_consolidado_{timestamp}.xlsx"
         ruta_excel = os.path.join(ruta_trabajo, nombre_excel)
-        procesar_diagnostico_a_excel(ruta_trabajo, ruta_excel, guardar_json_opcional=False)
+        procesar_diagnostico_a_excel(ruta_trabajo, ruta_excel, progress_callback=None)
     else:
         print("⛔ No se seleccionó carpeta. Operación cancelada.")

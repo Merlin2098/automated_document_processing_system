@@ -1,6 +1,6 @@
 """
-Worker para generar diagnóstico (Paso 3) - WRAPPER PATTERN
-Usa directamente las funciones del módulo core sin reimplementar lógica
+Worker para generar diagnóstico de datos (Paso 3) - OPTIMIZADO
+Soporta multiprocessing con progreso global por carpeta
 """
 from PySide6.QtCore import QThread, Signal
 from utils.logger import Logger
@@ -8,26 +8,17 @@ import os
 import sys
 import time
 
-# Agregar rutas para imports del core
-current_dir = os.path.dirname(os.path.abspath(__file__))
-parent_dir = os.path.dirname(os.path.dirname(current_dir))
-if parent_dir not in sys.path:
-    sys.path.insert(0, parent_dir)
+# Agregar ruta del módulo core
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-# Importar funciones PURAS del core (sin dependencias de UI)
 from core_pipeline.step3_generar_diagnostico import (
-    procesar_carpeta,
-    escribir_parquet,
-    generar_excel_desde_parquets,
-    CARPETAS_CONFIG,
-    BATCH_SIZE
+    procesar_diagnostico_a_excel,
+    CARPETAS_CONFIG
 )
 
 
 def format_time(seconds: float) -> str:
-    """
-    Convierte segundos a formato hh:mm:ss
-    """
+    """Convierte segundos a formato hh:mm:ss"""
     hours = int(seconds // 3600)
     minutes = int((seconds % 3600) // 60)
     secs = int(seconds % 60)
@@ -37,9 +28,7 @@ def format_time(seconds: float) -> str:
 def contar_archivos_totales(folder_path: str) -> dict:
     """
     Cuenta el total de archivos PDF en todas las carpetas a procesar.
-    
-    Returns:
-        dict: {'total': int, 'por_carpeta': {nombre_carpeta: count}}
+    Returns: {'total': int, 'por_carpeta': {nombre_carpeta: count}}
     """
     total = 0
     por_carpeta = {}
@@ -56,12 +45,12 @@ def contar_archivos_totales(folder_path: str) -> dict:
 
 
 class CorePipelineStep3Worker(QThread):
-    """Worker wrapper para generar diagnóstico Excel"""
+    """Worker optimizado para generar diagnóstico en segundo plano con multiprocessing"""
     
-    # Señales
-    progress_signal = Signal(int, int)  # (current, total)
+    # Señales (compatible con UI existente)
+    progress_signal = Signal(int, int)  # (current, total) - archivos procesados
     log_signal = Signal(str, str)  # (type, message)
-    stats_signal = Signal(dict)  # estadísticas
+    stats_signal = Signal(dict)  # estadísticas detalladas
     finished_signal = Signal(dict)  # resultado final
     error_signal = Signal(str)  # mensaje de error
     
@@ -71,353 +60,140 @@ class CorePipelineStep3Worker(QThread):
         self.guardar_json = guardar_json
         self._is_running = True
         self.logger = Logger("CorePipelineStep3Worker")
+        
+        # Contadores para estadísticas
+        self.archivos_totales = 0
+        self.archivos_procesados = 0
+        self.carpetas_totales = 0
+        self.carpetas_procesadas = 0
+        self.errores_acumulados = 0
     
     def run(self):
-        """Ejecuta el proceso usando funciones del core"""
+        """Ejecuta el proceso de generación de diagnóstico optimizado"""
         start_time = time.time()
         
         try:
-            self.logger.info("🚀 Iniciando generación de diagnóstico")
-            self.log_signal.emit("info", "🚀 Iniciando generación de diagnóstico")
-            self.logger.info(f"📂 Carpeta de trabajo: {self.folder_path}")
-            self.log_signal.emit("info", f"📂 Carpeta de trabajo: {self.folder_path}")
+            self.logger.info("🚀 Worker: Iniciando diagnóstico optimizado")
+            self.log_signal.emit("info", "🚀 Iniciando generación de diagnóstico (modo paralelo)...")
             
-            # Validar carpeta
-            if not os.path.isdir(self.folder_path):
-                error_msg = f"La carpeta no existe: {self.folder_path}"
-                self.logger.error(error_msg)
-                self.error_signal.emit(error_msg)
+            # Contar archivos totales antes de iniciar
+            conteo = contar_archivos_totales(self.folder_path)
+            self.archivos_totales = conteo['total']
+            self.carpetas_totales = len([c for c in CARPETAS_CONFIG.keys() 
+                                        if os.path.isdir(os.path.join(self.folder_path, c))])
+            
+            if self.carpetas_totales == 0:
+                self.error_signal.emit("No se encontraron carpetas válidas para procesar")
+                self.logger.error("❌ Sin carpetas válidas")
                 return
             
-            # Verificar openpyxl
-            try:
-                import openpyxl
-            except ImportError:
-                error_msg = "openpyxl no está instalado. Instale con: pip install openpyxl"
-                self.logger.error(error_msg)
-                self.error_signal.emit(error_msg)
-                return
+            self.logger.info(f"📂 Total: {self.archivos_totales} archivos en {self.carpetas_totales} carpetas")
+            self.log_signal.emit("info", f"📂 Total: {self.archivos_totales} archivos en {self.carpetas_totales} carpetas")
             
-            # Generar timestamp para el Excel
+            # Emitir estadísticas iniciales
+            self._emit_stats(start_time)
+            
+            # Generar nombre de Excel con timestamp
             timestamp = time.strftime("%d.%m.%Y_%H.%M.%S")
             nombre_excel = f"diagnostico_consolidado_{timestamp}.xlsx"
-            nombre_base_excel = f"diagnostico_consolidado_{timestamp}"
             ruta_excel = os.path.join(self.folder_path, nombre_excel)
             
-            self.log_signal.emit("info", f"📊 Excel: {nombre_excel}")
-            self.logger.info(f"📊 Excel: {nombre_excel}")
-            
-            # ============================================================
-            # FASE 0: Contar archivos totales
-            # ============================================================
-            self.log_signal.emit("info", "")
-            self.log_signal.emit("info", "📋 Contando archivos a procesar...")
-            self.logger.info("📋 Contando archivos a procesar...")
-            
-            conteo = contar_archivos_totales(self.folder_path)
-            total_archivos_global = conteo['total']
-            archivos_por_carpeta = conteo['por_carpeta']
-            
-            if total_archivos_global == 0:
-                error_msg = "No se encontraron archivos PDF para procesar"
-                self.logger.error(error_msg)
-                self.error_signal.emit(error_msg)
-                return
-            
-            self.log_signal.emit("info", f"✅ Total de archivos a procesar: {total_archivos_global}")
-            self.logger.info(f"✅ Total de archivos: {total_archivos_global}")
-            
-            # Emitir progreso inicial
-            self.progress_signal.emit(0, total_archivos_global)
-            
-            # ============================================================
-            # FASE 1-3: Procesar cada carpeta (USA EL CORE)
-            # ============================================================
-            rutas_parquet = {}
-            total_carpetas = len(CARPETAS_CONFIG)
-            carpetas_procesadas = 0
-            archivos_procesados_global = 0
-            total_registros = 0
-            errores_acumulados = 0
-            
-            for nombre_carpeta, config in CARPETAS_CONFIG.items():
+            # Callback para actualizar progreso desde el core multiproceso
+            def _progress_callback(carpetas_completadas, total_carpetas, tiempo_carpeta):
                 if not self._is_running:
-                    self.logger.warning("Proceso cancelado por el usuario")
                     return
                 
-                ruta_subcarpeta = os.path.join(self.folder_path, nombre_carpeta)
+                self.carpetas_procesadas = carpetas_completadas
                 
-                if not os.path.isdir(ruta_subcarpeta):
-                    msg = f"⚠️ Carpeta '{nombre_carpeta}' no encontrada, omitiendo..."
-                    self.log_signal.emit("warning", msg)
-                    self.logger.warning(msg)
-                    carpetas_procesadas += 1
-                    continue
+                # Estimar archivos procesados basado en carpetas completadas
+                # (aproximación: archivos procesados = proporción de carpetas * total archivos)
+                proporcion = carpetas_completadas / total_carpetas if total_carpetas > 0 else 0
+                self.archivos_procesados = int(self.archivos_totales * proporcion)
                 
-                self.log_signal.emit("info", "")
-                msg = f"📋 Procesando: {nombre_carpeta} ({config['tipo']})"
-                self.log_signal.emit("info", msg)
-                self.logger.info(msg)
+                # Emitir progreso de archivos (aproximado durante multiprocessing)
+                self.progress_signal.emit(self.archivos_procesados, self.archivos_totales)
                 
-                # Obtener lista de archivos PDF
-                archivos_pdf = [f for f in os.listdir(ruta_subcarpeta) if f.lower().endswith('.pdf')]
+                # Emitir estadísticas actualizadas
+                self._emit_stats(start_time)
                 
-                # Ordenar archivos numéricamente
-                import re
-                def extraer_numero(filename):
-                    match = re.search(r'_(\d+)', filename)
-                    return int(match.group(1)) if match else 0
-                archivos_pdf.sort(key=extraer_numero)
-                
-                tiene_extractor = config.get("extractor") is not None
-                extractor = config.get("extractor")
-                tipo_documento = config["tipo"]
-                
-                registros = []
-                errores_en_carpeta = 0
-                
-                # Procesar archivos con progreso por lotes según BATCH_SIZE del core
-                lote_actual = []
-                
-                for idx, archivo in enumerate(archivos_pdf, 1):
-                    ruta_completa = os.path.join(ruta_subcarpeta, archivo)
-                    
-                    if extractor is None:
-                        # Solo listado
-                        registro = {"archivo": archivo}
-                    else:
-                        # Extracción de datos
-                        resultado = extractor(ruta_completa)
-                        registro = {
-                            "archivo_original": archivo,
-                            "tipo_documento": tipo_documento,
-                            "nombre_extraido": resultado.get("nombre"),
-                            "dni_extraido": resultado.get("dni")
-                        }
-                        if "fecha" in resultado and resultado["fecha"]:
-                            registro["fecha_extraida"] = resultado["fecha"]
-                        
-                        # Contar errores
-                        if not (resultado.get("nombre") or resultado.get("dni")):
-                            errores_en_carpeta += 1
-                    
-                    registros.append(registro)
-                    lote_actual.append(registro)
-                    
-                    # Emitir progreso cada BATCH_SIZE archivos o al final
-                    if len(lote_actual) >= BATCH_SIZE or idx == len(archivos_pdf):
-                        archivos_procesados_global += len(lote_actual)
-                        errores_acumulados += errores_en_carpeta
-                        
-                        # Emitir progreso
-                        self.progress_signal.emit(archivos_procesados_global, total_archivos_global)
-                        
-                        # Emitir estadísticas parciales
-                        elapsed_time = time.time() - start_time
-                        time_formatted = format_time(elapsed_time)
-                        
-                        stats_parciales = {
-                            'current': archivos_procesados_global,
-                            'total': total_archivos_global,
-                            'time_elapsed': time_formatted,
-                            'carpetas_procesadas': carpetas_procesadas,
-                            'total_carpetas': total_carpetas,
-                            'errors': errores_acumulados
-                        }
-                        self.stats_signal.emit(stats_parciales)
-                        
-                        # Limpiar lote
-                        lote_actual = []
-                
-                # Actualizar contadores
-                total_registros += len(registros)
-                
-                msg = f"   ✅ {len(registros)} registros generados"
-                self.log_signal.emit("success", msg)
-                self.logger.info(msg)
-                
-                # Escribir Parquet con el mismo nombre base que el Excel (USA EL CORE)
-                nombre_parquet = f"{nombre_base_excel}_{nombre_carpeta}.parquet"
-                ruta_parquet = os.path.join(self.folder_path, nombre_parquet)
-                if escribir_parquet(registros, ruta_parquet):
-                    rutas_parquet[nombre_carpeta] = ruta_parquet
-                    self.log_signal.emit("info", f"   💾 Parquet guardado: {nombre_parquet}")
-                
-                # Guardar JSON opcional si se solicita
-                if self.guardar_json and registros:
-                    import json
-                    ruta_json = os.path.join(self.folder_path, f"diagnostico_{nombre_carpeta}.json")
-                    try:
-                        with open(ruta_json, 'w', encoding='utf-8') as f:
-                            json.dump(registros, f, ensure_ascii=False, indent=2)
-                        msg = f"   💾 JSON guardado: {os.path.basename(ruta_json)}"
-                        self.log_signal.emit("info", msg)
-                        self.logger.info(msg)
-                    except Exception as e:
-                        self.logger.error(f"Error guardando JSON: {e}")
-                
-                # Liberar memoria
-                del registros
-                
-                # Incrementar carpetas procesadas DESPUÉS de terminar la carpeta
-                carpetas_procesadas += 1
-                
-                # Emitir tiempo transcurrido después de cada carpeta
-                elapsed_time = time.time() - start_time
-                time_formatted = format_time(elapsed_time)
-                self.log_signal.emit("info", f"   ⏱️ Tiempo transcurrido: {time_formatted}")
-                self.logger.info(f"   ⏱️ Tiempo transcurrido: {time_formatted}")
-                
-                # Emitir estadísticas con carpetas actualizadas
-                stats_parciales = {
-                    'current': archivos_procesados_global,
-                    'total': total_archivos_global,
-                    'time_elapsed': time_formatted,
-                    'carpetas_procesadas': carpetas_procesadas,
-                    'total_carpetas': total_carpetas,
-                    'errors': errores_acumulados
-                }
-                self.stats_signal.emit(stats_parciales)
+                # Log de progreso
+                tiempo_fmt = format_time(time.time() - start_time)
+                self.logger.info(f"📊 Progreso: {carpetas_completadas}/{total_carpetas} carpetas | {tiempo_fmt}")
+                self.log_signal.emit("info", f"📊 Carpeta {carpetas_completadas}/{total_carpetas} completada en {int(tiempo_carpeta)}s")
             
-            # Verificar que haya datos para procesar
-            if not rutas_parquet or archivos_procesados_global == 0:
-                error_msg = "No se generaron registros. Verifique que las carpetas contengan PDFs válidos."
-                self.logger.error(error_msg)
-                self.error_signal.emit(error_msg)
+            # Ejecutar procesamiento con callback
+            procesar_diagnostico_a_excel(
+                ruta_carpeta_trabajo=self.folder_path,
+                ruta_excel_final=ruta_excel,
+                progress_callback=_progress_callback,
+                guardar_json_opcional=self.guardar_json
+            )
+            
+            # Verificar que el Excel se generó
+            if not os.path.exists(ruta_excel):
+                self.error_signal.emit("El archivo Excel no se generó correctamente")
+                self.logger.error("❌ Excel no generado")
                 return
             
-            # ============================================================
-            # FASE 4: Generar Excel desde Parquets (USA EL CORE)
-            # ============================================================
-            if not self._is_running:
-                self.logger.warning("Proceso cancelado por el usuario")
-                return
+            # Actualizar a 100% al finalizar
+            self.archivos_procesados = self.archivos_totales
+            self.carpetas_procesadas = self.carpetas_totales
+            self.progress_signal.emit(self.archivos_totales, self.archivos_totales)
             
-            self.log_signal.emit("info", "")
-            self.log_signal.emit("info", "📋 Generando archivo Excel desde Parquets...")
-            self.logger.info("📋 Generando archivo Excel desde Parquets...")
-            
-            exito = generar_excel_desde_parquets(rutas_parquet, ruta_excel)
-            
-            if not exito:
-                error_msg = "Error al generar el archivo Excel"
-                self.logger.error(error_msg)
-                self.error_signal.emit(error_msg)
-                return
-            
-            # ============================================================
-            # FASE 5: Resumen final
-            # ============================================================
+            # Tiempo total
             elapsed_time = time.time() - start_time
             time_formatted = format_time(elapsed_time)
             
-            # Calcular estadísticas por tipo leyendo Parquets con DuckDB
-            import duckdb
-            stats_por_tipo = {}
-            total_exitosos = 0
-            total_fallidos = 0
-            
-            for nombre_carpeta, ruta_parquet in rutas_parquet.items():
-                # Leer Parquet con DuckDB (más rápido que pandas)
-                df = duckdb.read_parquet(ruta_parquet).df()
-                
-                # Obtener config de la carpeta
-                config = CARPETAS_CONFIG.get(nombre_carpeta, {})
-                tiene_extractor = config.get("extractor") is not None
-                
-                # Solo contar extracciones en carpetas que tienen extractor
-                if tiene_extractor:
-                    # Si tiene nombre_extraido o dni_extraido, se considera exitoso
-                    exitosos = df[
-                        (df.get('nombre_extraido', df.iloc[:, 0].map(lambda x: None)).notna()) | 
-                        (df.get('dni_extraido', df.iloc[:, 0].map(lambda x: None)).notna())
-                    ].shape[0]
-                    fallidos = len(df) - exitosos
-                    
-                    stats_por_tipo[nombre_carpeta] = {
-                        'total': len(df),
-                        'exitosos': exitosos,
-                        'fallidos': fallidos,
-                        'tiene_extractor': True
-                    }
-                    
-                    total_exitosos += exitosos
-                    total_fallidos += fallidos
-                else:
-                    # Para carpetas sin extractor (solo listado)
-                    stats_por_tipo[nombre_carpeta] = {
-                        'total': len(df),
-                        'exitosos': 0,
-                        'fallidos': 0,
-                        'tiene_extractor': False
-                    }
-            
-            self.log_signal.emit("info", "")
-            self.log_signal.emit("info", "=" * 50)
-            self.log_signal.emit("info", "📊 RESUMEN FINAL")
-            self.log_signal.emit("info", f"📂 Carpetas procesadas: {carpetas_procesadas}/{total_carpetas}")
-            self.log_signal.emit("info", f"📄 Total archivos: {archivos_procesados_global}")
-            self.log_signal.emit("success", f"✅ Extracciones exitosas: {total_exitosos}")
-            
-            if total_fallidos > 0:
-                self.log_signal.emit("error", f"❌ Extracciones fallidas: {total_fallidos}")
-                porcentaje_exito = (total_exitosos / archivos_procesados_global * 100) if archivos_procesados_global > 0 else 0
-                self.log_signal.emit("info", f"📊 Tasa de éxito: {porcentaje_exito:.1f}%")
-            
-            self.log_signal.emit("info", f"📊 Excel generado: {nombre_excel}")
-            self.log_signal.emit("info", f"⏱️ Tiempo total: {time_formatted}")
-            self.log_signal.emit("info", "=" * 50)
-            
-            # Log a archivo
-            self.logger.info("=" * 50)
-            self.logger.info("📊 RESUMEN FINAL")
-            self.logger.info(f"📂 Carpetas procesadas: {carpetas_procesadas}/{total_carpetas}")
-            self.logger.info(f"📄 Total archivos: {archivos_procesados_global}")
-            self.logger.info(f"✅ Extracciones exitosas: {total_exitosos}")
-            
-            if total_fallidos > 0:
-                self.logger.error(f"❌ Extracciones fallidas: {total_fallidos}")
-            
-            self.logger.info(f"📊 Excel: {ruta_excel}")
-            self.logger.info(f"⏱️ Tiempo: {time_formatted}")
-            self.logger.info("=" * 50)
-            
             # Emitir estadísticas finales
-            stats = {
-                'current': archivos_procesados_global,
-                'total': total_archivos_global,
-                'carpetas_procesadas': carpetas_procesadas,
-                'total_carpetas': total_carpetas,
-                'total_registros': archivos_procesados_global,
-                'exitosos': total_exitosos,
-                'fallidos': total_fallidos,
-                'errors': total_fallidos,
-                'stats_por_tipo': stats_por_tipo,
-                'ruta_excel': ruta_excel,
-                'time_elapsed': time_formatted
+            stats_final = {
+                'current': self.archivos_totales,
+                'total': self.archivos_totales,
+                'time_elapsed': time_formatted,
+                'carpetas_procesadas': self.carpetas_totales,
+                'total_carpetas': self.carpetas_totales,
+                'errors': self.errores_acumulados,
+                'ruta_excel': ruta_excel
             }
-            self.stats_signal.emit(stats)
+            self.stats_signal.emit(stats_final)
             
-            # Emitir resultado final
+            # Resultado exitoso
             resultado = {
                 'success': True,
-                'stats': stats,
-                'excel_path': ruta_excel
+                'excel_path': ruta_excel,
+                'stats': stats_final,
+                'carpetas_procesadas': self.carpetas_totales,
+                'archivos_procesados': self.archivos_totales
             }
             
-            self.logger.info("🎉 ¡Diagnóstico completado exitosamente!")
-            self.log_signal.emit("success", "🎉 ¡Diagnóstico completado exitosamente!")
+            self.logger.info(f"✅ Worker completado en {time_formatted}")
+            self.log_signal.emit("success", f"✅ Diagnóstico generado exitosamente en {time_formatted}")
             self.finished_signal.emit(resultado)
             
         except Exception as e:
-            error_msg = f"Error durante el proceso: {str(e)}"
-            self.logger.error(error_msg)
-            self.log_signal.emit("error", f"❌ {error_msg}")
             import traceback
+            error_msg = f"Error en worker: {str(e)}"
+            self.logger.error(f"❌ {error_msg}")
             self.logger.error(traceback.format_exc())
             self.error_signal.emit(error_msg)
+            self.finished_signal.emit({'success': False, 'error': str(e)})
+    
+    def _emit_stats(self, start_time: float):
+        """Emite estadísticas actuales (compatible con UI)"""
+        elapsed_time = time.time() - start_time
+        time_formatted = format_time(elapsed_time)
+        
+        stats = {
+            'current': self.archivos_procesados,
+            'total': self.archivos_totales,
+            'time_elapsed': time_formatted,
+            'carpetas_procesadas': self.carpetas_procesadas,
+            'total_carpetas': self.carpetas_totales,
+            'errors': self.errores_acumulados
+        }
+        self.stats_signal.emit(stats)
     
     def stop(self):
-        """Detiene el worker"""
+        """Detener el worker (multiprocessing no permite stop fácil, pero marcamos flag)"""
+        self.logger.warning("⚠️ Solicitud de detención recibida")
         self._is_running = False
-        self.logger.warning("ℹ️ Worker detenido por el usuario")
+        self.quit()
