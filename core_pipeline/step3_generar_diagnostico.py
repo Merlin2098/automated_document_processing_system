@@ -65,19 +65,33 @@ BATCH_SIZE = 100
 # FUNCIONES DE PROCESAMIENTO (MULTIPROCESSING)
 # ============================================
 
-def procesar_carpeta_mp(args: Tuple[str, str, Dict, str]) -> Tuple[str, List[Dict], float, List[str]]:
+def procesar_carpeta_mp(args: Tuple[str, str, str, str]) -> Tuple[str, str, float, List[str]]:
     """
-    Procesa una carpeta completa en un proceso separado.
-    Retorna: (nombre_carpeta, registros, tiempo_procesamiento, logs)
+    Procesa una carpeta completa en un proceso separado (SPAWN-SAFE).
+    Re-importa extractores dentro del subproceso para compatibilidad Windows.
+    Retorna: (nombre_carpeta, ruta_parquet, tiempo_procesamiento, logs)
     """
-    nombre_carpeta, ruta_carpeta, config, ruta_parquet = args
+    nombre_carpeta, ruta_carpeta, tipo_documento, ruta_parquet = args
     import re
+    
+    # RE-IMPORTAR extractores dentro del subproceso (Windows spawn-safe)
+    from extractores.extractor_afp import extraer_datos_afp
+    from extractores.extractor_boleta import extraer_datos_boleta
+    from extractores.extractor_quinta import extraer_datos_quinta
+    
+    # Mapeo de tipos a extractores
+    EXTRACTORES_MAP = {
+        "BOLETA": extraer_datos_boleta,
+        "AFP": extraer_datos_afp,
+        "QUINTA": extraer_datos_quinta,
+        "CONVOCATORIA": None,
+        "CERTIFICADO_TRABAJO": None
+    }
     
     inicio = time.time()
     registros = []
     logs = []
-    tipo_documento = config["tipo"]
-    extractor = config.get("extractor")
+    extractor = EXTRACTORES_MAP.get(tipo_documento)
 
     archivos_pdf = [f for f in os.listdir(ruta_carpeta) if f.lower().endswith('.pdf')]
     
@@ -148,7 +162,7 @@ def procesar_carpetas_paralelo(ruta_carpeta_trabajo: str, nombre_base_excel: str
     Procesa todas las carpetas en paralelo usando multiprocessing.
     Retorna diccionario con rutas de Parquets generados.
     """
-    # Preparar argumentos para cada carpeta
+    # Preparar argumentos para cada carpeta (spawn-safe: solo datos serializables)
     tareas = []
     carpetas_validas = []
     
@@ -161,7 +175,9 @@ def procesar_carpetas_paralelo(ruta_carpeta_trabajo: str, nombre_base_excel: str
         nombre_parquet = f"{nombre_base_excel}_{nombre_carpeta}.parquet"
         ruta_parquet = os.path.join(ruta_carpeta_trabajo, nombre_parquet)
         
-        tareas.append((nombre_carpeta, ruta_subcarpeta, config, ruta_parquet))
+        # Pasar solo tipo_documento (string) en lugar del config completo (spawn-safe)
+        tipo_documento = config["tipo"]
+        tareas.append((nombre_carpeta, ruta_subcarpeta, tipo_documento, ruta_parquet))
         carpetas_validas.append(nombre_carpeta)
     
     if not tareas:
@@ -393,6 +409,9 @@ def obtener_ruta_carpeta(ruta: Optional[str] = None) -> str:
 # ============================================
 
 if __name__ == "__main__":
+    # CRÍTICO: Protección necesaria para multiprocessing en Windows (spawn)
+    # Sin esto, cada subproceso intentaría crear más subprocesos infinitamente
+    
     ruta_trabajo = obtener_ruta_carpeta()
     if ruta_trabajo:
         timestamp = time.strftime("%d.%m.%Y_%H.%M.%S")
