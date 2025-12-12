@@ -3,7 +3,7 @@ Tab Pipeline SUNAT - Pipeline para documentos SUNAT (3 pasos)
 """
 from PySide6.QtWidgets import (
     QWidget, QVBoxLayout, QHBoxLayout, QLabel, 
-    QPushButton, QGroupBox, QComboBox, QScrollArea,
+    QPushButton, QGroupBox, QScrollArea,
     QMessageBox, QDialog, QTextEdit, QDialogButtonBox
 )
 from PySide6.QtCore import Signal, Slot, Qt
@@ -28,6 +28,7 @@ class TabPipelineSunat(QWidget):
     log_message = Signal(str, str)
     progress_updated = Signal(int, int)
     stats_updated = Signal(dict)
+    config_updated = Signal()  # Nueva señal para notificar actualizaciones
     
     def __init__(self, theme_manager, parent=None):
         super().__init__(parent)
@@ -45,8 +46,33 @@ class TabPipelineSunat(QWidget):
         self.config = self._load_config()
         
         self._init_ui()
+        
+        # Actualizar información después de inicializar UI
+        self.update_workers_info()
     
-
+    def update_workers_info(self):
+        """Actualiza la información de workers mostrada al usuario"""
+        # Verificar si el widget ya fue creado
+        if not hasattr(self, 'step1_workers_info'):
+            return
+            
+        # Obtener workers óptimos de la configuración
+        performance_config = self.config.get('preferences', {}).get('performance', {})
+        optimal_workers = performance_config.get('workers', 4)
+        
+        # Mostrar información
+        info_text = f"""
+<b>Workers paralelos:</b> {optimal_workers} (configurado automáticamente)<br>
+<small><i>Basado en las capacidades de tu equipo</i></small>
+        """
+        self.step1_workers_info.setText(info_text)
+        self.step1_workers_info.setTextFormat(Qt.RichText)
+    
+    def on_config_updated(self):
+        """Se llama cuando la configuración se actualiza desde otro lugar"""
+        self.config = self._load_config()
+        self.update_workers_info()
+        self.log_message.emit("info", "⚙️ Configuración SUNAT actualizada")
     
     def _load_config(self):
         """Carga configuración desde config.json"""
@@ -55,7 +81,7 @@ class TabPipelineSunat(QWidget):
                 return json.load(f)
         except Exception as e:
             print(f"Error cargando config: {e}")
-            return {"sunat_workers": {"diagnostic": {"max_workers": 4}}}
+            return {"preferences": {"performance": {"workers": 4}}}
     
     def _init_ui(self):
         """Inicializa la interfaz"""
@@ -132,18 +158,16 @@ class TabPipelineSunat(QWidget):
         )
         group_layout.addWidget(self.step1_folder)
         
-        # Workers paralelos
-        workers_label = QLabel("⚡ Procesamiento paralelo")
+        # Configuración de procesamiento (automática)
+        workers_label = QLabel("⚡ Configuración de procesamiento")
         workers_label.setProperty("labelStyle", "header")
         group_layout.addWidget(workers_label)
         
-        self.workers_combo = QComboBox()
-        self.workers_combo.addItems([
-            "4 Workers (Recomendado)",
-            "2 Workers",
-            "8 Workers"
-        ])
-        group_layout.addWidget(self.workers_combo)
+        # Label informativo (no editable)
+        self.step1_workers_info = QLabel()
+        self.step1_workers_info.setProperty("labelStyle", "secondary")
+        self.step1_workers_info.setWordWrap(True)
+        group_layout.addWidget(self.step1_workers_info)
         
         # Info
         info = QLabel("""
@@ -341,16 +365,19 @@ en su nombre. Los archivos se renombrarán al formato: <b>NUMERO NOMBRE.pdf</b>
             )
             return
         
-        # Obtener número de workers
-        workers_text = self.workers_combo.currentText()
-        workers = int(workers_text.split()[0])
+        # Obtener número de workers de la configuración (no del combobox)
+        performance_config = self.config.get('preferences', {}).get('performance', {})
+        optimal_workers = performance_config.get('workers', 4)
+        
+        # Informar al usuario
+        self.log_message.emit("info", f"⚡ Usando {optimal_workers} workers (configuración automática)")
         
         # Deshabilitar botones
         self._set_buttons_enabled(False)
         self.setCursor(QCursor(Qt.WaitCursor))
         
         # Crear y configurar worker
-        self.current_worker = SunatDiagnosticWorker(folder, workers)
+        self.current_worker = SunatDiagnosticWorker(folder, optimal_workers)
         
         # Conectar señales
         self.current_worker.log_signal.connect(self.log_message.emit)
