@@ -284,8 +284,8 @@ def main():
     print(f"\nCarpeta seleccionada: {carpeta_madre}")
     logger.info(f"Carpeta seleccionada: {carpeta_madre}")
     
-    # Definir las carpetas a procesar (las 3 primeras)
-    carpetas_a_procesar = ['1_Boletas', '2_Afp', '3_5ta']
+    # Definir las carpetas a procesar
+    carpetas_a_procesar = ['1_Boletas', '2_Afp', '3_5ta', '4_Convocatoria', '5_CertificadosTrabajo']
     
     # Estadísticas globales
     estadisticas = []

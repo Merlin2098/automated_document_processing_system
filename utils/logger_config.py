@@ -1,11 +1,13 @@
 """
 Logger Config - Configuración centralizada del sistema de logging
 Sistema híbrido con 3 niveles: app.log + errors.log + detailed/
+VERSION 1.1: Fix para WinError 32 en Windows con múltiples workers
 """
 import os
 from pathlib import Path
 import logging
 import logging.handlers
+import platform
 
 
 # ============================================================================
@@ -30,12 +32,15 @@ ARCHIVE_LOGS_DIR.mkdir(exist_ok=True)
 # Tamaños máximos de archivos de log (en bytes)
 APP_LOG_MAX_SIZE = 10 * 1024 * 1024  # 10 MB
 ERROR_LOG_MAX_SIZE = 5 * 1024 * 1024  # 5 MB
-DETAILED_LOG_MAX_SIZE = 5 * 1024 * 1024  # 5 MB
+DETAILED_LOG_MAX_SIZE = 10 * 1024 * 1024  # 10 MB (aumentado para evitar rotaciones frecuentes)
 
 # Cantidad de backups a mantener
 APP_LOG_BACKUP_COUNT = 5
 ERROR_LOG_BACKUP_COUNT = 3
 DETAILED_LOG_BACKUP_COUNT = 3
+
+# Detectar si estamos en Windows
+IS_WINDOWS = platform.system() == 'Windows'
 
 
 # ============================================================================
@@ -93,6 +98,77 @@ LOG_LEVELS = {
 
 
 # ============================================================================
+# HANDLER SEGURO PARA WINDOWS
+# ============================================================================
+
+class SafeRotatingFileHandler(logging.handlers.RotatingFileHandler):
+    """
+    RotatingFileHandler mejorado que maneja errores de Windows gracefully.
+    Si falla la rotación, continúa escribiendo sin rotar.
+    """
+    
+    def doRollover(self):
+        """
+        Override de doRollover para manejar PermissionError en Windows
+        """
+        try:
+            super().doRollover()
+        except PermissionError as e:
+            # En Windows, si el archivo está bloqueado, solo logueamos y continuamos
+            # El archivo seguirá creciendo pero la app no se cae
+            print(f"⚠️ No se pudo rotar log (archivo en uso): {self.baseFilename}")
+            # Intentar crear un nuevo archivo con sufijo
+            try:
+                import time
+                suffix = int(time.time())
+                new_name = f"{self.baseFilename}.{suffix}"
+                self.stream.close()
+                self.stream = self._open()
+            except:
+                pass  # Si falla, seguimos con el archivo actual
+        except Exception as e:
+            # Cualquier otro error, lo logueamos pero no detenemos la app
+            print(f"⚠️ Error al rotar log: {e}")
+
+
+def create_safe_handler(filename, max_bytes, backup_count, level, formatter):
+    """
+    Crea un handler seguro para Windows que no falla en rotaciones.
+    
+    Args:
+        filename: Ruta del archivo de log
+        max_bytes: Tamaño máximo antes de rotar
+        backup_count: Cantidad de backups
+        level: Nivel de logging
+        formatter: Formatter a usar
+        
+    Returns:
+        Handler configurado
+    """
+    if IS_WINDOWS:
+        # En Windows, usar SafeRotatingFileHandler
+        handler = SafeRotatingFileHandler(
+            filename=filename,
+            maxBytes=max_bytes,
+            backupCount=backup_count,
+            encoding='utf-8',
+            delay=True  # No abrir el archivo hasta que se necesite
+        )
+    else:
+        # En Linux/Mac, usar el handler estándar
+        handler = logging.handlers.RotatingFileHandler(
+            filename=filename,
+            maxBytes=max_bytes,
+            backupCount=backup_count,
+            encoding='utf-8'
+        )
+    
+    handler.setLevel(level)
+    handler.setFormatter(formatter)
+    return handler
+
+
+# ============================================================================
 # CONFIGURACIÓN DE HANDLERS
 # ============================================================================
 
@@ -102,16 +178,14 @@ def get_app_handler():
     Nivel: INFO+
     Rotación: 10MB, 5 backups
     """
-    handler = logging.handlers.RotatingFileHandler(
-        filename=LOGS_DIR / "app.log",
-        maxBytes=APP_LOG_MAX_SIZE,
-        backupCount=APP_LOG_BACKUP_COUNT,
-        encoding='utf-8'
-    )
-    handler.setLevel(logging.INFO)
     formatter = logging.Formatter(DETAILED_FORMAT, DETAILED_DATE_FORMAT)
-    handler.setFormatter(formatter)
-    return handler
+    return create_safe_handler(
+        filename=LOGS_DIR / "app.log",
+        max_bytes=APP_LOG_MAX_SIZE,
+        backup_count=APP_LOG_BACKUP_COUNT,
+        level=logging.INFO,
+        formatter=formatter
+    )
 
 
 def get_error_handler():
@@ -120,16 +194,14 @@ def get_error_handler():
     Nivel: ERROR+
     Rotación: 5MB, 3 backups
     """
-    handler = logging.handlers.RotatingFileHandler(
-        filename=LOGS_DIR / "errors.log",
-        maxBytes=ERROR_LOG_MAX_SIZE,
-        backupCount=ERROR_LOG_BACKUP_COUNT,
-        encoding='utf-8'
-    )
-    handler.setLevel(logging.ERROR)
     formatter = logging.Formatter(ERROR_FORMAT, DETAILED_DATE_FORMAT)
-    handler.setFormatter(formatter)
-    return handler
+    return create_safe_handler(
+        filename=LOGS_DIR / "errors.log",
+        max_bytes=ERROR_LOG_MAX_SIZE,
+        backup_count=ERROR_LOG_BACKUP_COUNT,
+        level=logging.ERROR,
+        formatter=formatter
+    )
 
 
 def get_console_handler():
@@ -144,28 +216,31 @@ def get_console_handler():
     return handler
 
 
-def get_detailed_handler(module_category: str):
+def get_detailed_handler(module_category: str, unique_suffix: str = None):
     """
-    Handler para logs detallados por categoría de módulo
+    Handler para logs detallados por categoría de módulo.
+    Ahora soporta sufijos únicos para evitar conflictos entre workers.
     
     Args:
         module_category: Categoría del módulo (ui, workers, core, etc)
+        unique_suffix: Sufijo único opcional (ej: timestamp) para workers
         
     Returns:
-        RotatingFileHandler configurado
+        SafeRotatingFileHandler configurado
     """
-    filename = DETAILED_LOGS_DIR / f"{module_category}.log"
+    if unique_suffix:
+        filename = DETAILED_LOGS_DIR / f"{module_category}_{unique_suffix}.log"
+    else:
+        filename = DETAILED_LOGS_DIR / f"{module_category}.log"
     
-    handler = logging.handlers.RotatingFileHandler(
-        filename=filename,
-        maxBytes=DETAILED_LOG_MAX_SIZE,
-        backupCount=DETAILED_LOG_BACKUP_COUNT,
-        encoding='utf-8'
-    )
-    handler.setLevel(logging.DEBUG)
     formatter = logging.Formatter(DETAILED_FORMAT, DETAILED_DATE_FORMAT)
-    handler.setFormatter(formatter)
-    return handler
+    return create_safe_handler(
+        filename=filename,
+        max_bytes=DETAILED_LOG_MAX_SIZE,
+        backup_count=DETAILED_LOG_BACKUP_COUNT,
+        level=logging.DEBUG,
+        formatter=formatter
+    )
 
 
 # ============================================================================
@@ -237,6 +312,31 @@ def get_module_category(logger_name: str) -> str:
     return 'general'
 
 
+def extract_unique_suffix(logger_name: str) -> str:
+    """
+    Extrae un sufijo único del nombre del logger para workers.
+    Esto permite que cada worker tenga su propio archivo de log.
+    
+    Args:
+        logger_name: Nombre completo del logger
+        
+    Returns:
+        Sufijo único o None
+    
+    Examples:
+        'workers.CorePipelineStep5Worker' -> 'CorePipelineStep5Worker'
+        'workers.SunatDiagnostic' -> 'SunatDiagnostic'
+    """
+    # Si es un worker con nombre de clase, usar ese nombre
+    if logger_name.startswith('workers.'):
+        parts = logger_name.split('.')
+        if len(parts) >= 2:
+            # Retornar la última parte (nombre de la clase del worker)
+            return parts[-1]
+    
+    return None
+
+
 # ============================================================================
 # FUNCIÓN DE CONFIGURACIÓN PRINCIPAL
 # ============================================================================
@@ -263,15 +363,18 @@ def setup_logging():
     logger.info("="*80)
     logger.info("Sistema de logging inicializado correctamente")
     logger.info(f"Directorio de logs: {LOGS_DIR.absolute()}")
+    if IS_WINDOWS:
+        logger.info("Sistema: Windows - Usando SafeRotatingFileHandler")
     logger.info("="*80)
 
 
 def configure_logger(logger_name: str) -> logging.Logger:
     """
-    Configura un logger específico con su nivel y handlers detallados
+    Configura un logger específico con su nivel y handlers detallados.
+    Los workers obtienen archivos de log separados automáticamente.
     
     Args:
-        logger_name: Nombre del logger (ej: 'workers.core_pipeline_step1')
+        logger_name: Nombre del logger (ej: 'workers.CorePipelineStep5Worker')
         
     Returns:
         Logger configurado
@@ -290,18 +393,26 @@ def configure_logger(logger_name: str) -> logging.Logger:
     
     logger.setLevel(level)
     
-    # Agregar handler detallado para esta categoría
+    # Obtener categoría y sufijo único (para workers)
     category = get_module_category(logger_name)
-    detailed_handler = get_detailed_handler(category)
+    unique_suffix = extract_unique_suffix(logger_name)
     
-    # Evitar duplicados
-    if not any(isinstance(h, logging.handlers.RotatingFileHandler) and 
-               str(DETAILED_LOGS_DIR) in str(getattr(h, 'baseFilename', ''))
-               for h in logger.handlers):
+    # Agregar handler detallado para esta categoría
+    # Si es un worker, tendrá su propio archivo (workers_NombreWorker.log)
+    detailed_handler = get_detailed_handler(category, unique_suffix)
+    
+    # Evitar duplicados verificando el baseFilename
+    handler_exists = False
+    for h in logger.handlers:
+        if isinstance(h, (logging.handlers.RotatingFileHandler, SafeRotatingFileHandler)):
+            if hasattr(h, 'baseFilename') and h.baseFilename == str(detailed_handler.baseFilename):
+                handler_exists = True
+                break
+    
+    if not handler_exists:
         logger.addHandler(detailed_handler)
     
-    # No propagar al root para evitar duplicados en app.log
-    # (el root ya tiene sus propios handlers)
+    # Propagar al root para que también se loguee en app.log y errors.log
     logger.propagate = True
     
     return logger

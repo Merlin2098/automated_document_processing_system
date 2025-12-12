@@ -10,7 +10,6 @@ pandas
 pdfminer.six
 pdfplumber
 pefile
-pillow
 psutil
 pyarrow
 pycparser
@@ -22,3 +21,4 @@ pywin32-ctypes
 setuptools
 wheel
 PySide6
+tqdm

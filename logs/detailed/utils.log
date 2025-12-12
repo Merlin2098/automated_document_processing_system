@@ -153,3 +153,39 @@
 2025-12-11 15:06:22 | INFO     | utils.theme_manager            | _load_themes         | ✅ Tema cargado: light (Tema claro innovador y tecnológico con acentos verde-azulados)
 2025-12-11 15:06:22 | INFO     | utils.theme_manager            | _load_config         | ✅ Configuración cargada: tema 'dark'
 2025-12-11 15:06:22 | INFO     | utils.theme_manager            | __init__             | ✅ Theme Manager inicializado - Tema activo: dark
+2025-12-11 16:55:19 | INFO     | utils.theme_manager            | _load_themes         | ✅ Tema cargado: dark (Tema oscuro con fondo azul nocturno profundo)
+2025-12-11 16:55:19 | INFO     | utils.theme_manager            | _load_themes         | ✅ Tema cargado: light (Tema claro innovador y tecnológico con acentos verde-azulados)
+2025-12-11 16:55:19 | INFO     | utils.theme_manager            | _load_config         | ✅ Configuración cargada: tema 'dark'
+2025-12-11 16:55:19 | INFO     | utils.theme_manager            | __init__             | ✅ Theme Manager inicializado - Tema activo: dark
+2025-12-11 17:08:05 | INFO     | utils.theme_manager            | _load_themes         | ✅ Tema cargado: dark (Tema oscuro con fondo azul nocturno profundo)
+2025-12-11 17:08:05 | INFO     | utils.theme_manager            | _load_themes         | ✅ Tema cargado: light (Tema claro innovador y tecnológico con acentos verde-azulados)
+2025-12-11 17:08:05 | INFO     | utils.theme_manager            | _load_config         | ✅ Configuración cargada: tema 'dark'
+2025-12-11 17:08:05 | INFO     | utils.theme_manager            | __init__             | ✅ Theme Manager inicializado - Tema activo: dark
+2025-12-11 17:15:48 | INFO     | utils.theme_manager            | _load_themes         | ✅ Tema cargado: dark (Tema oscuro con fondo azul nocturno profundo)
+2025-12-11 17:15:48 | INFO     | utils.theme_manager            | _load_themes         | ✅ Tema cargado: light (Tema claro innovador y tecnológico con acentos verde-azulados)
+2025-12-11 17:15:48 | INFO     | utils.theme_manager            | _load_config         | ✅ Configuración cargada: tema 'dark'
+2025-12-11 17:15:48 | INFO     | utils.theme_manager            | __init__             | ✅ Theme Manager inicializado - Tema activo: dark
+2025-12-11 17:16:40 | INFO     | utils.theme_manager            | _load_themes         | ✅ Tema cargado: dark (Tema oscuro con fondo azul nocturno profundo)
+2025-12-11 17:16:40 | INFO     | utils.theme_manager            | _load_themes         | ✅ Tema cargado: light (Tema claro innovador y tecnológico con acentos verde-azulados)
+2025-12-11 17:16:40 | INFO     | utils.theme_manager            | _load_config         | ✅ Configuración cargada: tema 'dark'
+2025-12-11 17:16:40 | INFO     | utils.theme_manager            | __init__             | ✅ Theme Manager inicializado - Tema activo: dark
+2025-12-11 17:37:23 | INFO     | utils.theme_manager            | _load_themes         | ✅ Tema cargado: dark (Tema oscuro con fondo azul nocturno profundo)
+2025-12-11 17:37:23 | INFO     | utils.theme_manager            | _load_themes         | ✅ Tema cargado: light (Tema claro innovador y tecnológico con acentos verde-azulados)
+2025-12-11 17:37:23 | INFO     | utils.theme_manager            | _load_config         | ✅ Configuración cargada: tema 'dark'
+2025-12-11 17:37:23 | INFO     | utils.theme_manager            | __init__             | ✅ Theme Manager inicializado - Tema activo: dark
+2025-12-11 17:49:20 | INFO     | utils.theme_manager            | _load_themes         | ✅ Tema cargado: dark (Tema oscuro con fondo azul nocturno profundo)
+2025-12-11 17:49:20 | INFO     | utils.theme_manager            | _load_themes         | ✅ Tema cargado: light (Tema claro innovador y tecnológico con acentos verde-azulados)
+2025-12-11 17:49:20 | INFO     | utils.theme_manager            | _load_config         | ✅ Configuración cargada: tema 'dark'
+2025-12-11 17:49:20 | INFO     | utils.theme_manager            | __init__             | ✅ Theme Manager inicializado - Tema activo: dark
+2025-12-11 18:00:09 | INFO     | utils.theme_manager            | _load_themes         | ✅ Tema cargado: dark (Tema oscuro con fondo azul nocturno profundo)
+2025-12-11 18:00:09 | INFO     | utils.theme_manager            | _load_themes         | ✅ Tema cargado: light (Tema claro innovador y tecnológico con acentos verde-azulados)
+2025-12-11 18:00:09 | INFO     | utils.theme_manager            | _load_config         | ✅ Configuración cargada: tema 'dark'
+2025-12-11 18:00:09 | INFO     | utils.theme_manager            | __init__             | ✅ Theme Manager inicializado - Tema activo: dark
+2025-12-12 09:04:50 | INFO     | utils.theme_manager            | _load_themes         | ✅ Tema cargado: dark (Tema oscuro con fondo azul nocturno profundo)
+2025-12-12 09:04:50 | INFO     | utils.theme_manager            | _load_themes         | ✅ Tema cargado: light (Tema claro innovador y tecnológico con acentos verde-azulados)
+2025-12-12 09:04:50 | INFO     | utils.theme_manager            | _load_config         | ✅ Configuración cargada: tema 'dark'
+2025-12-12 09:04:50 | INFO     | utils.theme_manager            | __init__             | ✅ Theme Manager inicializado - Tema activo: dark
+2025-12-12 09:43:11 | INFO     | utils.theme_manager            | _load_themes         | ✅ Tema cargado: dark (Tema oscuro con fondo azul nocturno profundo)
+2025-12-12 09:43:11 | INFO     | utils.theme_manager            | _load_themes         | ✅ Tema cargado: light (Tema claro innovador y tecnológico con acentos verde-azulados)
+2025-12-12 09:43:11 | INFO     | utils.theme_manager            | _load_config         | ✅ Configuración cargada: tema 'dark'
+2025-12-12 09:43:11 | INFO     | utils.theme_manager            | __init__             | ✅ Theme Manager inicializado - Tema activo: dark

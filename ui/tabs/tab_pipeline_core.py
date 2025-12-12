@@ -226,7 +226,7 @@ Se generará un archivo Excel con múltiples hojas conteniendo:
         # Info
         info = QLabel("""
 <b>Requisito previo:</b> Coloque los archivos JSON de renombrado en cada subcarpeta 
-(1_Boletas, 2_Afp, 3_5ta).<br><br>
+(1_Boletas, 2_Afp, 3_5ta, 4_Convocatoria, 5_CertificadosTrabajo).<br><br>
 El sistema buscará automáticamente los JSONs y renombrará los archivos según el mapeo 
 de "ARCHIVO ORIGINAL" → "NUEVO NOMBRE".
         """)
@@ -234,6 +234,25 @@ de "ARCHIVO ORIGINAL" → "NUEVO NOMBRE".
         info.setWordWrap(True)
         info.setTextFormat(Qt.RichText)
         group_layout.addWidget(info)
+        
+        # Labels de información de progreso
+        info_layout = QHBoxLayout()
+        info_layout.setSpacing(20)
+        
+        self.step4_time_label = QLabel("⏱️ Tiempo: --:--")
+        self.step4_time_label.setProperty("labelStyle", "info")
+        info_layout.addWidget(self.step4_time_label)
+        
+        self.step4_files_label = QLabel("📄 Archivos: 0 / 0")
+        self.step4_files_label.setProperty("labelStyle", "info")
+        info_layout.addWidget(self.step4_files_label)
+        
+        self.step4_folder_label = QLabel("📁 Carpeta: -")
+        self.step4_folder_label.setProperty("labelStyle", "info")
+        info_layout.addWidget(self.step4_folder_label)
+        
+        info_layout.addStretch()
+        group_layout.addLayout(info_layout)
         
         # Botones
         btn_layout = self._create_step_buttons(3)
@@ -517,7 +536,7 @@ El sistema:
             return
         
         # Validar que existen las subcarpetas requeridas
-        carpetas_requeridas = ['1_Boletas', '2_Afp', '3_5ta']
+        carpetas_requeridas = ['1_Boletas', '2_Afp', '3_5ta', '4_Convocatoria', '5_CertificadosTrabajo']
         carpetas_faltantes = []
         
         for carpeta in carpetas_requeridas:
@@ -531,6 +550,11 @@ El sistema:
                 f"⚠️ Carpetas faltantes: {', '.join(carpetas_faltantes)}. Se omitirán."
             )
         
+        # Resetear labels de información
+        self.step4_time_label.setText("⏱️ Tiempo: 00:00")
+        self.step4_files_label.setText("📄 Archivos: 0 / 0")
+        self.step4_folder_label.setText("📁 Carpeta: Escaneando...")
+        
         # Deshabilitar botón
         btn = self.findChild(QPushButton, "btn_execute_step3")
         if btn:
@@ -540,12 +564,49 @@ El sistema:
         # Crear y configurar worker
         self.current_worker = CorePipelineStep4Worker(folder_path)
         
-        # Conectar señales
-        self.current_worker.progress_signal.connect(self.progress_updated.emit)
+        # Conectar señales básicas
         self.current_worker.log_signal.connect(self.log_message.emit)
-        self.current_worker.stats_signal.connect(self.stats_updated.emit)
         self.current_worker.finished_signal.connect(self._on_step4_completed)
         self.current_worker.error_signal.connect(self._on_step_error)
+        
+        # Conectar señales enriquecidas al tab
+        self.current_worker.time_update_signal.connect(self._on_step4_time_update)
+        self.current_worker.file_progress_signal.connect(self._on_step4_file_progress)
+        self.current_worker.folder_update_signal.connect(self._on_step4_folder_update)
+        self.current_worker.overall_progress_signal.connect(self._on_step4_overall_progress)
+        
+        # Conectar señales al monitoring panel
+        if hasattr(main_window, 'monitoring_panel'):
+            # Progreso de carpetas (progress_signal)
+            self.current_worker.progress_signal.connect(
+                lambda current, total: main_window.monitoring_panel.folders_label.setText(
+                    f"📂 Carpetas: {current}/{total}"
+                )
+            )
+            
+            # Progreso de archivos (file_progress_signal)
+            self.current_worker.file_progress_signal.connect(
+                lambda current, total: main_window.monitoring_panel.update_progress(current, total)
+            )
+            
+            # Tiempo (time_update_signal)
+            self.current_worker.time_update_signal.connect(
+                lambda elapsed: main_window.monitoring_panel.time_label.setText(
+                    f"⏱️ Tiempo: {int(elapsed//3600):02d}:{int((elapsed%3600)//60):02d}:{int(elapsed%60):02d}"
+                )
+            )
+            
+            # Progreso global (overall_progress_signal)
+            self.current_worker.overall_progress_signal.connect(
+                lambda progress: main_window.monitoring_panel.progress_bar.setValue(progress)
+            )
+            
+            # Estadísticas finales (stats_signal)
+            self.current_worker.stats_signal.connect(
+                lambda stats: main_window.monitoring_panel.errors_label.setText(
+                    f"⚠️ Errores: {stats.get('total_fallidos', 0)}"
+                )
+            )
         
         # Iniciar worker
         self.current_worker.start()
@@ -666,6 +727,15 @@ El sistema:
             btn.setEnabled(True)
             btn.setText("▶️ Ejecutar Paso 4")
         
+        # Limpiar label de carpeta
+        self.step4_folder_label.setText("📁 Carpeta: Completado")
+        
+        # Actualizar monitoring panel
+        main_window = self.window()
+        if hasattr(main_window, 'monitoring_panel'):
+            main_window.monitoring_panel.status_label.setText("✅ Proceso completado")
+            main_window.monitoring_panel.progress_bar.setValue(100)
+        
         # Marcar paso como completado
         self.stepper.mark_step_completed(3)
         
@@ -678,6 +748,29 @@ El sistema:
                 self.log_message.emit("warning", "⚠️ Paso 4 completado con algunos errores")
             else:
                 self.log_message.emit("warning", "⚠️ No se renombró ningún archivo")
+    
+    @Slot(float)
+    def _on_step4_time_update(self, elapsed_seconds: float):
+        """Actualiza el label de tiempo del paso 4"""
+        mins = int(elapsed_seconds // 60)
+        secs = int(elapsed_seconds % 60)
+        self.step4_time_label.setText(f"⏱️ Tiempo: {mins:02d}:{secs:02d}")
+    
+    @Slot(int, int)
+    def _on_step4_file_progress(self, current: int, total: int):
+        """Actualiza el label de archivos procesados del paso 4"""
+        self.step4_files_label.setText(f"📄 Archivos: {current} / {total}")
+    
+    @Slot(str)
+    def _on_step4_folder_update(self, folder_name: str):
+        """Actualiza el label de carpeta actual del paso 4"""
+        self.step4_folder_label.setText(f"📁 Carpeta: {folder_name}")
+    
+    @Slot(int)
+    def _on_step4_overall_progress(self, progress_percent: int):
+        """Actualiza el progreso global del paso 4 (opcional, para barra de progreso futura)"""
+        # Por ahora solo lo registramos en logs si quisieras agregarlo
+        pass
     
     @Slot(dict)
     def _on_step5_completed(self, resultado: dict):

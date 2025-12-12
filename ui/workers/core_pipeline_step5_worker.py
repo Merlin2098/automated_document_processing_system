@@ -5,7 +5,7 @@ Usa directamente las funciones del módulo core sin reimplementar lógica
 Este worker actúa como un puente entre la UI (PySide6) y el módulo core,
 proporcionando señales para actualizar la interfaz sin duplicar código.
 
-VERSION 1.1: Progreso detallado por pack generado
+VERSION 2.0: Integración con módulo optimizado (paralelización + contract extractor + parquet)
 """
 from PySide6.QtCore import QThread, Signal
 from utils.logger import Logger
@@ -34,7 +34,7 @@ class CorePipelineStep5Worker(QThread):
     """Worker wrapper que usa el módulo core para fusión por contratos"""
     
     # Señales
-    progress_signal = Signal(int, int)  # (current, total) - Ahora reporta packs generados
+    progress_signal = Signal(int, int)  # (current, total) - Reporta packs generados
     log_signal = Signal(str, str)  # (type, message)
     stats_signal = Signal(dict)  # estadísticas
     finished_signal = Signal(dict)  # resultado final
@@ -58,7 +58,7 @@ class CorePipelineStep5Worker(QThread):
         self.log_signal.emit("info", f"   📦 Generando pack {current}/{total}...")
     
     def run(self):
-        """Ejecuta el proceso usando funciones del core"""
+        """Ejecuta el proceso usando funciones del core optimizado"""
         start_time = time.time()
         
         try:
@@ -111,16 +111,17 @@ class CorePipelineStep5Worker(QThread):
                 self.logger.warning(msg)
             
             # ============================================================
-            # FASE 2: Copiar PDFs a carpeta temporal (USA EL CORE)
+            # FASE 2: Copiar PDFs a carpeta temporal (USA EL CORE PARALELIZADO)
             # ============================================================
             if not self._is_running:
                 self.logger.warning("Proceso cancelado por el usuario")
                 return
             
             self.log_signal.emit("info", "")
-            self.log_signal.emit("info", "📋 [2/4] Copiando PDFs a carpeta temporal...")
-            self.logger.info("📋 [2/4] Copiando PDFs a carpeta temporal...")
+            self.log_signal.emit("info", "📋 [2/4] Copiando PDFs (paralelizado)...")
+            self.logger.info("📋 [2/4] Copiando PDFs (paralelizado)...")
             
+            # La función PARALELIZADA retorna 3 valores
             ruta_procesar, copiados, errores_copia = copiar_pdfs_a_procesamiento(
                 self.folder_path,
                 encontradas,
@@ -143,15 +144,15 @@ class CorePipelineStep5Worker(QThread):
                 self.logger.warning(msg)
             
             # ============================================================
-            # FASE 3: Generar diagnóstico de contratos (USA EL CORE)
+            # FASE 3: Generar diagnóstico de contratos (USA CONTRACT EXTRACTOR)
             # ============================================================
             if not self._is_running:
                 self.logger.warning("Proceso cancelado por el usuario")
                 return
             
             self.log_signal.emit("info", "")
-            self.log_signal.emit("info", "📋 [3/4] Analizando contratos...")
-            self.logger.info("📋 [3/4] Analizando contratos...")
+            self.log_signal.emit("info", "📋 [3/4] Analizando contratos (con extractor)...")
+            self.logger.info("📋 [3/4] Analizando contratos (con extractor)...")
             
             diagnostico = generar_diagnostico(ruta_procesar, timestamp)
             
@@ -166,10 +167,27 @@ class CorePipelineStep5Worker(QThread):
             self.logger.info(f"✅ Contratos únicos: {diagnostico['total_contratos_unicos']}")
             self.logger.info(f"📄 Total archivos: {diagnostico['total_archivos']}")
             
-            # Guardar diagnóstico (USA EL CORE)
+            # Calcular tamaño total de todos los contratos
+            tamano_total = sum(
+                info['tamano_total_mb'] 
+                for info in diagnostico['contratos'].values()
+            )
+            self.log_signal.emit("info", f"💾 Tamaño total: {tamano_total:.2f} MB")
+            self.logger.info(f"💾 Tamaño total: {tamano_total:.2f} MB")
+            
+            # Guardar diagnóstico (JSON + PARQUET si disponible)
             ruta_json = guardar_diagnostico(diagnostico, ruta_procesar, timestamp)
             if ruta_json:
                 self.log_signal.emit("success", f"✅ Diagnóstico guardado: {os.path.basename(ruta_json)}")
+                
+                # Verificar si también se guardó en Parquet
+                try:
+                    import pandas as pd
+                    ruta_parquet = os.path.join(ruta_procesar, f"contratos_metadata_{timestamp}.parquet")
+                    if os.path.exists(ruta_parquet):
+                        self.log_signal.emit("info", "   ℹ️ También guardado en formato Parquet")
+                except:
+                    pass
             
             # ============================================================
             # FASE 4: Generar packs documentarios (USA EL CORE)
@@ -182,6 +200,16 @@ class CorePipelineStep5Worker(QThread):
             self.log_signal.emit("info", "📋 [4/4] Generando packs por contrato...")
             self.logger.info("📋 [4/4] Generando packs por contrato...")
             self.log_signal.emit("info", f"   Se generarán {diagnostico['total_contratos_unicos']} packs...")
+            
+            # Advertir sobre packs grandes
+            packs_grandes = sum(
+                1 for info in diagnostico['contratos'].values() 
+                if info['tamano_total_mb'] > 100
+            )
+            if packs_grandes > 0:
+                msg = f"⚠️ Hay {packs_grandes} pack(s) que exceden 100 MB y serán divididos"
+                self.log_signal.emit("warning", msg)
+                self.logger.warning(msg)
             
             # Inicializar progreso en 0
             self.progress_signal.emit(0, diagnostico['total_contratos_unicos'])
@@ -239,6 +267,7 @@ class CorePipelineStep5Worker(QThread):
                 'archivos_procesados': diagnostico['total_archivos'],
                 'packs_generados': packs_generados,
                 'errores': errores_fusion,
+                'tamano_total_mb': tamano_total,
                 'carpeta_procesar': ruta_procesar,
                 'carpeta_enviar': ruta_enviar,
                 'time': elapsed_time
