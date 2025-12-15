@@ -14,6 +14,8 @@ import pkg_resources
 import subprocess
 import shutil
 from pathlib import Path
+import time
+import threading
 
 # ==========================================================
 # CONFIGURACIÓN
@@ -25,9 +27,10 @@ DIST_PATH = "dist"
 BUILD_PATH = "build"
 SPEC_PATH = "spec"
 
+# CORRECCIÓN: Se han eliminado 'distutils', 'setuptools' y 'pkg_resources'
+# de las exclusiones para evitar el ValueError en los hooks de PyInstaller.
 EXCLUSIONES = [
-    "pip", "wheel", "setuptools", "pkg_resources",
-    "distutils", "ensurepip", "test", "tkinter.test",
+    "pip", "wheel", "ensurepip", "test", "tkinter.test",
     "pytest", "pytest_cov", "coverage", "notebook",
     "IPython", "jupyter", "matplotlib", "scipy",
     "numpy.testing", "pandas.tests"
@@ -51,11 +54,16 @@ def validar_entorno_virtual():
 
     print(f"✅ Entorno virtual detectado: {sys.prefix}\n")
 
-    paquetes = sorted([(pkg.key, pkg.version) for pkg in pkg_resources.working_set])
-    print(f"📦 Librerías instaladas ({len(paquetes)}):")
-    for nombre, version in paquetes:
-        flag = "🧹 (excluir)" if nombre in EXCLUSIONES else "✅"
-        print(f"   {flag} {nombre:<25} {version}")
+    # Nota: pkg_resources puede lanzar advertencias si no está instalado, 
+    # pero es estándar en venv.
+    try:
+        paquetes = sorted([(pkg.key, pkg.version) for pkg in pkg_resources.working_set])
+        print(f"📦 Librerías instaladas ({len(paquetes)}):")
+        for nombre, version in paquetes:
+            flag = "🧹 (excluir)" if nombre in EXCLUSIONES else "✅"
+            print(f"   {flag} {nombre:<25} {version}")
+    except Exception:
+        print("⚠️ No se pudo listar paquetes con pkg_resources (no crítico).")
     print("\n")
 
 # ==========================================================
@@ -109,6 +117,7 @@ def construir_comando():
         "--workpath", BUILD_PATH,
         "--specpath", SPEC_PATH,
         "--name", NOMBRE_EXE.replace(".exe", ""),
+        "--noconfirm",           # No preguntar confirmar sobreescritura
     ]
 
     # ======================================================
@@ -261,9 +270,6 @@ def generar_exe():
         ("✨ Finalizando bundle", 90, 100),
     ]
     
-    import time
-    import threading
-    
     # Variable para controlar el progreso
     progreso_actual = [0]
     proceso_completado = [False]
@@ -301,7 +307,7 @@ def generar_exe():
     
     def actualizar_progreso():
         """Simula el progreso basado en tiempo estimado"""
-        tiempo_total = 300  # 5 minutos estimados
+        tiempo_total = 60  # Reducido a 1 min para no bloquear visualmente
         intervalos = 100
         tiempo_por_intervalo = tiempo_total / intervalos
         
@@ -318,7 +324,9 @@ def generar_exe():
     thread_progreso.start()
     thread_actualizar.start()
     
-    # Ejecutar PyInstaller (salida suprimida para no interferir con la barra)
+    # Ejecutar PyInstaller
+    # Importante: para debug, a veces es util quitar stdout=PIPE si falla,
+    # pero aqui mantenemos la logica original
     result = subprocess.run(
         cmd,
         stdout=subprocess.PIPE,
@@ -352,15 +360,11 @@ def generar_exe():
         print("\n💡 Detalles del error:")
         print("─" * 60)
         if result.stderr:
-            # Mostrar solo las últimas líneas del error
-            lineas_error = result.stderr.strip().split('\n')
-            for linea in lineas_error[-20:]:  # Últimas 20 líneas
-                print(f"   {linea}")
+            # Mostrar todo el error para debugging si es grave
+            print(result.stderr)
+        else:
+            print("   No se capturó stderr, revisa los logs en build/")
         print("─" * 60)
-        print("\n💡 Posibles causas:")
-        print("   - Faltan dependencias en el venv (PySide6, PyPDF2, etc.)")
-        print("   - Estructura de carpetas incorrecta")
-        print("   - Imports problemáticos en el código")
     print("=" * 60)
 
 # ==========================================================
@@ -439,7 +443,6 @@ def verificar_estructura():
         sys.exit(1)
     
     print("\n" + "=" * 60)
-
 
 
 # ==========================================================

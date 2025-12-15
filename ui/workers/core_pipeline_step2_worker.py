@@ -6,6 +6,7 @@ from PySide6.QtCore import QThread, Signal
 from utils.logger import Logger
 import os
 import sys
+from datetime import datetime
 
 # Agregar rutas para imports del core
 current_dir = os.path.dirname(os.path.abspath(__file__))
@@ -41,10 +42,38 @@ class CorePipelineStep2Worker(QThread):
         self.sobrescribir = sobrescribir
         self._is_running = True
         self.logger = Logger("CorePipelineStep2Worker")
+        
+        # Para tracking de tiempo
+        self.start_time = None
+    
+    def _get_elapsed_time(self) -> str:
+        """Retorna el tiempo transcurrido en formato HH:MM:SS"""
+        if not self.start_time:
+            return "00:00:00"
+        
+        elapsed = (datetime.now() - self.start_time).total_seconds()
+        hours = int(elapsed // 3600)
+        minutes = int((elapsed % 3600) // 60)
+        seconds = int(elapsed % 60)
+        
+        return f"{hours:02d}:{minutes:02d}:{seconds:02d}"
+    
+    def _emit_stats_update(self, current_pages: int, total_pages: int, errors: int = 0):
+        """Emite actualización de estadísticas con tiempo"""
+        stats = {
+            'time_elapsed': self._get_elapsed_time(),
+            'current': current_pages,
+            'total': total_pages,
+            'errors': errors
+        }
+        self.stats_signal.emit(stats)
     
     def run(self):
         """Ejecuta el proceso usando funciones del core"""
         try:
+            # Iniciar tracking de tiempo
+            self.start_time = datetime.now()
+            
             self.logger.info("🚀 Iniciando clasificación y división de PDFs")
             self.log_signal.emit("info", "🚀 Iniciando clasificación y división de PDFs")
             self.logger.info(f"📂 Carpeta de trabajo: {self.folder_path}")
@@ -143,15 +172,48 @@ class CorePipelineStep2Worker(QThread):
                     return
             
             # ============================================================
-            # FASE 4: Dividir PDFs (USA EL CORE)
+            # FASE 4: Calcular total de páginas esperadas
+            # ============================================================
+            self.log_signal.emit("info", "")
+            self.log_signal.emit("info", "📋 [4/5] Calculando páginas totales...")
+            self.logger.info("📋 [4/5] Calculando páginas totales...")
+            
+            # Calcular total de páginas para progreso preciso
+            try:
+                from PyPDF2 import PdfReader
+                total_paginas_esperadas = 0
+                
+                tipos_con_archivos = [tipo for tipo, archivos in pdfs_por_tipo.items() if archivos]
+                
+                for tipo in tipos_con_archivos:
+                    archivo = pdfs_por_tipo[tipo][0]
+                    ruta_pdf = os.path.join(self.folder_path, archivo)
+                    
+                    try:
+                        with open(ruta_pdf, 'rb') as f:
+                            pdf = PdfReader(f)
+                            num_pages = len(pdf.pages)
+                            total_paginas_esperadas += num_pages
+                    except Exception as e:
+                        self.logger.warning(f"No se pudo leer {archivo} para contar páginas: {e}")
+                
+                self.log_signal.emit("success", f"✅ Total de páginas a procesar: {total_paginas_esperadas}")
+                self.logger.info(f"✅ Total de páginas: {total_paginas_esperadas}")
+                
+            except Exception as e:
+                self.logger.warning(f"Error al calcular páginas totales: {e}")
+                total_paginas_esperadas = 0
+            
+            # ============================================================
+            # FASE 5: Dividir PDFs (USA EL CORE)
             # ============================================================
             if not self._is_running:
                 self.logger.warning("Proceso cancelado por el usuario")
                 return
             
             self.log_signal.emit("info", "")
-            self.log_signal.emit("info", "📋 [4/5] Dividiendo PDFs por páginas...")
-            self.logger.info("📋 [4/5] Dividiendo PDFs...")
+            self.log_signal.emit("info", "📋 [5/5] Dividiendo PDFs por páginas...")
+            self.logger.info("📋 [5/5] Dividiendo PDFs...")
             
             resumen = {
                 "total_paginas": 0,
@@ -161,8 +223,8 @@ class CorePipelineStep2Worker(QThread):
                 "detalle_por_tipo": {}
             }
             
-            tipos_con_archivos = [tipo for tipo, archivos in pdfs_por_tipo.items() if archivos]
-            total_pdfs = len(tipos_con_archivos)
+            paginas_procesadas = 0
+            error_count = 0
             
             for idx, tipo in enumerate(tipos_con_archivos, 1):
                 if not self._is_running:
@@ -194,8 +256,12 @@ class CorePipelineStep2Worker(QThread):
                     msg = f"      ✅ {paginas} páginas generadas"
                     self.log_signal.emit("success", msg)
                     self.logger.info(msg)
+                    
+                    # Actualizar progreso por páginas procesadas
+                    paginas_procesadas += paginas
                 else:
                     resumen["pdfs_con_error"] += 1
+                    error_count += 1
                     resumen["errores"].append({
                         "tipo": tipo,
                         "archivo": archivo,
@@ -211,11 +277,18 @@ class CorePipelineStep2Worker(QThread):
                     self.log_signal.emit("error", msg)
                     self.logger.error(msg)
                 
-                # Actualizar progreso: solo PDFs procesados
-                self.progress_signal.emit(idx, total_pdfs)
+                # Emitir progreso: páginas procesadas vs total esperado
+                if total_paginas_esperadas > 0:
+                    self.progress_signal.emit(paginas_procesadas, total_paginas_esperadas)
+                else:
+                    # Fallback: si no pudimos calcular, usar PDFs procesados
+                    self.progress_signal.emit(idx, len(tipos_con_archivos))
+                
+                # Emitir estadísticas con tiempo
+                self._emit_stats_update(paginas_procesadas, total_paginas_esperadas, error_count)
             
             # ============================================================
-            # FASE 5: Resumen final
+            # FASE 6: Resumen final
             # ============================================================
             resumen["pdfs_no_clasificados"] = len(pdfs_no_clasificados)
             
@@ -224,6 +297,7 @@ class CorePipelineStep2Worker(QThread):
             self.log_signal.emit("info", "📊 RESUMEN FINAL")
             self.log_signal.emit("success", f"✅ PDFs procesados: {resumen['pdfs_procesados']}")
             self.log_signal.emit("info", f"📄 Total páginas: {resumen['total_paginas']}")
+            self.log_signal.emit("info", f"⏱️ Tiempo total: {self._get_elapsed_time()}")
             
             if resumen['pdfs_con_error'] > 0:
                 self.log_signal.emit("error", f"❌ PDFs con errores: {resumen['pdfs_con_error']}")
@@ -238,6 +312,7 @@ class CorePipelineStep2Worker(QThread):
             self.logger.info("📊 RESUMEN FINAL")
             self.logger.info(f"✅ PDFs procesados: {resumen['pdfs_procesados']}")
             self.logger.info(f"📄 Total páginas: {resumen['total_paginas']}")
+            self.logger.info(f"⏱️ Tiempo total: {self._get_elapsed_time()}")
             
             if resumen['pdfs_con_error'] > 0:
                 self.logger.error(f"❌ PDFs con errores: {resumen['pdfs_con_error']}")
@@ -247,8 +322,12 @@ class CorePipelineStep2Worker(QThread):
             
             self.logger.info("=" * 50)
             
-            # Emitir estadísticas
+            # Emitir estadísticas finales
             stats = {
+                'time_elapsed': self._get_elapsed_time(),
+                'current': resumen['total_paginas'],
+                'total': resumen['total_paginas'],
+                'errors': resumen['pdfs_con_error'],
                 'pdfs_procesados': resumen['pdfs_procesados'],
                 'pdfs_con_error': resumen['pdfs_con_error'],
                 'total_paginas': resumen['total_paginas'],

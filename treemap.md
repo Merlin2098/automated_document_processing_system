@@ -15,6 +15,7 @@
 ├── core_tools/
 │   └── dividir_pdf.py
 ├── extractores/
+│   ├── contract_number_extractor.py
 │   ├── extractor_afp.py
 │   ├── extractor_boleta.py
 │   ├── extractor_quinta.py
