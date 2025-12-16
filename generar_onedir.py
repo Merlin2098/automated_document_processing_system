@@ -148,6 +148,16 @@ def construir_comando():
         # Excel y datos
         "pandas",
         "openpyxl",
+        "duckdb",
+        "pyarrow",
+        "pyarrow.parquet",
+        
+        # Multiprocessing (CRÍTICO para Paso 3)
+        "multiprocessing",
+        "multiprocessing.spawn",
+        "multiprocessing.pool",
+        "multiprocessing.managers",
+        "multiprocessing.queues",
         
         # Expresiones regulares y utilidades
         "re",
@@ -184,6 +194,12 @@ def construir_comando():
         "utils.logger",
         "utils.logger_config",
         "utils.excel_converter",
+        
+        # Core modules (para multiprocessing)
+        "core_pipeline.step3_generar_diagnostico",
+        "extractores.extractor_afp",
+        "extractores.extractor_boleta",
+        "extractores.extractor_quinta",
     ]
     
     for imp in hidden_imports:
@@ -204,6 +220,30 @@ def construir_comando():
         print(f"   ✅ Icono encontrado: {ico_path}")
     else:
         print(f"   ⚠️  Advertencia: No se encontró el icono en {ico_path}")
+    
+    # ======================================================
+    # RUNTIME HOOKS (para multiprocessing)
+    # ======================================================
+    print("\n🔧 Configurando runtime hooks...")
+    
+    # Crear directorio hooks si no existe
+    hooks_dir = base_dir / "hooks"
+    hooks_dir.mkdir(exist_ok=True)
+    
+    # Verificar si existe el hook de multiprocessing
+    hook_mp_path = hooks_dir / "pyi_rth_multiprocessing.py"
+    if hook_mp_path.exists():
+        comando += ["--runtime-hook", str(hook_mp_path)]
+        print(f"   ✅ Runtime hook multiprocessing: {hook_mp_path}")
+    else:
+        print(f"   ⚠️  Advertencia: Runtime hook no encontrado en {hook_mp_path}")
+        print(f"      El Paso 3 puede no funcionar correctamente en producción")
+    
+    # ======================================================
+    # CONFIGURACIÓN ADICIONAL DE MULTIPROCESSING
+    # ======================================================
+    # Recolectar todos los submódulos de multiprocessing
+    comando += ["--collect-all", "multiprocessing"]
 
     # ======================================================
     # ARCHIVOS Y CARPETAS DE DATOS (--add-data)

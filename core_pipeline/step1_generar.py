@@ -7,8 +7,7 @@ Descripción: Crea las subcarpetas necesarias dentro de una carpeta de trabajo s
 
 import os
 import sys
-import tkinter as tk
-from tkinter import filedialog, messagebox
+from PySide6.QtWidgets import QFileDialog, QApplication, QMessageBox
 
 # Importar logger
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
@@ -24,17 +23,20 @@ def seleccionar_carpeta():
     Returns:
         str: Ruta de la carpeta seleccionada o None si se cancela.
     """
-    # Ocultar la ventana principal de tkinter
-    root = tk.Tk()
-    root.withdraw()
-    root.attributes('-topmost', True)  # Mantener la ventana encima de otras
+    # Verificar si ya existe una instancia de QApplication
+    app = QApplication.instance()
+    if app is None:
+        app = QApplication(sys.argv)
     
     logger.info("📂 Abriendo diálogo de selección de carpeta...")
     print("Selecciona la carpeta de trabajo...")
     
     # Mostrar el diálogo de selección de carpeta
-    carpeta_seleccionada = filedialog.askdirectory(
-        title="Selecciona la carpeta de trabajo"
+    carpeta_seleccionada = QFileDialog.getExistingDirectory(
+        None,
+        "Selecciona la carpeta de trabajo",
+        "",
+        QFileDialog.Option.ShowDirsOnly
     )
     
     if carpeta_seleccionada:
@@ -209,9 +211,12 @@ def main():
         print(f"\nPuedes comenzar a trabajar en: {carpeta_base}")
         
         # Mostrar mensaje gráfico si no hubo errores
-        root = tk.Tk()
-        root.withdraw()
-        messagebox.showinfo(
+        app = QApplication.instance()
+        if app is None:
+            app = QApplication(sys.argv)
+        
+        QMessageBox.information(
+            None,
             "Operación Exitosa",
             f"Estructura de carpetas creada exitosamente en:\n{carpeta_base}"
         )

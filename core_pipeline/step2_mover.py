@@ -10,8 +10,7 @@ import sys
 import re
 from datetime import datetime
 from pathlib import Path
-import tkinter as tk
-from tkinter import messagebox
+from PySide6.QtWidgets import QFileDialog, QApplication, QMessageBox
 import PyPDF2
 from PyPDF2 import PdfReader, PdfWriter
 
@@ -96,9 +95,9 @@ def preguntar_sobrescribir_cli(carpetas_con_archivos):
         return False
     
     # También mostrar diálogo gráfico
-    root = tk.Tk()
-    root.withdraw()
-    root.attributes('-topmost', True)
+    app = QApplication.instance()
+    if app is None:
+        app = QApplication(sys.argv)
     
     # Crear mensaje detallado
     mensaje = "Las siguientes carpetas destino contienen archivos:\n\n"
@@ -108,12 +107,14 @@ def preguntar_sobrescribir_cli(carpetas_con_archivos):
     
     mensaje += "\n¿Desea continuar y sobrescribir los archivos existentes?"
     
-    respuesta = messagebox.askyesno(
+    respuesta = QMessageBox.question(
+        None,
         "Advertencia - Archivos Existentes",
-        mensaje
+        mensaje,
+        QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No
     )
     
-    return respuesta
+    return respuesta == QMessageBox.StandardButton.Yes
 
 def buscar_pdfs_por_tipo(carpeta_madre):
     """
@@ -426,16 +427,16 @@ def mostrar_resumen_final(resumen, carpeta_madre):
     
     # Mostrar mensaje gráfico
     if resumen["pdfs_procesados"] > 0:
-        root = tk.Tk()
-        root.withdraw()
-        root.attributes('-topmost', True)
+        app = QApplication.instance()
+        if app is None:
+            app = QApplication(sys.argv)
         
         mensaje = f"Procesamiento completado:\n\n"
         mensaje += f"• PDFs procesados: {resumen['pdfs_procesados']}\n"
         mensaje += f"• Páginas generadas: {resumen['total_paginas']}\n"
         mensaje += f"• PDFs con errores: {resumen['pdfs_con_error']}\n"
         
-        messagebox.showinfo("Procesamiento Completado", mensaje)
+        QMessageBox.information(None, "Procesamiento Completado", mensaje)
 
 def main():
     """
@@ -456,15 +457,19 @@ def main():
     print("  • 'certificado de trabajo' → Carpeta 5_CertificadosTrabajo (archivos: certif_trabajo_1.pdf, ...)")
     print("="*60)
     
-    # Seleccionar carpeta madre (usando tkinter o argumento)
+    # Seleccionar carpeta madre (usando QFileDialog o argumento)
     if len(sys.argv) > 1:
         carpeta_madre = sys.argv[1]
     else:
-        root = tk.Tk()
-        root.withdraw()
-        root.attributes('-topmost', True)
-        carpeta_madre = tk.filedialog.askdirectory(
-            title="Selecciona la carpeta madre con los PDFs"
+        app = QApplication.instance()
+        if app is None:
+            app = QApplication(sys.argv)
+        
+        carpeta_madre = QFileDialog.getExistingDirectory(
+            None,
+            "Selecciona la carpeta madre con los PDFs",
+            "",
+            QFileDialog.Option.ShowDirsOnly
         )
     
     if not carpeta_madre:
@@ -510,14 +515,6 @@ def main():
 
 if __name__ == "__main__":
     # Verificar dependencias
-    try:
-        from tkinter import filedialog
-    except ImportError:
-        print("ERROR: tkinter no está instalado.")
-        print("En Ubuntu/Debian: sudo apt-get install python3-tk")
-        print("En Windows/Mac: tkinter generalmente viene con Python")
-        sys.exit(1)
-    
     try:
         import PyPDF2
     except ImportError:

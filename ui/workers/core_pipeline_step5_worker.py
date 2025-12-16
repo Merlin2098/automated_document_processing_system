@@ -6,12 +6,14 @@ Este worker actúa como un puente entre la UI (PySide6) y el módulo core,
 proporcionando señales para actualizar la interfaz sin duplicar código.
 
 VERSION 2.0: Integración con módulo optimizado (paralelización + contract extractor + parquet)
+VERSION 2.2: Threading.Timer para actualización de tiempo en tiempo real (FIX)
 """
 from PySide6.QtCore import QThread, Signal
 from utils.logger import Logger
 import os
 import sys
 import time
+import threading
 
 # Agregar rutas para imports del core
 current_dir = os.path.dirname(os.path.abspath(__file__))
@@ -45,6 +47,31 @@ class CorePipelineStep5Worker(QThread):
         self.folder_path = folder_path
         self._is_running = True
         self.logger = Logger("CorePipelineStep5Worker")
+        
+        # ⭐ Variables para tracking de tiempo
+        self.start_time = None
+        self.time_update_timer = None
+    
+    def _update_elapsed_time(self):
+        """Actualiza el tiempo transcurrido cada segundo (llamado por threading.Timer)"""
+        if self._is_running and self.start_time:
+            elapsed = time.time() - self.start_time
+            hours = int(elapsed // 3600)
+            minutes = int((elapsed % 3600) // 60)
+            seconds = int(elapsed % 60)
+            time_str = f"{hours:02d}:{minutes:02d}:{seconds:02d}"
+            
+            # Emitir actualización de tiempo
+            self.stats_signal.emit({
+                'time_elapsed': time_str,
+                'time': elapsed
+            })
+            
+            # Programar siguiente actualización
+            if self._is_running:
+                self.time_update_timer = threading.Timer(1.0, self._update_elapsed_time)
+                self.time_update_timer.daemon = True
+                self.time_update_timer.start()
     
     def _emit_pack_progress(self, current: int, total: int):
         """
@@ -59,7 +86,12 @@ class CorePipelineStep5Worker(QThread):
     
     def run(self):
         """Ejecuta el proceso usando funciones del core optimizado"""
-        start_time = time.time()
+        self.start_time = time.time()
+        
+        # ⭐ Iniciar timer de actualización (usando threading.Timer)
+        self.time_update_timer = threading.Timer(1.0, self._update_elapsed_time)
+        self.time_update_timer.daemon = True
+        self.time_update_timer.start()
         
         try:
             self.logger.info("🚀 Iniciando proceso de fusión por contratos")
@@ -231,7 +263,7 @@ class CorePipelineStep5Worker(QThread):
             # ============================================================
             # FASE 5: Resumen final
             # ============================================================
-            elapsed_time = time.time() - start_time
+            elapsed_time = time.time() - self.start_time
             
             self.log_signal.emit("info", "")
             self.log_signal.emit("info", "=" * 50)
@@ -261,7 +293,7 @@ class CorePipelineStep5Worker(QThread):
             self.logger.info(f"⏱️ Tiempo total: {elapsed_time:.2f}s")
             self.logger.info("=" * 50)
             
-            # Emitir estadísticas
+            # Emitir estadísticas finales completas
             stats = {
                 'contratos_unicos': diagnostico['total_contratos_unicos'],
                 'archivos_procesados': diagnostico['total_archivos'],
@@ -270,7 +302,8 @@ class CorePipelineStep5Worker(QThread):
                 'tamano_total_mb': tamano_total,
                 'carpeta_procesar': ruta_procesar,
                 'carpeta_enviar': ruta_enviar,
-                'time': elapsed_time
+                'time': elapsed_time,
+                'time_elapsed': f"{int(elapsed_time // 3600):02d}:{int((elapsed_time % 3600) // 60):02d}:{int(elapsed_time % 60):02d}"
             }
             self.stats_signal.emit(stats)
             
@@ -295,8 +328,16 @@ class CorePipelineStep5Worker(QThread):
             import traceback
             self.logger.error(traceback.format_exc())
             self.error_signal.emit(error_msg)
+        
+        finally:
+            # ⭐ Detener timer al finalizar (éxito o error)
+            self._is_running = False
+            if self.time_update_timer and self.time_update_timer.is_alive():
+                self.time_update_timer.cancel()
     
     def stop(self):
         """Detiene el worker"""
         self._is_running = False
+        if self.time_update_timer and self.time_update_timer.is_alive():
+            self.time_update_timer.cancel()
         self.logger.warning("ℹ️ Worker detenido por el usuario")

@@ -1,19 +1,27 @@
 import os
 import json
 from pathlib import Path
-from tkinter import Tk, filedialog
+from PySide6.QtWidgets import QFileDialog, QApplication
 import sys
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from utils.logger import Logger
 logger = Logger("CorePipeline4_Rename")
 
 def seleccionar_carpeta_madre():
-    """Abre un diálogo para seleccionar la carpeta madre."""
-    root = Tk()
-    root.withdraw()
-    carpeta = filedialog.askdirectory(title="Selecciona la carpeta madre")
-    root.destroy()
-    return carpeta
+    """Abre un diálogo para seleccionar la carpeta madre usando PySide6."""
+    # Verificar si ya existe una instancia de QApplication
+    app = QApplication.instance()
+    if app is None:
+        app = QApplication(sys.argv)
+    
+    carpeta = QFileDialog.getExistingDirectory(
+        None,
+        "Selecciona la carpeta madre",
+        "",
+        QFileDialog.Option.ShowDirsOnly
+    )
+    
+    return carpeta if carpeta else None
 
 def cargar_json(ruta_json):
     """Carga el archivo JSON con manejo robusto de encodings."""

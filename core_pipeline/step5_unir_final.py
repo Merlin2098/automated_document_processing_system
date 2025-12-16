@@ -12,7 +12,7 @@ import json
 import shutil
 import re
 from datetime import datetime
-from tkinter import Tk, filedialog
+from PySide6.QtWidgets import QFileDialog, QApplication
 from typing import List, Dict, Tuple, Optional, Callable
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from threading import Lock
@@ -165,17 +165,24 @@ def seleccionar_carpeta_madre() -> Optional[str]:
         str: Ruta de la carpeta madre o None si se cancela
     """
     logger.info("📂 Abriendo selector de carpeta madre...")
-    root = Tk()
-    root.withdraw()
-    root.attributes('-topmost', True)
-    carpeta = filedialog.askdirectory(
-        title="Selecciona la carpeta madre que contiene las 5 subcarpetas"
+    
+    # Verificar si ya existe una instancia de QApplication
+    app = QApplication.instance()
+    if app is None:
+        app = QApplication(sys.argv)
+    
+    carpeta = QFileDialog.getExistingDirectory(
+        None,
+        "Selecciona la carpeta madre que contiene las 5 subcarpetas",
+        "",
+        QFileDialog.Option.ShowDirsOnly
     )
+    
     if carpeta:
         logger.info(f"✅ Carpeta seleccionada: {carpeta}")
     else:
         logger.warning("⚠️ Usuario canceló la selección")
-    root.destroy()
+    
     return carpeta if carpeta else None
 
 

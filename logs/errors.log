@@ -224,3 +224,7 @@ El archivo debe contener 'rename' en su nombre.
     handle = open(handle, ioargs.mode)
 FileNotFoundError: [Errno 2] No such file or directory: 'C:/Users/ricuculm/OneDrive - Metso/Documents/Laboratorio/Prueba_MatrixRework\\.temp_parquets\\1_Boletas.parquet'
 
+2025-12-16 12:22:07 | ERROR    | workers.SunatDiagnostic        | error                | c:\Users\ricuculm\OneDrive - Metso\Documents\VS Code\7. Matrix_Rework\utils\logger.py:57 | ❌ Errores: 0
+2025-12-16 12:29:09 | ERROR    | workers.SunatDiagnostic        | error                | c:\Users\ricuculm\OneDrive - Metso\Documents\VS Code\7. Matrix_Rework\utils\logger.py:57 | ❌ Errores: 0
+2025-12-16 12:33:53 | ERROR    | workers.SunatDiagnostic        | error                | c:\Users\ricuculm\OneDrive - Metso\Documents\VS Code\7. Matrix_Rework\utils\logger.py:57 | ❌ Errores: 0
+2025-12-16 12:36:10 | ERROR    | workers.SunatRename            | error                | c:\Users\ricuculm\OneDrive - Metso\Documents\VS Code\7. Matrix_Rework\utils\logger.py:57 | ❌ Errores: 0

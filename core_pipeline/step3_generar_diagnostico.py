@@ -391,13 +391,19 @@ def obtener_ruta_carpeta(ruta: Optional[str] = None) -> str:
     if ruta and os.path.isdir(ruta):
         return os.path.normpath(ruta)
     try:
-        import tkinter as tk
-        from tkinter import filedialog
-        root = tk.Tk()
-        root.withdraw()
-        root.attributes('-topmost', True)
-        ruta_seleccionada = filedialog.askdirectory(title="Seleccionar carpeta de trabajo", mustexist=True)
-        root.destroy()
+        from PySide6.QtWidgets import QFileDialog, QApplication
+        
+        app = QApplication.instance()
+        if app is None:
+            app = QApplication(sys.argv)
+        
+        ruta_seleccionada = QFileDialog.getExistingDirectory(
+            None,
+            "Seleccionar carpeta de trabajo",
+            "",
+            QFileDialog.Option.ShowDirsOnly
+        )
+        
         return os.path.normpath(ruta_seleccionada) if ruta_seleccionada else None
     except Exception as e:
         print(f"❌ Error al abrir explorador: {e}")
@@ -411,6 +417,16 @@ def obtener_ruta_carpeta(ruta: Optional[str] = None) -> str:
 if __name__ == "__main__":
     # CRÍTICO: Protección necesaria para multiprocessing en Windows (spawn)
     # Sin esto, cada subproceso intentaría crear más subprocesos infinitamente
+    import multiprocessing
+    import sys
+    
+    # FREEZE_SUPPORT: Esencial para PyInstaller
+    multiprocessing.freeze_support()
+    
+    # Detectar si estamos en entorno empaquetado (frozen)
+    if getattr(sys, 'frozen', False):
+        # Modo PyInstaller: configurar multiprocessing para entorno frozen
+        multiprocessing.set_start_method('spawn', force=True)
     
     ruta_trabajo = obtener_ruta_carpeta()
     if ruta_trabajo:

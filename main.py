@@ -3,6 +3,7 @@ Matrix File Processor v3.0
 Aplicación principal - Punto de entrada
 """
 import sys
+import multiprocessing
 from PySide6.QtWidgets import QApplication
 from PySide6.QtCore import Qt
 
@@ -118,4 +119,19 @@ def main():
 
 
 if __name__ == "__main__":
+    # CRÍTICO: freeze_support() DEBE estar antes de cualquier código
+    # Esto previene bucles infinitos cuando multiprocessing crea subprocesos
+    # en aplicaciones empaquetadas con PyInstaller
+    multiprocessing.freeze_support()
+    
+    # Configurar método de inicio para multiprocessing (solo en Windows)
+    if sys.platform.startswith('win'):
+        # En Windows, forzar 'spawn' para evitar problemas con PyInstaller
+        try:
+            multiprocessing.set_start_method('spawn', force=True)
+        except RuntimeError:
+            # Ya configurado, ignorar
+            pass
+    
+    # Ejecutar aplicación
     main()
