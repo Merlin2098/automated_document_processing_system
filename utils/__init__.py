@@ -8,4 +8,5 @@ __all__ = [
     'json_to_excel',
     'leer_json',
     'theme_manager',
+    'path_helper',
 ]

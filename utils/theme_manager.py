@@ -3,7 +3,6 @@ Theme Manager - Gestión de temas visuales (Refactorizado)
 Carga temas desde archivos JSON en resources/themes/
 """
 import json
-import sys
 from pathlib import Path
 from datetime import datetime
 from PySide6.QtGui import QPalette, QColor
@@ -11,6 +10,8 @@ from PySide6.QtCore import QObject, Signal
 
 # Importar sistema de logging
 from utils.logger import get_logger, log_exception
+# Importar helper de rutas
+from utils.path_helper import get_resource_path
 
 # Obtener logger para este módulo
 logger = get_logger('utils.theme_manager')
@@ -26,9 +27,9 @@ class ThemeManager(QObject):
         
         logger.debug("Inicializando Theme Manager...")
         
-        # Rutas de recursos
-        self.themes_dir = self._get_resource_path("resources/themes")
-        self.config_file = self._get_resource_path("resources/config.json")
+        # Rutas de recursos (usando helper centralizado)
+        self.themes_dir = get_resource_path("resources/themes")
+        self.config_file = get_resource_path("resources/config.json")
         
         logger.debug(f"Directorio de temas: {self.themes_dir}")
         logger.debug(f"Archivo de configuración: {self.config_file}")
@@ -43,27 +44,6 @@ class ThemeManager(QObject):
         self._load_config()
         
         logger.info(f"✅ Theme Manager inicializado - Tema activo: {self.current_theme_name}")
-    
-    def _get_resource_path(self, relative_path: str) -> Path:
-        """
-        Obtiene la ruta correcta para desarrollo y PyInstaller
-        
-        Args:
-            relative_path: Ruta relativa desde la raíz del proyecto
-            
-        Returns:
-            Path absoluto al recurso
-        """
-        if getattr(sys, 'frozen', False):
-            # Ejecutable empaquetado con PyInstaller
-            base_path = Path(sys._MEIPASS)
-            logger.debug(f"Modo PyInstaller - Base path: {base_path}")
-        else:
-            # Modo desarrollo
-            base_path = Path(__file__).parent.parent
-            logger.debug(f"Modo desarrollo - Base path: {base_path}")
-        
-        return base_path / relative_path
     
     def _load_themes(self):
         """Carga todos los temas disponibles desde resources/themes/"""

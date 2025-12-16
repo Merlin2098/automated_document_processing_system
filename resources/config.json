@@ -1,6 +1,6 @@
 {
   "theme": "dark",
-  "last_modified": "2025-12-09T23:42:30.676679",
+  "last_modified": "2025-12-16T10:16:06.683586",
   "preferences": {
     "sounds": {
       "enabled": true,
@@ -9,9 +9,9 @@
       "sound_warning": false
     },
     "performance": {
-      "workers": 4,
-      "console_interval": 4,
-      "batch_size": 100
+      "workers": 7,
+      "console_interval": 1,
+      "batch_size": 200
     },
     "logs": {
       "folder": "",

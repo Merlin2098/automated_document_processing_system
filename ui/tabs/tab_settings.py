@@ -5,6 +5,7 @@ import datetime
 import json
 import os
 import psutil
+from pathlib import Path
 from PySide6.QtWidgets import (
     QWidget, QVBoxLayout, QHBoxLayout, QLabel, 
     QPushButton, QGroupBox, QRadioButton, QCheckBox,
@@ -12,6 +13,9 @@ from PySide6.QtWidgets import (
 )
 from PySide6.QtCore import Signal, Slot, Qt
 from PySide6.QtGui import QColor
+
+# Importar helper de rutas
+from utils.path_helper import get_resource_path
 
 
 class TabSettings(QWidget):
@@ -25,7 +29,7 @@ class TabSettings(QWidget):
     def __init__(self, theme_manager, parent=None):
         super().__init__(parent)
         self.theme_manager = theme_manager
-        self.config_file = "resources/config.json"
+        self.config_file = get_resource_path("resources/config.json")
         
         self._init_ui()
         self._load_settings()
@@ -325,7 +329,7 @@ Todos los derechos reservados.
     def _load_settings(self):
         """Carga la configuración actual desde config.json"""
         try:
-            if os.path.exists(self.config_file):
+            if self.config_file.exists():
                 with open(self.config_file, 'r', encoding='utf-8') as f:
                     config = json.load(f)
                 
@@ -354,7 +358,7 @@ Todos los derechos reservados.
         try:
             # Cargar configuración existente
             config = {}
-            if os.path.exists(self.config_file):
+            if self.config_file.exists():
                 with open(self.config_file, 'r', encoding='utf-8') as f:
                     config = json.load(f)
             
