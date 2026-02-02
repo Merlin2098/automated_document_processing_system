@@ -4,10 +4,10 @@
 
 ## Executive Summary
 
-- **Total Python modules**: 33
-- **Project entry points**: 33
-- **Configuration files**: 11
-- **Unique external libraries**: 19
+- **Total Python modules**: 51
+- **Project entry points**: 51
+- **Configuration files**: 12
+- **Unique external libraries**: 33
 
 ---
 
@@ -24,209 +24,333 @@ These modules are the **main scripts** that initiate execution (they are not imp
 
 **Direct dependencies**: 7 (0 modules, 0 configs, 7 libraries)
 
-- **External libraries**: `collections`, `pathspec`, `os`, `pathlib`, `sys` (+2 more)
+- **External libraries**: `pathlib`, `re`, `os`, `ast`, `sys` (+2 more)
 
 ### `agent_tools.treemap`
 
 **Direct dependencies**: 3 (0 modules, 0 configs, 3 libraries)
 
-- **External libraries**: `pathspec`, `os`, `sys`
+- **External libraries**: `sys`, `os`, `pathspec`
 
-### `etl_core.__init__`
+### `core_pipeline.step1_generar`
 
-**Direct dependencies**: 0 (0 modules, 0 configs, 0 libraries)
+**Direct dependencies**: 4 (1 modules, 0 configs, 3 libraries)
 
+- **Internal modules**: `utils`
+- **External libraries**: `sys`, `PySide6`, `os`
 
-### `etl_core.step1`
+### `core_pipeline.step2_mover`
 
-**Direct dependencies**: 12 (4 modules, 1 configs, 7 libraries)
+**Direct dependencies**: 8 (1 modules, 0 configs, 7 libraries)
 
-- **Internal modules**: `utils`, `utils`, `utils`, `utils`
-- **Config files**: `data_learning_bronzetosilver.yaml`
-- **External libraries**: `traceback`, `pandas`, `polars`, `pathlib`, `sys` (+2 more)
+- **Internal modules**: `utils`
+- **External libraries**: `datetime`, `pathlib`, `PyPDF2`, `re`, `os` (+2 more)
 
-### `etl_core.step2`
+### `core_pipeline.step3_generar_diagnostico`
 
-**Direct dependencies**: 9 (4 modules, 1 configs, 4 libraries)
+**Direct dependencies**: 19 (7 modules, 0 configs, 12 libraries)
 
-- **Internal modules**: `utils`, `utils`, `utils`, `utils`
-- **Config files**: `data_learning_silvertogold.yaml`
-- **External libraries**: `pathlib`, `traceback`, `sys`, `polars`
+- **Internal modules**: `utils`, `extractores`, `extractores`, `extractores`, `extractores`, `extractores`, `extractores`
+- **External libraries**: `re`, `openpyxl`, `os`, `typing`, `duckdb` (+7 more)
 
-### `etl_forms.__init__`
+### `core_pipeline.step4_rename`
 
-**Direct dependencies**: 0 (0 modules, 0 configs, 0 libraries)
+**Direct dependencies**: 6 (1 modules, 0 configs, 5 libraries)
 
+- **Internal modules**: `utils`
+- **External libraries**: `pathlib`, `os`, `json`, `sys`, `PySide6`
 
-### `etl_forms.step1_forms`
+### `core_pipeline.step5_unir_final`
 
-**Direct dependencies**: 11 (4 modules, 1 configs, 6 libraries)
+**Direct dependencies**: 18 (2 modules, 2 configs, 14 libraries)
 
-- **Internal modules**: `utils`, `utils`, `utils`, `utils`
-- **Config files**: `forms_step1.yaml`
-- **External libraries**: `traceback`, `pandas`, `pathlib`, `sys`, `numpy` (+1 more)
+- **Internal modules**: `utils`, `extractores`
+- **Config files**: `diagnostico_merge_{timestamp}.json`, `     ├── diagnostico_merge_{timestamp}.json`
+- **External libraries**: `datetime`, `PyPDF2`, `re`, `pyarrow`, `os` (+9 more)
 
-### `etl_forms.step2_forms`
+### `core_sunat.sunat`
 
-**Direct dependencies**: 13 (8 modules, 2 configs, 3 libraries)
+**Direct dependencies**: 10 (2 modules, 0 configs, 8 libraries)
 
-- **Internal modules**: `utils`, `utils`, `utils`, `utils`, `utils`, `utils`, `utils`, `utils`
-- **Config files**: `Por favor, verifica los datos o actualiza el esquema en likert_scale.json`, `forms_step2.yaml`
-- **External libraries**: `pathlib`, `traceback`, `sys`
+- **Internal modules**: `extractores`, `utils`
+- **External libraries**: `datetime`, `pathlib`, `tkinter`, `openpyxl`, `os` (+3 more)
 
-### `etl_ita_subordinates.__init__`
+### `core_sunat.sunat_duplicados`
 
-**Direct dependencies**: 0 (0 modules, 0 configs, 0 libraries)
+**Direct dependencies**: 9 (1 modules, 0 configs, 8 libraries)
 
+- **Internal modules**: `utils`
+- **External libraries**: `tkinter`, `re`, `os`, `typing`, `time` (+3 more)
 
-### `etl_ita_subordinates.step1_ita`
+### `core_sunat.sunat_rename`
 
-**Direct dependencies**: 11 (6 modules, 1 configs, 4 libraries)
+**Direct dependencies**: 9 (1 modules, 0 configs, 8 libraries)
 
-- **Internal modules**: `utils`, `utils`, `utils`, `utils`, `utils`, `utils`
-- **Config files**: `step1_ita.yaml`
-- **External libraries**: `pathlib`, `traceback`, `sys`, `datetime`
+- **Internal modules**: `utils`
+- **External libraries**: `datetime`, `pathlib`, `tkinter`, `os`, `json` (+3 more)
 
-### `etl_ita_subordinates.step1_managers`
+### `core_tools.dividir_pdf`
 
-**Direct dependencies**: 11 (6 modules, 1 configs, 4 libraries)
+**Direct dependencies**: 5 (1 modules, 0 configs, 4 libraries)
 
-- **Internal modules**: `utils`, `utils`, `utils`, `utils`, `utils`, `utils`
-- **Config files**: `step1_managers.yaml`
-- **External libraries**: `pathlib`, `traceback`, `sys`, `datetime`
+- **Internal modules**: `utils`
+- **External libraries**: `traceback`, `sys`, `PyPDF2`, `os`
 
-### `etl_ita_subordinates.step2_ita`
-
-**Direct dependencies**: 12 (8 modules, 1 configs, 3 libraries)
-
-- **Internal modules**: `utils`, `utils`, `utils`, `utils`, `utils`, `utils`, `utils`, `utils`
-- **Config files**: `step2_ita.yaml`
-- **External libraries**: `pathlib`, `traceback`, `sys`
-
-### `etl_psico.__init__`
-
-**Direct dependencies**: 0 (0 modules, 0 configs, 0 libraries)
-
-
-### `etl_psico.step1_psico`
-
-**Direct dependencies**: 11 (6 modules, 1 configs, 4 libraries)
-
-- **Internal modules**: `utils`, `utils`, `utils`, `utils`, `utils`, `utils`
-- **Config files**: `step1_seguridad_psicologica.yaml`
-- **External libraries**: `pathlib`, `traceback`, `sys`, `datetime`
-
-### `etl_psico.step2_psico`
-
-**Direct dependencies**: 12 (8 modules, 1 configs, 3 libraries)
-
-- **Internal modules**: `utils`, `utils`, `utils`, `utils`, `utils`, `utils`, `utils`, `utils`
-- **Config files**: `step2_seguridad_psicologica.yaml`
-- **External libraries**: `pathlib`, `traceback`, `sys`
-
-### `utils.__init__`
-
-**Direct dependencies**: 18 (18 modules, 0 configs, 0 libraries)
-
-- **Internal modules**: `core`, `core`, `utils`, `utils`, `etl`, `etl`, `etl`, `etl`, `etl`, `formatting`, `ui`, `utils`, `utils`, `utils`, `utils`, `utils`, `utils`, `utils`
-
-### `utils.core.__init__`
-
-**Direct dependencies**: 2 (2 modules, 0 configs, 0 libraries)
-
-- **Internal modules**: `utils`, `utils`
-
-### `utils.core.config_loader`
-
-**Direct dependencies**: 5 (0 modules, 1 configs, 4 libraries)
-
-- **Config files**: `pipeline.sql`
-- **External libraries**: `json`, `typing`, `pathlib`, `yaml`
-
-### `utils.core.path_manager`
-
-**Direct dependencies**: 4 (0 modules, 1 configs, 3 libraries)
-
-- **Config files**: `forms_step1.yaml`
-- **External libraries**: `typing`, `os`, `pathlib`
-
-### `utils.etl.__init__`
-
-**Direct dependencies**: 3 (3 modules, 0 configs, 0 libraries)
-
-- **Internal modules**: `utils`, `utils`, `utils`
-
-### `utils.etl.converters.__init__`
-
-**Direct dependencies**: 2 (2 modules, 0 configs, 0 libraries)
-
-- **Internal modules**: `utils`, `utils`
-
-### `utils.etl.converters.excel_to_parquet`
+### `extractores.__init__`
 
 **Direct dependencies**: 5 (0 modules, 0 configs, 5 libraries)
 
-- **External libraries**: `pyarrow`, `openpyxl`, `typing`, `pathlib`, `datetime`
+- **External libraries**: `openpyxl`, `subprocess`, `typing`, `json`, `sys`
 
-### `utils.etl.converters.parquet_to_excel`
+### `extractores.contract_number_extractor`
 
-**Direct dependencies**: 3 (0 modules, 0 configs, 3 libraries)
+**Direct dependencies**: 6 (1 modules, 0 configs, 5 libraries)
 
-- **External libraries**: `typing`, `pathlib`, `polars`
+- **Internal modules**: `utils`
+- **External libraries**: `pdfplumber`, `re`, `os`, `typing`, `sys`
 
-### `utils.etl.database.__init__`
-
-**Direct dependencies**: 2 (2 modules, 0 configs, 0 libraries)
-
-- **Internal modules**: `utils`, `utils`
-
-### `utils.etl.database.duckdb_manager`
+### `extractores.extractor_afp`
 
 **Direct dependencies**: 4 (0 modules, 0 configs, 4 libraries)
 
-- **External libraries**: `typing`, `pathlib`, `polars`, `duckdb`
+- **External libraries**: `re`, `pathlib`, `pdfplumber`, `typing`
 
-### `utils.etl.database.sql_query_loader`
+### `extractores.extractor_boleta`
 
-**Direct dependencies**: 2 (0 modules, 0 configs, 2 libraries)
+**Direct dependencies**: 4 (0 modules, 0 configs, 4 libraries)
 
-- **External libraries**: `typing`, `pathlib`
+- **External libraries**: `re`, `pathlib`, `PyPDF2`, `typing`
 
-### `utils.etl.validators.__init__`
+### `extractores.extractor_quinta`
+
+**Direct dependencies**: 4 (0 modules, 0 configs, 4 libraries)
+
+- **External libraries**: `re`, `pathlib`, `pdfplumber`, `typing`
+
+### `extractores.extractor_sunat`
+
+**Direct dependencies**: 4 (0 modules, 0 configs, 4 libraries)
+
+- **External libraries**: `re`, `pathlib`, `pdfplumber`, `typing`
+
+### `generar_onedir`
+
+**Direct dependencies**: 14 (0 modules, 5 configs, 9 libraries)
+
+- **Config files**: `   ✅ config.json`, `config.json`, `*.json`, `theme_dark.json`, `theme_light.json`
+- **External libraries**: `pkg_resources`, `pathlib`, `os`, `subprocess`, `shutil` (+4 more)
+
+### `hooks.__init__`
+
+**Direct dependencies**: 0 (0 modules, 0 configs, 0 libraries)
+
+
+### `hooksi_rth_multiprocessing`
+
+**Direct dependencies**: 3 (0 modules, 0 configs, 3 libraries)
+
+- **External libraries**: `sys`, `os`, `multiprocessing`
+
+### `main`
+
+**Direct dependencies**: 6 (3 modules, 0 configs, 3 libraries)
+
+- **Internal modules**: `utils`, `ui`, `ui`
+- **External libraries**: `sys`, `PySide6`, `multiprocessing`
+
+### `ui.__init__`
 
 **Direct dependencies**: 1 (1 modules, 0 configs, 0 libraries)
 
-- **Internal modules**: `utils`
+- **Internal modules**: `main_window`
 
-### `utils.etl.validators.data_validator`
+### `ui.main_window`
 
-**Direct dependencies**: 2 (0 modules, 0 configs, 2 libraries)
+**Direct dependencies**: 10 (8 modules, 0 configs, 2 libraries)
 
-- **External libraries**: `typing`, `datetime`
+- **Internal modules**: `utils`, `ui`, `ui`, `utils`, `ui`, `ui`, `ui`, `ui`
+- **External libraries**: `PySide6`, `os`
 
-### `utils.formatting.__init__`
-
-**Direct dependencies**: 1 (1 modules, 0 configs, 0 libraries)
-
-- **Internal modules**: `utils`
-
-### `utils.formatting.excel_formatter`
+### `ui.splash_screen`
 
 **Direct dependencies**: 2 (0 modules, 0 configs, 2 libraries)
 
-- **External libraries**: `typing`, `openpyxl`
+- **External libraries**: `PySide6`, `os`
 
-### `utils.ui.__init__`
+### `ui.tabs.__init__`
+
+**Direct dependencies**: 4 (4 modules, 0 configs, 0 libraries)
+
+- **Internal modules**: `tab_quick_tools`, `tab_pipeline_core`, `tab_pipeline_sunat`, `tab_settings`
+
+### `ui.tabs.tab_pipeline_core`
+
+**Direct dependencies**: 9 (7 modules, 0 configs, 2 libraries)
+
+- **Internal modules**: `ui`, `ui`, `ui`, `ui`, `ui`, `ui`, `ui`
+- **External libraries**: `PySide6`, `os`
+
+### `ui.tabs.tab_pipeline_sunat`
+
+**Direct dependencies**: 10 (5 modules, 2 configs, 3 libraries)
+
+- **Internal modules**: `ui`, `ui`, `ui`, `ui`, `ui`
+- **Config files**: `config.json`, `Carga configuración desde config.json`
+- **External libraries**: `json`, `PySide6`, `os`
+
+### `ui.tabs.tab_quick_tools`
+
+**Direct dependencies**: 5 (2 modules, 0 configs, 3 libraries)
+
+- **Internal modules**: `ui`, `ui`
+- **External libraries**: `sys`, `PySide6`, `os`
+
+### `ui.tabs.tab_settings`
+
+**Direct dependencies**: 9 (1 modules, 2 configs, 6 libraries)
+
+- **Internal modules**: `utils`
+- **Config files**: `config.json`, `Carga la configuración actual desde config.json`
+- **External libraries**: `datetime`, `pathlib`, `psutil`, `os`, `json` (+1 more)
+
+### `ui.widgets.__init__`
+
+**Direct dependencies**: 4 (4 modules, 0 configs, 0 libraries)
+
+- **Internal modules**: `monitoring_panel`, `console_widget`, `file_selector`, `stepper_widget`
+
+### `ui.widgets.console_widget`
+
+**Direct dependencies**: 2 (0 modules, 0 configs, 2 libraries)
+
+- **External libraries**: `datetime`, `PySide6`
+
+### `ui.widgets.file_selector`
+
+**Direct dependencies**: 1 (0 modules, 0 configs, 1 libraries)
+
+- **External libraries**: `PySide6`
+
+### `ui.widgets.monitoring_panel`
+
+**Direct dependencies**: 2 (0 modules, 0 configs, 2 libraries)
+
+- **External libraries**: `datetime`, `PySide6`
+
+### `ui.widgets.stepper_widget`
+
+**Direct dependencies**: 1 (0 modules, 0 configs, 1 libraries)
+
+- **External libraries**: `PySide6`
+
+### `ui.workers.__init__`
+
+**Direct dependencies**: 9 (9 modules, 0 configs, 0 libraries)
+
+- **Internal modules**: `pdf_splitter_worker`, `sunat_diagnostic_worker`, `sunat_rename_worker`, `sunat_duplicates_worker`, `core_pipeline_step1_worker`, `core_pipeline_step2_worker`, `core_pipeline_step3_worker`, `core_pipeline_step4_worker`, `core_pipeline_step5_worker`
+
+### `ui.workers.core_pipeline_step1_worker`
+
+**Direct dependencies**: 3 (1 modules, 0 configs, 2 libraries)
+
+- **Internal modules**: `utils`
+- **External libraries**: `PySide6`, `os`
+
+### `ui.workers.core_pipeline_step2_worker`
+
+**Direct dependencies**: 8 (1 modules, 0 configs, 7 libraries)
+
+- **Internal modules**: `utils`
+- **External libraries**: `traceback`, `datetime`, `PyPDF2`, `os`, `sys` (+2 more)
+
+### `ui.workers.core_pipeline_step3_worker`
+
+**Direct dependencies**: 7 (1 modules, 0 configs, 6 libraries)
+
+- **Internal modules**: `utils`
+- **External libraries**: `traceback`, `os`, `time`, `sys`, `core_pipeline` (+1 more)
+
+### `ui.workers.core_pipeline_step4_worker`
+
+**Direct dependencies**: 9 (1 modules, 0 configs, 8 libraries)
+
+- **Internal modules**: `utils`
+- **External libraries**: `traceback`, `os`, `time`, `sys`, `concurrent` (+3 more)
+
+### `ui.workers.core_pipeline_step5_worker`
+
+**Direct dependencies**: 10 (1 modules, 0 configs, 9 libraries)
+
+- **Internal modules**: `utils`
+- **External libraries**: `traceback`, `PyPDF2`, `os`, `pandas`, `time` (+4 more)
+
+### `ui.workers.pdf_splitter_worker`
+
+**Direct dependencies**: 8 (1 modules, 0 configs, 7 libraries)
+
+- **Internal modules**: `utils`
+- **External libraries**: `datetime`, `PyPDF2`, `core_tools`, `os`, `sys` (+2 more)
+
+### `ui.workers.sunat_diagnostic_worker`
+
+**Direct dependencies**: 6 (1 modules, 0 configs, 5 libraries)
+
+- **Internal modules**: `utils`
+- **External libraries**: `os`, `core_sunat`, `sys`, `traceback`, `PySide6`
+
+### `ui.workers.sunat_duplicates_worker`
+
+**Direct dependencies**: 7 (1 modules, 0 configs, 6 libraries)
+
+- **Internal modules**: `utils`
+- **External libraries**: `os`, `core_sunat`, `time`, `sys`, `traceback` (+1 more)
+
+### `ui.workers.sunat_rename_worker`
+
+**Direct dependencies**: 7 (1 modules, 0 configs, 6 libraries)
+
+- **Internal modules**: `utils`
+- **External libraries**: `os`, `core_sunat`, `time`, `sys`, `traceback` (+1 more)
+
+### `utils.__init__`
 
 **Direct dependencies**: 1 (1 modules, 0 configs, 0 libraries)
 
-- **Internal modules**: `utils`
+- **Internal modules**: `excel_converter`
 
-### `utils.ui.file_dialog_helper`
+### `utils.excel_converter`
 
 **Direct dependencies**: 5 (0 modules, 0 configs, 5 libraries)
 
-- **External libraries**: `tkinter`, `typing`, `os`, `pathlib`, `sys`
+- **External libraries**: `openpyxl`, `subprocess`, `typing`, `json`, `sys`
+
+### `utils.logger`
+
+**Direct dependencies**: 6 (1 modules, 0 configs, 5 libraries)
+
+- **Internal modules**: `utils`
+- **External libraries**: `pathlib`, `typing`, `sys`, `logging`, `traceback`
+
+### `utils.logger_config`
+
+**Direct dependencies**: 5 (0 modules, 0 configs, 5 libraries)
+
+- **External libraries**: `pathlib`, `os`, `time`, `platform`, `logging`
+
+### `utils.path_helper`
+
+**Direct dependencies**: 4 (0 modules, 2 configs, 2 libraries)
+
+- **Config files**: `config.json`, `theme_dark.json`
+- **External libraries**: `sys`, `pathlib`
+
+### `utils.theme_manager`
+
+**Direct dependencies**: 10 (2 modules, 4 configs, 4 libraries)
+
+- **Internal modules**: `utils`, `utils`
+- **Config files**: `config.json`, `theme_*.json`, `Carga la configuración del usuario desde config.json`, `Guarda la configuración del usuario en config.json`
+- **External libraries**: `PySide6`, `json`, `datetime`, `pathlib`
 
 ---
 
@@ -250,370 +374,614 @@ __init__
 
 ```
 agent_tools.analyze_dependencies
-├── 🔗 collections
-├── 🔗 pathspec
-├── 🔗 os
 ├── 🔗 pathlib
-├── 🔗 sys
+├── 🔗 re
+├── 🔗 os
 ├── 🔗 ast
-└── 🔗 re
+├── 🔗 sys
+├── 🔗 pathspec
+└── 🔗 collections
 ```
 
 ### agent_tools.treemap
 
 ```
 agent_tools.treemap
-├── 🔗 pathspec
+├── 🔗 sys
 ├── 🔗 os
-└── 🔗 sys
+└── 🔗 pathspec
 ```
 
-### etl_core.__init__
+### core_pipeline.step1_generar
 
 ```
-etl_core.__init__
-
+core_pipeline.step1_generar
+├── 📦 utils
+├── 🔗 sys
+├── 🔗 PySide6
+└── 🔗 os
 ```
 
-### etl_core.step1
+### core_pipeline.step2_mover
 
 ```
-etl_core.step1
+core_pipeline.step2_mover
 ├── 📦 utils
+├── 🔗 datetime
+├── 🔗 pathlib
+├── 🔗 PyPDF2
+├── 🔗 re
+├── 🔗 os
+├── 🔗 sys
+└── 🔗 PySide6
+```
+
+### core_pipeline.step3_generar_diagnostico
+
+```
+core_pipeline.step3_generar_diagnostico
 ├── 📦 utils
-├── 📦 utils
-├── 📦 utils
-├── 📄 data_learning_bronzetosilver.yaml
-├── 🔗 traceback
+├── 📦 extractores
+├── 📦 extractores
+├── 📦 extractores
+├── 📦 extractores
+├── 📦 extractores
+├── 📦 extractores
+├── 🔗 re
+├── 🔗 openpyxl
+├── 🔗 os
+├── 🔗 typing
+├── 🔗 duckdb
+├── 🔗 gc
+├── 🔗 sys
+├── 🔗 time
 ├── 🔗 pandas
-├── 🔗 polars
-├── 🔗 pathlib
-├── 🔗 sys
-├── 🔗 numpy
-└── 🔗 re
-```
-
-### etl_core.step2
-
-```
-etl_core.step2
-├── 📦 utils
-├── 📦 utils
-├── 📦 utils
-├── 📦 utils
-├── 📄 data_learning_silvertogold.yaml
-├── 🔗 pathlib
 ├── 🔗 traceback
+├── 🔗 PySide6
+└── 🔗 multiprocessing
+```
+
+### core_pipeline.step4_rename
+
+```
+core_pipeline.step4_rename
+├── 📦 utils
+├── 🔗 pathlib
+├── 🔗 os
+├── 🔗 json
 ├── 🔗 sys
-└── 🔗 polars
+└── 🔗 PySide6
 ```
 
-### etl_forms.__init__
+### core_pipeline.step5_unir_final
 
 ```
-etl_forms.__init__
-
-```
-
-### etl_forms.step1_forms
-
-```
-etl_forms.step1_forms
+core_pipeline.step5_unir_final
 ├── 📦 utils
-├── 📦 utils
-├── 📦 utils
-├── 📦 utils
-├── 📄 forms_step1.yaml
-├── 🔗 traceback
+├── 📦 extractores
+├── 📄 diagnostico_merge_{timestamp}.json
+├── 📄      ├── diagnostico_merge_{timestamp}.json
+├── 🔗 datetime
+├── 🔗 PyPDF2
+├── 🔗 re
+├── 🔗 pyarrow
+├── 🔗 os
+├── 🔗 typing
+├── 🔗 shutil
+├── 🔗 json
+├── 🔗 sys
 ├── 🔗 pandas
-├── 🔗 pathlib
-├── 🔗 sys
-├── 🔗 numpy
-└── 🔗 datetime
-```
-
-### etl_forms.step2_forms
-
-```
-etl_forms.step2_forms
-├── 📦 utils
-├── 📦 utils
-├── 📦 utils
-├── 📦 utils
-├── 📦 utils
-├── 📦 utils
-├── 📦 utils
-├── 📦 utils
-├── 📄 Por favor, verifica los datos o actualiza el esquema en likert_scale.json
-├── 📄 forms_step2.yaml
-├── 🔗 pathlib
+├── 🔗 concurrent
 ├── 🔗 traceback
+├── 🔗 PySide6
+└── 🔗 threading
+```
+
+### core_sunat.sunat
+
+```
+core_sunat.sunat
+├── 📦 extractores
+├── 📦 utils
+├── 🔗 datetime
+├── 🔗 pathlib
+├── 🔗 tkinter
+├── 🔗 openpyxl
+├── 🔗 os
+├── 🔗 sys
+├── 🔗 concurrent
+└── 🔗 traceback
+```
+
+### core_sunat.sunat_duplicados
+
+```
+core_sunat.sunat_duplicados
+├── 📦 utils
+├── 🔗 tkinter
+├── 🔗 re
+├── 🔗 os
+├── 🔗 typing
+├── 🔗 time
+├── 🔗 sys
+├── 🔗 collections
+└── 🔗 traceback
+```
+
+### core_sunat.sunat_rename
+
+```
+core_sunat.sunat_rename
+├── 📦 utils
+├── 🔗 datetime
+├── 🔗 pathlib
+├── 🔗 tkinter
+├── 🔗 os
+├── 🔗 json
+├── 🔗 sys
+├── 🔗 time
+└── 🔗 traceback
+```
+
+### core_tools.dividir_pdf
+
+```
+core_tools.dividir_pdf
+├── 📦 utils
+├── 🔗 traceback
+├── 🔗 sys
+├── 🔗 PyPDF2
+└── 🔗 os
+```
+
+### extractores.__init__
+
+```
+extractores.__init__
+├── 🔗 openpyxl
+├── 🔗 subprocess
+├── 🔗 typing
+├── 🔗 json
 └── 🔗 sys
 ```
 
-### etl_ita_subordinates.__init__
+### extractores.contract_number_extractor
 
 ```
-etl_ita_subordinates.__init__
-
-```
-
-### etl_ita_subordinates.step1_ita
-
-```
-etl_ita_subordinates.step1_ita
+extractores.contract_number_extractor
 ├── 📦 utils
-├── 📦 utils
-├── 📦 utils
-├── 📦 utils
-├── 📦 utils
-├── 📦 utils
-├── 📄 step1_ita.yaml
-├── 🔗 pathlib
-├── 🔗 traceback
-├── 🔗 sys
-└── 🔗 datetime
-```
-
-### etl_ita_subordinates.step1_managers
-
-```
-etl_ita_subordinates.step1_managers
-├── 📦 utils
-├── 📦 utils
-├── 📦 utils
-├── 📦 utils
-├── 📦 utils
-├── 📦 utils
-├── 📄 step1_managers.yaml
-├── 🔗 pathlib
-├── 🔗 traceback
-├── 🔗 sys
-└── 🔗 datetime
-```
-
-### etl_ita_subordinates.step2_ita
-
-```
-etl_ita_subordinates.step2_ita
-├── 📦 utils
-├── 📦 utils
-├── 📦 utils
-├── 📦 utils
-├── 📦 utils
-├── 📦 utils
-├── 📦 utils
-├── 📦 utils
-├── 📄 step2_ita.yaml
-├── 🔗 pathlib
-├── 🔗 traceback
+├── 🔗 pdfplumber
+├── 🔗 re
+├── 🔗 os
+├── 🔗 typing
 └── 🔗 sys
 ```
 
-### etl_psico.__init__
+### extractores.extractor_afp
 
 ```
-etl_psico.__init__
-
-```
-
-### etl_psico.step1_psico
-
-```
-etl_psico.step1_psico
-├── 📦 utils
-├── 📦 utils
-├── 📦 utils
-├── 📦 utils
-├── 📦 utils
-├── 📦 utils
-├── 📄 step1_seguridad_psicologica.yaml
+extractores.extractor_afp
+├── 🔗 re
 ├── 🔗 pathlib
-├── 🔗 traceback
+├── 🔗 pdfplumber
+└── 🔗 typing
+```
+
+### extractores.extractor_boleta
+
+```
+extractores.extractor_boleta
+├── 🔗 re
+├── 🔗 pathlib
+├── 🔗 PyPDF2
+└── 🔗 typing
+```
+
+### extractores.extractor_quinta
+
+```
+extractores.extractor_quinta
+├── 🔗 re
+├── 🔗 pathlib
+├── 🔗 pdfplumber
+└── 🔗 typing
+```
+
+### extractores.extractor_sunat
+
+```
+extractores.extractor_sunat
+├── 🔗 re
+├── 🔗 pathlib
+├── 🔗 pdfplumber
+└── 🔗 typing
+```
+
+### generar_onedir
+
+```
+generar_onedir
+├── 📄    ✅ config.json
+├── 📄 config.json
+├── 📄 *.json
+├── 📄 theme_dark.json
+├── 📄 theme_light.json
+├── 🔗 pkg_resources
+├── 🔗 pathlib
+├── 🔗 os
+├── 🔗 subprocess
+├── 🔗 shutil
 ├── 🔗 sys
-└── 🔗 datetime
+├── 🔗 time
+├── 🔗 threading
+└── 🔗 traceback
 ```
 
-### etl_psico.step2_psico
+### hooks.__init__
 
 ```
-etl_psico.step2_psico
+hooks.__init__
+
+```
+
+### hooksi_rth_multiprocessing
+
+```
+hooksi_rth_multiprocessing
+├── 🔗 sys
+├── 🔗 os
+└── 🔗 multiprocessing
+```
+
+### main
+
+```
+main
 ├── 📦 utils
+├── 📦 ui
+├── 📦 ui
+├── 🔗 sys
+├── 🔗 PySide6
+└── 🔗 multiprocessing
+```
+
+### ui.__init__
+
+```
+ui.__init__
+└── 📦 main_window
+```
+
+### ui.main_window
+
+```
+ui.main_window
 ├── 📦 utils
+├── 📦 ui
+├── 📦 ui
 ├── 📦 utils
+├── 📦 ui
+├── 📦 ui
+├── 📦 ui
+├── 📦 ui
+├── 🔗 PySide6
+└── 🔗 os
+```
+
+### ui.splash_screen
+
+```
+ui.splash_screen
+├── 🔗 PySide6
+└── 🔗 os
+```
+
+### ui.tabs.__init__
+
+```
+ui.tabs.__init__
+├── 📦 tab_quick_tools
+├── 📦 tab_pipeline_core
+├── 📦 tab_pipeline_sunat
+└── 📦 tab_settings
+```
+
+### ui.tabs.tab_pipeline_core
+
+```
+ui.tabs.tab_pipeline_core
+├── 📦 ui
+├── 📦 ui
+├── 📦 ui
+├── 📦 ui
+├── 📦 ui
+├── 📦 ui
+├── 📦 ui
+├── 🔗 PySide6
+└── 🔗 os
+```
+
+### ui.tabs.tab_pipeline_sunat
+
+```
+ui.tabs.tab_pipeline_sunat
+├── 📦 ui
+├── 📦 ui
+├── 📦 ui
+├── 📦 ui
+├── 📦 ui
+├── 📄 config.json
+├── 📄 Carga configuración desde config.json
+├── 🔗 json
+├── 🔗 PySide6
+└── 🔗 os
+```
+
+### ui.tabs.tab_quick_tools
+
+```
+ui.tabs.tab_quick_tools
+├── 📦 ui
+├── 📦 ui
+├── 🔗 sys
+├── 🔗 PySide6
+└── 🔗 os
+```
+
+### ui.tabs.tab_settings
+
+```
+ui.tabs.tab_settings
 ├── 📦 utils
-├── 📦 utils
-├── 📦 utils
-├── 📦 utils
-├── 📦 utils
-├── 📄 step2_seguridad_psicologica.yaml
+├── 📄 config.json
+├── 📄 Carga la configuración actual desde config.json
+├── 🔗 datetime
 ├── 🔗 pathlib
+├── 🔗 psutil
+├── 🔗 os
+├── 🔗 json
+└── 🔗 PySide6
+```
+
+### ui.widgets.__init__
+
+```
+ui.widgets.__init__
+├── 📦 monitoring_panel
+├── 📦 console_widget
+├── 📦 file_selector
+└── 📦 stepper_widget
+```
+
+### ui.widgets.console_widget
+
+```
+ui.widgets.console_widget
+├── 🔗 datetime
+└── 🔗 PySide6
+```
+
+### ui.widgets.file_selector
+
+```
+ui.widgets.file_selector
+└── 🔗 PySide6
+```
+
+### ui.widgets.monitoring_panel
+
+```
+ui.widgets.monitoring_panel
+├── 🔗 datetime
+└── 🔗 PySide6
+```
+
+### ui.widgets.stepper_widget
+
+```
+ui.widgets.stepper_widget
+└── 🔗 PySide6
+```
+
+### ui.workers.__init__
+
+```
+ui.workers.__init__
+├── 📦 pdf_splitter_worker
+├── 📦 sunat_diagnostic_worker
+├── 📦 sunat_rename_worker
+├── 📦 sunat_duplicates_worker
+├── 📦 core_pipeline_step1_worker
+├── 📦 core_pipeline_step2_worker
+├── 📦 core_pipeline_step3_worker
+├── 📦 core_pipeline_step4_worker
+└── 📦 core_pipeline_step5_worker
+```
+
+### ui.workers.core_pipeline_step1_worker
+
+```
+ui.workers.core_pipeline_step1_worker
+├── 📦 utils
+├── 🔗 PySide6
+└── 🔗 os
+```
+
+### ui.workers.core_pipeline_step2_worker
+
+```
+ui.workers.core_pipeline_step2_worker
+├── 📦 utils
 ├── 🔗 traceback
-└── 🔗 sys
+├── 🔗 datetime
+├── 🔗 PyPDF2
+├── 🔗 os
+├── 🔗 sys
+├── 🔗 core_pipeline
+└── 🔗 PySide6
+```
+
+### ui.workers.core_pipeline_step3_worker
+
+```
+ui.workers.core_pipeline_step3_worker
+├── 📦 utils
+├── 🔗 traceback
+├── 🔗 os
+├── 🔗 time
+├── 🔗 sys
+├── 🔗 core_pipeline
+└── 🔗 PySide6
+```
+
+### ui.workers.core_pipeline_step4_worker
+
+```
+ui.workers.core_pipeline_step4_worker
+├── 📦 utils
+├── 🔗 traceback
+├── 🔗 os
+├── 🔗 time
+├── 🔗 sys
+├── 🔗 concurrent
+├── 🔗 core_pipeline
+├── 🔗 PySide6
+└── 🔗 threading
+```
+
+### ui.workers.core_pipeline_step5_worker
+
+```
+ui.workers.core_pipeline_step5_worker
+├── 📦 utils
+├── 🔗 traceback
+├── 🔗 PyPDF2
+├── 🔗 os
+├── 🔗 pandas
+├── 🔗 time
+├── 🔗 sys
+├── 🔗 threading
+├── 🔗 core_pipeline
+└── 🔗 PySide6
+```
+
+### ui.workers.pdf_splitter_worker
+
+```
+ui.workers.pdf_splitter_worker
+├── 📦 utils
+├── 🔗 datetime
+├── 🔗 PyPDF2
+├── 🔗 core_tools
+├── 🔗 os
+├── 🔗 sys
+├── 🔗 traceback
+└── 🔗 PySide6
+```
+
+### ui.workers.sunat_diagnostic_worker
+
+```
+ui.workers.sunat_diagnostic_worker
+├── 📦 utils
+├── 🔗 os
+├── 🔗 core_sunat
+├── 🔗 sys
+├── 🔗 traceback
+└── 🔗 PySide6
+```
+
+### ui.workers.sunat_duplicates_worker
+
+```
+ui.workers.sunat_duplicates_worker
+├── 📦 utils
+├── 🔗 os
+├── 🔗 core_sunat
+├── 🔗 time
+├── 🔗 sys
+├── 🔗 traceback
+└── 🔗 PySide6
+```
+
+### ui.workers.sunat_rename_worker
+
+```
+ui.workers.sunat_rename_worker
+├── 📦 utils
+├── 🔗 os
+├── 🔗 core_sunat
+├── 🔗 time
+├── 🔗 sys
+├── 🔗 traceback
+└── 🔗 PySide6
 ```
 
 ### utils.__init__
 
 ```
 utils.__init__
-├── 📦 core
-├── 📦 core
-├── 📦 utils
-├── 📦 utils
-├── 📦 etl
-├── 📦 etl
-├── 📦 etl
-├── 📦 etl
-├── 📦 etl
-├── 📦 formatting
-├── 📦 ui
-├── 📦 utils
-├── 📦 utils
-├── 📦 utils
-├── 📦 utils
-├── 📦 utils
-├── 📦 utils
-└── 📦 utils
+└── 📦 excel_converter
 ```
 
-### utils.core.__init__
+### utils.excel_converter
 
 ```
-utils.core.__init__
-├── 📦 utils
-└── 📦 utils
-```
-
-### utils.core.config_loader
-
-```
-utils.core.config_loader
-├── 📄 pipeline.sql
-├── 🔗 json
-├── 🔗 typing
-├── 🔗 pathlib
-└── 🔗 yaml
-```
-
-### utils.core.path_manager
-
-```
-utils.core.path_manager
-├── 📄 forms_step1.yaml
-├── 🔗 typing
-├── 🔗 os
-└── 🔗 pathlib
-```
-
-### utils.etl.__init__
-
-```
-utils.etl.__init__
-├── 📦 utils
-├── 📦 utils
-└── 📦 utils
-```
-
-### utils.etl.converters.__init__
-
-```
-utils.etl.converters.__init__
-├── 📦 utils
-└── 📦 utils
-```
-
-### utils.etl.converters.excel_to_parquet
-
-```
-utils.etl.converters.excel_to_parquet
-├── 🔗 pyarrow
+utils.excel_converter
 ├── 🔗 openpyxl
+├── 🔗 subprocess
 ├── 🔗 typing
-├── 🔗 pathlib
-└── 🔗 datetime
+├── 🔗 json
+└── 🔗 sys
 ```
 
-### utils.etl.converters.parquet_to_excel
+### utils.logger
 
 ```
-utils.etl.converters.parquet_to_excel
-├── 🔗 typing
-├── 🔗 pathlib
-└── 🔗 polars
-```
-
-### utils.etl.database.__init__
-
-```
-utils.etl.database.__init__
+utils.logger
 ├── 📦 utils
-└── 📦 utils
-```
-
-### utils.etl.database.duckdb_manager
-
-```
-utils.etl.database.duckdb_manager
-├── 🔗 typing
 ├── 🔗 pathlib
-├── 🔗 polars
-└── 🔗 duckdb
-```
-
-### utils.etl.database.sql_query_loader
-
-```
-utils.etl.database.sql_query_loader
 ├── 🔗 typing
+├── 🔗 sys
+├── 🔗 logging
+└── 🔗 traceback
+```
+
+### utils.logger_config
+
+```
+utils.logger_config
+├── 🔗 pathlib
+├── 🔗 os
+├── 🔗 time
+├── 🔗 platform
+└── 🔗 logging
+```
+
+### utils.path_helper
+
+```
+utils.path_helper
+├── 📄 config.json
+├── 📄 theme_dark.json
+├── 🔗 sys
 └── 🔗 pathlib
 ```
 
-### utils.etl.validators.__init__
+### utils.theme_manager
 
 ```
-utils.etl.validators.__init__
-└── 📦 utils
-```
-
-### utils.etl.validators.data_validator
-
-```
-utils.etl.validators.data_validator
-├── 🔗 typing
-└── 🔗 datetime
-```
-
-### utils.formatting.__init__
-
-```
-utils.formatting.__init__
-└── 📦 utils
-```
-
-### utils.formatting.excel_formatter
-
-```
-utils.formatting.excel_formatter
-├── 🔗 typing
-└── 🔗 openpyxl
-```
-
-### utils.ui.__init__
-
-```
-utils.ui.__init__
-└── 📦 utils
-```
-
-### utils.ui.file_dialog_helper
-
-```
-utils.ui.file_dialog_helper
-├── 🔗 tkinter
-├── 🔗 typing
-├── 🔗 os
-├── 🔗 pathlib
-└── 🔗 sys
+utils.theme_manager
+├── 📦 utils
+├── 📦 utils
+├── 📄 config.json
+├── 📄 theme_*.json
+├── 📄 Carga la configuración del usuario desde config.json
+├── 📄 Guarda la configuración del usuario en config.json
+├── 🔗 PySide6
+├── 🔗 json
+├── 🔗 datetime
+└── 🔗 pathlib
 ```
 
 ---
@@ -627,36 +995,54 @@ Tabular view of all modules and their dependency counts:
 | __init__ | Entry Point | 0 | 0 | 0 |
 | agent_tools.analyze_dependencies | Entry Point | 0 | 0 | 7 |
 | agent_tools.treemap | Entry Point | 0 | 0 | 3 |
-| etl_core.__init__ | Entry Point | 0 | 0 | 0 |
-| etl_core.step1 | Entry Point | 4 | 1 | 7 |
-| etl_core.step2 | Entry Point | 4 | 1 | 4 |
-| etl_forms.__init__ | Entry Point | 0 | 0 | 0 |
-| etl_forms.step1_forms | Entry Point | 4 | 1 | 6 |
-| etl_forms.step2_forms | Entry Point | 8 | 2 | 3 |
-| etl_ita_subordinates.__init__ | Entry Point | 0 | 0 | 0 |
-| etl_ita_subordinates.step1_ita | Entry Point | 6 | 1 | 4 |
-| etl_ita_subordinates.step1_managers | Entry Point | 6 | 1 | 4 |
-| etl_ita_subordinates.step2_ita | Entry Point | 8 | 1 | 3 |
-| etl_psico.__init__ | Entry Point | 0 | 0 | 0 |
-| etl_psico.step1_psico | Entry Point | 6 | 1 | 4 |
-| etl_psico.step2_psico | Entry Point | 8 | 1 | 3 |
-| utils.__init__ | Entry Point | 18 | 0 | 0 |
-| utils.core.__init__ | Entry Point | 2 | 0 | 0 |
-| utils.core.config_loader | Entry Point | 0 | 1 | 4 |
-| utils.core.path_manager | Entry Point | 0 | 1 | 3 |
-| utils.etl.__init__ | Entry Point | 3 | 0 | 0 |
-| utils.etl.converters.__init__ | Entry Point | 2 | 0 | 0 |
-| utils.etl.converters.excel_to_parquet | Entry Point | 0 | 0 | 5 |
-| utils.etl.converters.parquet_to_excel | Entry Point | 0 | 0 | 3 |
-| utils.etl.database.__init__ | Entry Point | 2 | 0 | 0 |
-| utils.etl.database.duckdb_manager | Entry Point | 0 | 0 | 4 |
-| utils.etl.database.sql_query_loader | Entry Point | 0 | 0 | 2 |
-| utils.etl.validators.__init__ | Entry Point | 1 | 0 | 0 |
-| utils.etl.validators.data_validator | Entry Point | 0 | 0 | 2 |
-| utils.formatting.__init__ | Entry Point | 1 | 0 | 0 |
-| utils.formatting.excel_formatter | Entry Point | 0 | 0 | 2 |
-| utils.ui.__init__ | Entry Point | 1 | 0 | 0 |
-| utils.ui.file_dialog_helper | Entry Point | 0 | 0 | 5 |
+| core_pipeline.step1_generar | Entry Point | 1 | 0 | 3 |
+| core_pipeline.step2_mover | Entry Point | 1 | 0 | 7 |
+| core_pipeline.step3_generar_diagnostico | Entry Point | 7 | 0 | 12 |
+| core_pipeline.step4_rename | Entry Point | 1 | 0 | 5 |
+| core_pipeline.step5_unir_final | Entry Point | 2 | 2 | 14 |
+| core_sunat.sunat | Entry Point | 2 | 0 | 8 |
+| core_sunat.sunat_duplicados | Entry Point | 1 | 0 | 8 |
+| core_sunat.sunat_rename | Entry Point | 1 | 0 | 8 |
+| core_tools.dividir_pdf | Entry Point | 1 | 0 | 4 |
+| extractores.__init__ | Entry Point | 0 | 0 | 5 |
+| extractores.contract_number_extractor | Entry Point | 1 | 0 | 5 |
+| extractores.extractor_afp | Entry Point | 0 | 0 | 4 |
+| extractores.extractor_boleta | Entry Point | 0 | 0 | 4 |
+| extractores.extractor_quinta | Entry Point | 0 | 0 | 4 |
+| extractores.extractor_sunat | Entry Point | 0 | 0 | 4 |
+| generar_onedir | Entry Point | 0 | 5 | 9 |
+| hooks.__init__ | Entry Point | 0 | 0 | 0 |
+| hooksi_rth_multiprocessing | Entry Point | 0 | 0 | 3 |
+| main | Entry Point | 3 | 0 | 3 |
+| ui.__init__ | Entry Point | 1 | 0 | 0 |
+| ui.main_window | Entry Point | 8 | 0 | 2 |
+| ui.splash_screen | Entry Point | 0 | 0 | 2 |
+| ui.tabs.__init__ | Entry Point | 4 | 0 | 0 |
+| ui.tabs.tab_pipeline_core | Entry Point | 7 | 0 | 2 |
+| ui.tabs.tab_pipeline_sunat | Entry Point | 5 | 2 | 3 |
+| ui.tabs.tab_quick_tools | Entry Point | 2 | 0 | 3 |
+| ui.tabs.tab_settings | Entry Point | 1 | 2 | 6 |
+| ui.widgets.__init__ | Entry Point | 4 | 0 | 0 |
+| ui.widgets.console_widget | Entry Point | 0 | 0 | 2 |
+| ui.widgets.file_selector | Entry Point | 0 | 0 | 1 |
+| ui.widgets.monitoring_panel | Entry Point | 0 | 0 | 2 |
+| ui.widgets.stepper_widget | Entry Point | 0 | 0 | 1 |
+| ui.workers.__init__ | Entry Point | 9 | 0 | 0 |
+| ui.workers.core_pipeline_step1_worker | Entry Point | 1 | 0 | 2 |
+| ui.workers.core_pipeline_step2_worker | Entry Point | 1 | 0 | 7 |
+| ui.workers.core_pipeline_step3_worker | Entry Point | 1 | 0 | 6 |
+| ui.workers.core_pipeline_step4_worker | Entry Point | 1 | 0 | 8 |
+| ui.workers.core_pipeline_step5_worker | Entry Point | 1 | 0 | 9 |
+| ui.workers.pdf_splitter_worker | Entry Point | 1 | 0 | 7 |
+| ui.workers.sunat_diagnostic_worker | Entry Point | 1 | 0 | 5 |
+| ui.workers.sunat_duplicates_worker | Entry Point | 1 | 0 | 6 |
+| ui.workers.sunat_rename_worker | Entry Point | 1 | 0 | 6 |
+| utils.__init__ | Entry Point | 1 | 0 | 0 |
+| utils.excel_converter | Entry Point | 0 | 0 | 5 |
+| utils.logger | Entry Point | 1 | 0 | 5 |
+| utils.logger_config | Entry Point | 0 | 0 | 5 |
+| utils.path_helper | Entry Point | 0 | 2 | 2 |
+| utils.theme_manager | Entry Point | 2 | 4 | 4 |
 
 ---
 
@@ -664,17 +1050,18 @@ Tabular view of all modules and their dependency counts:
 
 Data/configuration files detected in code and modules using them:
 
-- **`Por favor, verifica los datos o actualiza el esquema en likert_scale.json`** → Used by: `etl_forms.step2_forms`
-- **`data_learning_bronzetosilver.yaml`** → Used by: `etl_core.step1`
-- **`data_learning_silvertogold.yaml`** → Used by: `etl_core.step2`
-- **`forms_step1.yaml`** → Used by: `etl_forms.step1_forms`, `utils.core.path_manager`
-- **`forms_step2.yaml`** → Used by: `etl_forms.step2_forms`
-- **`pipeline.sql`** → Used by: `utils.core.config_loader`
-- **`step1_ita.yaml`** → Used by: `etl_ita_subordinates.step1_ita`
-- **`step1_managers.yaml`** → Used by: `etl_ita_subordinates.step1_managers`
-- **`step1_seguridad_psicologica.yaml`** → Used by: `etl_psico.step1_psico`
-- **`step2_ita.yaml`** → Used by: `etl_ita_subordinates.step2_ita`
-- **`step2_seguridad_psicologica.yaml`** → Used by: `etl_psico.step2_psico`
+- **`     ├── diagnostico_merge_{timestamp}.json`** → Used by: `core_pipeline.step5_unir_final`
+- **`   ✅ config.json`** → Used by: `generar_onedir`
+- **`*.json`** → Used by: `generar_onedir`
+- **`Carga configuración desde config.json`** → Used by: `ui.tabs.tab_pipeline_sunat`
+- **`Carga la configuración actual desde config.json`** → Used by: `ui.tabs.tab_settings`
+- **`Carga la configuración del usuario desde config.json`** → Used by: `utils.theme_manager`
+- **`Guarda la configuración del usuario en config.json`** → Used by: `utils.theme_manager`
+- **`config.json`** → Used by: `generar_onedir`, `ui.tabs.tab_pipeline_sunat`, `ui.tabs.tab_settings`, `utils.path_helper`, `utils.theme_manager`
+- **`diagnostico_merge_{timestamp}.json`** → Used by: `core_pipeline.step5_unir_final`
+- **`theme_*.json`** → Used by: `utils.theme_manager`
+- **`theme_dark.json`** → Used by: `generar_onedir`, `utils.path_helper`
+- **`theme_light.json`** → Used by: `generar_onedir`
 
 ---
 

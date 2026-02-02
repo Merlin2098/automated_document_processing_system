@@ -11,6 +11,8 @@ pdfminer.six
 pdfplumber
 pefile
 psutil
+pathspec
+pre-commit
 pyarrow
 pycparser
 pyinstaller

@@ -10,7 +10,7 @@ repos:
       
       - id: update-dependencies
         name: Actualizar análisis de dependencias
-        entry: .venv/Scripts/python.exe agent_tools/analyze_dependencies.py
+        entry: cmd /c ".venv\Scripts\python.exe agent_tools\analyze_dependencies.py && git add agent\dependencies_report.md"
         language: system
         pass_filenames: false
         always_run: true

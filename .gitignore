@@ -12,8 +12,8 @@ logs/
 *.log
 
 # Archivos específicos
-treemap.py
-treemap.md
+agent/treemap.md
+agent/dependencies_report.md
 
 # __pycache__ y temporales de Python
 __pycache__/
