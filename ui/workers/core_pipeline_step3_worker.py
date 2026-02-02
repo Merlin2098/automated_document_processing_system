@@ -99,23 +99,32 @@ class CorePipelineStep3Worker(QThread):
             ruta_excel = os.path.join(self.folder_path, nombre_excel)
             
             # Callback para actualizar progreso desde el core multiproceso
-            def _progress_callback(carpetas_completadas, total_carpetas, tiempo_carpeta):
+            def _progress_callback(carpetas_completadas, total_carpetas, tiempo_carpeta, logs=None):
                 if not self._is_running:
                     return
-                
+
                 self.carpetas_procesadas = carpetas_completadas
-                
+
                 # Estimar archivos procesados basado en carpetas completadas
                 # (aproximación: archivos procesados = proporción de carpetas * total archivos)
                 proporcion = carpetas_completadas / total_carpetas if total_carpetas > 0 else 0
                 self.archivos_procesados = int(self.archivos_totales * proporcion)
-                
+
                 # Emitir progreso de archivos (aproximado durante multiprocessing)
                 self.progress_signal.emit(self.archivos_procesados, self.archivos_totales)
-                
+
+                # Surfacear errores y resúmenes de extracción al UI
+                if logs:
+                    for log_line in logs:
+                        if "⚠️ Fallo extracción:" in log_line:
+                            self.errores_acumulados += 1
+                            self.log_signal.emit("warning", log_line.strip())
+                        elif "📊 Resumen:" in log_line:
+                            self.log_signal.emit("info", log_line.strip())
+
                 # Emitir estadísticas actualizadas
                 self._emit_stats(start_time)
-                
+
                 # Log de progreso
                 tiempo_fmt = format_time(time.time() - start_time)
                 self.logger.info(f"📊 Progreso: {carpetas_completadas}/{total_carpetas} carpetas | {tiempo_fmt}")

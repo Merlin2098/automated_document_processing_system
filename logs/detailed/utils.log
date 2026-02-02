@@ -300,3 +300,10 @@
 2025-12-22 08:59:03 | INFO     | utils.theme_manager            | set_theme            | Cambiando tema a: light
 2025-12-22 08:59:03 | INFO     | utils.theme_manager            | _save_config         | ✅ Configuración guardada: tema 'light'
 2025-12-22 08:59:03 | INFO     | utils.theme_manager            | set_theme            | ✅ Tema cambiado exitosamente: light
+2026-02-02 12:47:34 | INFO     | utils.theme_manager            | _load_themes         | ✅ Tema cargado: dark (Tema oscuro con fondo azul nocturno profundo)
+2026-02-02 12:47:34 | INFO     | utils.theme_manager            | _load_themes         | ✅ Tema cargado: light (Tema claro innovador y tecnológico con acentos verde-azulados)
+2026-02-02 12:47:34 | INFO     | utils.theme_manager            | _load_config         | ✅ Configuración cargada: tema 'light'
+2026-02-02 12:47:34 | INFO     | utils.theme_manager            | __init__             | ✅ Theme Manager inicializado - Tema activo: light
+2026-02-02 12:47:50 | INFO     | utils.theme_manager            | set_theme            | Cambiando tema a: dark
+2026-02-02 12:47:50 | INFO     | utils.theme_manager            | _save_config         | ✅ Configuración guardada: tema 'dark'
+2026-02-02 12:47:50 | INFO     | utils.theme_manager            | set_theme            | ✅ Tema cambiado exitosamente: dark

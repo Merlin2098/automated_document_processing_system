@@ -1,6 +1,6 @@
 {
-  "theme": "light",
-  "last_modified": "2025-12-22T08:59:03.993004",
+  "theme": "dark",
+  "last_modified": "2026-02-02T12:47:50.919801",
   "preferences": {
     "sounds": {
       "enabled": true,
@@ -9,7 +9,7 @@
       "sound_warning": false
     },
     "performance": {
-      "workers": 7,
+      "workers": 8,
       "console_interval": 1,
       "batch_size": 200
     },

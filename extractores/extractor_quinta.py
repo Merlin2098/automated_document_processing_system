@@ -121,19 +121,22 @@ def extraer_datos_quinta(ruta_pdf: str, logger=None) -> Dict:
         for mal, bien in correcciones_encoding.items():
             texto = texto.replace(mal, bien)
         
-        # Patrón para el Nombre (mejorado para más robustez)
+        # Patrón para el Nombre (nuevo formato primero, luego legacy)
         patrones_nombre = [
-            r"SR\(A\):\s*(.+?),\s*CON DNI",  # Patrón original
-            r"SEÑOR\(A\):\s*(.+?),\s*CON DNI",  # Variante con SEÑOR
-            r"SR\.?\s*(.+?),\s*CON DNI",  # Variante con punto
-            r"NOMBRE:\s*(.+?)\s*(?:,|CON DNI|$)",  # Variante con NOMBRE:
+            # Nuevo formato: "sr(a) NOMBRE con documento de identidad"
+            r"(?:trabajador\(a\)\s+)?sr\(a\)\s+(?P<nombre>[A-ZÁÉÍÓÚÑ\s]+?)\s+con\s+documento\s+de\s+identidad",
+            # Legacy: "SR(A): NOMBRE, CON DNI"
+            r"SR\(A\):\s*(?P<nombre>.+?),\s*CON DNI",
+            r"SEÑOR\(A\):\s*(?P<nombre>.+?),\s*CON DNI",
+            r"SR\.?\s*(?P<nombre>.+?),\s*CON DNI",
+            r"NOMBRE:\s*(?P<nombre>.+?)\s*(?:,|CON DNI|$)",
         ]
         
         nombre_encontrado = None
         for i, patron in enumerate(patrones_nombre):
             match_nombre = re.search(patron, texto, flags=re.IGNORECASE | re.DOTALL)
             if match_nombre:
-                nombre_raw = match_nombre.group(1).strip()
+                nombre_raw = match_nombre.group("nombre").strip()
                 
                 # Aplicar correcciones de encoding al nombre
                 for mal, bien in correcciones_encoding.items():
@@ -150,19 +153,22 @@ def extraer_datos_quinta(ruta_pdf: str, logger=None) -> Dict:
                     logger.debug(f"🔍 QUINTA - Nombre encontrado (patrón {i+1}): {nombre_encontrado}")
                 break
         
-        # Patrón para el DNI (mejorado)
+        # Patrón para el DNI (nuevo formato primero, luego legacy)
         patrones_dni = [
-            r"CON DNI\s*[:\.]?\s*(\d{8,})",  # Original mejorado
-            r"DNI\s*[:\.]?\s*(\d{8,})",  # Variante sin CON
-            r"DOCUMENTO.*?(\d{8,})",  # Variante con DOCUMENTO
-            r"C\.I\.\s*[:\.]?\s*(\d{8,})",  # Variante con C.I.
+            # Nuevo formato: "documento de identidad DNI 12345678"
+            r"documento\s+de\s+identidad\s+DNI\s+(?P<dni>\d{8})",
+            # Legacy
+            r"CON DNI\s*[:\.]?\s*(?P<dni>\d{8,})",
+            r"DNI\s*[:\.]?\s*(?P<dni>\d{8,})",
+            r"DOCUMENTO.*?(?P<dni>\d{8,})",
+            r"C\.I\.\s*[:\.]?\s*(?P<dni>\d{8,})",
         ]
         
         dni_encontrado = None
         for i, patron in enumerate(patrones_dni):
             match_dni = re.search(patron, texto, flags=re.IGNORECASE | re.DOTALL)
             if match_dni:
-                dni_raw = match_dni.group(1).strip()
+                dni_raw = match_dni.group("dni").strip()
                 # Tomar solo los primeros 8 dígitos si hay más
                 dni_encontrado = dni_raw[:8] if len(dni_raw) > 8 else dni_raw
                 resultado["dni"] = dni_encontrado

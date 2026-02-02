@@ -78,48 +78,62 @@ def extraer_datos_afp(ruta_pdf: str, logger=None) -> Dict:
         for mal, bien in correcciones_encoding.items():
             texto = texto.replace(mal, bien)
         
-        # Patrón con DNI
-        patron_con_dni = r"Que a don \(doña\)\s+([A-ZÁÉÍÓÚÑ\s]+),\s+CON\s+DNI\s+(\d{8})"
-        match_dni = re.search(patron_con_dni, texto)
-        
-        if match_dni:
-            nombre = match_dni.group(1).strip()
-            dni = match_dni.group(2)
-            
-            # Corrección adicional de encoding en nombre
-            for mal, bien in correcciones_encoding.items():
-                nombre = nombre.replace(mal, bien)
-            
-            resultado["nombre"] = nombre
-            resultado["dni"] = dni
-            resultado["exito"] = True
-            resultado["observaciones"] = "OK"
-            
-            if logger:
-                logger.info(f"✅ AFP - Extracción exitosa: {nombre} | DNI: {dni}")
-            return resultado
-        
-        # Patrón sin DNI
-        patron_sin_dni = r"Que a don \(doña\)\s+([A-ZÁÉÍÓÚÑ\s]+),"
-        match_nombre = re.search(patron_sin_dni, texto)
-        
-        if match_nombre:
-            nombre = match_nombre.group(1).strip()
-            
-            # Corrección adicional de encoding en nombre
-            for mal, bien in correcciones_encoding.items():
-                nombre = nombre.replace(mal, bien)
-            
-            resultado["nombre"] = nombre
-            resultado["dni"] = None
-            resultado["exito"] = True
-            resultado["observaciones"] = "DNI no encontrado"
-            
-            if logger:
-                logger.info(f"✅ AFP - Nombre extraído (sin DNI): {nombre}")
-                logger.warning(f"⚠️ AFP - DNI no encontrado en: {nombre_archivo}")
-            return resultado
-        
+        # Patrones con nombre + DNI (orden: nuevo formato primero, luego legacy)
+        patrones_con_dni = [
+            # Nuevo formato: "identificado(a) con DNI - 12345678"
+            r"Que\s+a\s+don\s+\(doña\)\s+(?P<nombre>[A-ZÁÉÍÓÚÑ\s]+?)\s+identificado\(a\)\s+con\s+DNI\s*[-:.]?\s*(?P<dni>\d{8})",
+            # Legacy: "NOMBRE, CON DNI 12345678"
+            r"Que\s+a\s+don\s+\(doña\)\s+(?P<nombre>[A-ZÁÉÍÓÚÑ\s]+),\s*CON\s+DNI\s+(?P<dni>\d{8})",
+        ]
+
+        for i, patron in enumerate(patrones_con_dni):
+            match = re.search(patron, texto, re.IGNORECASE)
+            if match:
+                nombre = match.group("nombre").strip()
+                dni = match.group("dni")
+
+                for mal, bien in correcciones_encoding.items():
+                    nombre = nombre.replace(mal, bien)
+
+                resultado["nombre"] = nombre
+                resultado["dni"] = dni
+                resultado["exito"] = True
+                resultado["observaciones"] = "OK"
+
+                if logger:
+                    logger.info(f"✅ AFP - Extracción exitosa (patrón {i+1}): {nombre} | DNI: {dni}")
+                return resultado
+
+        # Fallback: extraer solo nombre (sin DNI) — se reporta como FALLO
+        patrones_solo_nombre = [
+            # Nuevo formato sin DNI: "NOMBRE identificado(a) con ..."
+            r"Que\s+a\s+don\s+\(doña\)\s+(?P<nombre>[A-ZÁÉÍÓÚÑ\s]+?)\s+identificado\(a\)",
+            # Legacy: "NOMBRE," (terminado en coma)
+            r"Que\s+a\s+don\s+\(doña\)\s+(?P<nombre>[A-ZÁÉÍÓÚÑ\s]+),",
+        ]
+
+        # Detectar qué identificador se usó en lugar de DNI (para diagnóstico)
+        match_id = re.search(r"identificado\(a\)\s+con\s+(?P<id_tipo>\w+)", texto, re.IGNORECASE)
+        id_encontrado = match_id.group("id_tipo") if match_id else None
+
+        for i, patron in enumerate(patrones_solo_nombre):
+            match = re.search(patron, texto, re.IGNORECASE)
+            if match:
+                nombre = match.group("nombre").strip()
+
+                for mal, bien in correcciones_encoding.items():
+                    nombre = nombre.replace(mal, bien)
+
+                obs = f"DNI no encontrado — identificador detectado: {id_encontrado}" if id_encontrado else "DNI no encontrado"
+                resultado["nombre"] = nombre
+                resultado["dni"] = None
+                resultado["exito"] = False
+                resultado["observaciones"] = obs
+
+                if logger:
+                    logger.error(f"❌ AFP - Sin DNI en: {nombre_archivo} | Nombre: {nombre} | Identificador: {id_encontrado or 'ninguno'}")
+                return resultado
+
         # No se encontró ningún patrón
         resultado["observaciones"] = "No se encontró patrón de certificado AFP"
         if logger:

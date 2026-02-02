@@ -12105,3 +12105,184 @@
 2025-12-22 08:59:21 | INFO     | main                           | main                 | --------------------------------------------------------------------------------
 2025-12-22 08:59:21 | INFO     | main                           | main                 | Aplicación cerrada con código: 0
 2025-12-22 08:59:21 | INFO     | main                           | main                 | ================================================================================
+2026-02-02 12:44:17 | INFO     | main                           | setup_logging        | ================================================================================
+2026-02-02 12:44:17 | INFO     | main                           | setup_logging        | Sistema de logging inicializado correctamente
+2026-02-02 12:44:17 | INFO     | main                           | setup_logging        | Directorio de logs: C:\Users\ricuculm\OneDrive - Metso\Documents\VS Code\7. Matrix_Rework\logs
+2026-02-02 12:44:17 | INFO     | main                           | setup_logging        | Sistema: Windows - Usando SafeRotatingFileHandler
+2026-02-02 12:44:17 | INFO     | main                           | setup_logging        | ================================================================================
+2026-02-02 12:44:17 | INFO     | main                           | main                 | ================================================================================
+2026-02-02 12:44:17 | INFO     | main                           | main                 | DocFlow Eventuales v4.0 - Iniciando aplicación
+2026-02-02 12:44:17 | INFO     | main                           | main                 | ================================================================================
+2026-02-02 12:44:17 | INFO     | main                           | main                 | Sistema operativo: win32
+2026-02-02 12:44:17 | INFO     | main                           | main                 | Versión Python: 3.13.9
+2026-02-02 12:44:17 | INFO     | main                           | main                 | --------------------------------------------------------------------------------
+2026-02-02 12:44:17 | INFO     | main                           | main                 | Configurando aplicación Qt...
+2026-02-02 12:44:17 | INFO     | main                           | main                 | ✅ Aplicación Qt configurada correctamente
+2026-02-02 12:44:17 | INFO     | main                           | main                 | Mostrando splash screen...
+2026-02-02 12:47:19 | INFO     | main                           | setup_logging        | ================================================================================
+2026-02-02 12:47:19 | INFO     | main                           | setup_logging        | Sistema de logging inicializado correctamente
+2026-02-02 12:47:19 | INFO     | main                           | setup_logging        | Directorio de logs: C:\Users\ricuculm\OneDrive - Metso\Documents\VS Code\7. Matrix_Rework\logs
+2026-02-02 12:47:19 | INFO     | main                           | setup_logging        | Sistema: Windows - Usando SafeRotatingFileHandler
+2026-02-02 12:47:19 | INFO     | main                           | setup_logging        | ================================================================================
+2026-02-02 12:47:19 | INFO     | main                           | main                 | ================================================================================
+2026-02-02 12:47:19 | INFO     | main                           | main                 | DocFlow Eventuales v4.0 - Iniciando aplicación
+2026-02-02 12:47:19 | INFO     | main                           | main                 | ================================================================================
+2026-02-02 12:47:19 | INFO     | main                           | main                 | Sistema operativo: win32
+2026-02-02 12:47:19 | INFO     | main                           | main                 | Versión Python: 3.13.9
+2026-02-02 12:47:19 | INFO     | main                           | main                 | --------------------------------------------------------------------------------
+2026-02-02 12:47:19 | INFO     | main                           | main                 | Configurando aplicación Qt...
+2026-02-02 12:47:19 | INFO     | main                           | main                 | ✅ Aplicación Qt configurada correctamente
+2026-02-02 12:47:19 | INFO     | main                           | main                 | Mostrando splash screen...
+2026-02-02 12:47:30 | INFO     | main                           | main                 | ✅ Splash screen mostrado
+2026-02-02 12:47:30 | INFO     | main                           | main                 | Iniciando event loop de Qt...
+2026-02-02 12:47:34 | INFO     | main                           | on_splash_finished   | Splash screen completado, cargando ventana principal...
+2026-02-02 12:47:34 | INFO     | ui.main_window                 | __init__             | Inicializando ventana principal...
+2026-02-02 12:47:34 | INFO     | utils.theme_manager            | _load_themes         | ✅ Tema cargado: dark (Tema oscuro con fondo azul nocturno profundo)
+2026-02-02 12:47:34 | INFO     | utils.theme_manager            | _load_themes         | ✅ Tema cargado: light (Tema claro innovador y tecnológico con acentos verde-azulados)
+2026-02-02 12:47:34 | INFO     | utils.theme_manager            | _load_config         | ✅ Configuración cargada: tema 'light'
+2026-02-02 12:47:34 | INFO     | utils.theme_manager            | __init__             | ✅ Theme Manager inicializado - Tema activo: light
+2026-02-02 12:47:34 | INFO     | ui.main_window                 | __init__             | ✅ Tema cargado: light
+2026-02-02 12:47:34 | INFO     | ui.main_window                 | __init__             | ✅ Interfaz de usuario creada
+2026-02-02 12:47:34 | INFO     | ui.main_window                 | __init__             | ✅ Ventana principal inicializada correctamente
+2026-02-02 12:47:34 | INFO     | main                           | on_splash_finished   | ✅ Ventana principal cargada y mostrada
+2026-02-02 12:47:34 | INFO     | main                           | on_splash_finished   | --------------------------------------------------------------------------------
+2026-02-02 12:47:34 | INFO     | main                           | on_splash_finished   | 🚀 Aplicación lista para usar
+2026-02-02 12:47:34 | INFO     | main                           | on_splash_finished   | ================================================================================
+2026-02-02 12:47:34 | INFO     | ui.main_window                 | _load_tabs           | Iniciando carga lazy de tabs...
+2026-02-02 12:47:45 | INFO     | ui.main_window                 | _load_tabs           | ✅ Todos los tabs cargados correctamente
+2026-02-02 12:47:45 | INFO     | ui.main_window                 | _load_tabs           | ✅ Señales de tabs conectadas
+2026-02-02 12:47:50 | INFO     | utils.theme_manager            | set_theme            | Cambiando tema a: dark
+2026-02-02 12:47:50 | INFO     | utils.theme_manager            | _save_config         | ✅ Configuración guardada: tema 'dark'
+2026-02-02 12:47:50 | INFO     | utils.theme_manager            | set_theme            | ✅ Tema cambiado exitosamente: dark
+2026-02-02 12:48:15 | INFO     | workers.core_pipeline_step1    | __init__             | Worker Step 1 creado - Carpeta: C:/Users/ricuculm/OneDrive - Metso/Documents/Laboratorio/bug_docflow
+2026-02-02 12:48:15 | INFO     | workers.core_pipeline_step1    | log_start            | ============================================================
+2026-02-02 12:48:15 | INFO     | workers.core_pipeline_step1    | log_start            | ▶️  INICIANDO: Creación de Estructura (Step 1)
+2026-02-02 12:48:15 | INFO     | workers.core_pipeline_step1    | log_start            | Parámetros:
+2026-02-02 12:48:15 | INFO     | workers.core_pipeline_step1    | log_start            |   • carpeta_base: C:/Users/ricuculm/OneDrive - Metso/Documents/Laboratorio/bug_docflow
+2026-02-02 12:48:15 | INFO     | workers.core_pipeline_step1    | log_start            | ------------------------------------------------------------
+2026-02-02 12:48:15 | INFO     | workers.core_pipeline_step1    | run                  | ✅ Carpeta creada: 1_Boletas
+2026-02-02 12:48:15 | INFO     | workers.core_pipeline_step1    | run                  | ✅ Carpeta creada: 2_Afp
+2026-02-02 12:48:15 | INFO     | workers.core_pipeline_step1    | run                  | ✅ Carpeta creada: 3_5ta
+2026-02-02 12:48:15 | INFO     | workers.core_pipeline_step1    | run                  | ✅ Carpeta creada: 4_Convocatoria
+2026-02-02 12:48:15 | INFO     | workers.core_pipeline_step1    | run                  | ✅ Carpeta creada: 5_CertificadosTrabajo
+2026-02-02 12:48:15 | INFO     | workers.core_pipeline_step1    | log_end              | ------------------------------------------------------------
+2026-02-02 12:48:15 | INFO     | workers.core_pipeline_step1    | log_end              | ✅ COMPLETADO: Creación de Estructura (Step 1)
+2026-02-02 12:48:15 | INFO     | workers.core_pipeline_step1    | log_end              | Estadísticas:
+2026-02-02 12:48:15 | INFO     | workers.core_pipeline_step1    | log_end              |   • carpetas_creadas: 5
+2026-02-02 12:48:15 | INFO     | workers.core_pipeline_step1    | log_end              |   • carpetas_existentes: 0
+2026-02-02 12:48:15 | INFO     | workers.core_pipeline_step1    | log_end              |   • errores: 0
+2026-02-02 12:48:15 | INFO     | workers.core_pipeline_step1    | log_end              |   • total: 5
+2026-02-02 12:48:15 | INFO     | workers.core_pipeline_step1    | log_end              | ============================================================
+2026-02-02 12:48:25 | INFO     | workers.CorePipelineStep2Worker | info                 | 🚀 Iniciando clasificación y división de PDFs
+2026-02-02 12:48:25 | INFO     | workers.CorePipelineStep2Worker | info                 | 📂 Carpeta de trabajo: C:/Users/ricuculm/OneDrive - Metso/Documents/Laboratorio/bug_docflow
+2026-02-02 12:48:25 | INFO     | workers.CorePipelineStep2Worker | info                 | 📋 [1/5] Buscando y clasificando PDFs...
+2026-02-02 12:48:25 | INFO     | workers.CorePipeline2_Mover    | info                 | Encontrados 5 archivo(s) PDF en carpeta madre
+2026-02-02 12:48:25 | INFO     | workers.CorePipeline2_Mover    | info                 | Clasificado: 'Cert Afp.pdf' → 2_Afp (palabra: 'afp')
+2026-02-02 12:48:25 | INFO     | workers.CorePipeline2_Mover    | info                 | Clasificado: 'Cert Quinta.pdf' → 3_5ta (palabra: 'quinta')
+2026-02-02 12:48:25 | INFO     | workers.CorePipeline2_Mover    | info                 | Clasificado: 'CERTIFICADO DE TRABAJO.pdf' → 5_CertificadosTrabajo (palabra: 'certificado de trabajo')
+2026-02-02 12:48:25 | INFO     | workers.CorePipeline2_Mover    | info                 | Clasificado: 'Convocatoria.pdf' → 4_Convocatoria (palabra: 'convocatoria')
+2026-02-02 12:48:25 | INFO     | workers.CorePipeline2_Mover    | info                 | Clasificado: 'METSO_Boletas Eventuales_2026-01_1ra Semana.pdf' → 1_Boletas (palabra: 'boleta')
+2026-02-02 12:48:25 | INFO     | workers.CorePipelineStep2Worker | info                 | ✅ PDFs clasificados: 5
+2026-02-02 12:48:25 | INFO     | workers.CorePipelineStep2Worker | info                 | 📋 [2/5] Validando archivos...
+2026-02-02 12:48:25 | INFO     | workers.CorePipelineStep2Worker | info                 | ✅ Validación correcta
+2026-02-02 12:48:25 | INFO     | workers.CorePipelineStep2Worker | info                 | 📋 [3/5] Preparando carpetas destino...
+2026-02-02 12:48:25 | INFO     | workers.CorePipelineStep2Worker | info                 | 📋 [4/5] Calculando páginas totales...
+2026-02-02 12:48:25 | INFO     | workers.CorePipelineStep2Worker | info                 | ✅ Total de páginas: 14
+2026-02-02 12:48:25 | INFO     | workers.CorePipelineStep2Worker | info                 | 📋 [5/5] Dividiendo PDFs...
+2026-02-02 12:48:25 | INFO     | workers.CorePipelineStep2Worker | info                 |    📄 1_Boletas: METSO_Boletas Eventuales_2026-01_1ra Semana.pdf
+2026-02-02 12:48:25 | INFO     | workers.CorePipeline2_Mover    | info                 |   Procesando 3 página(s)...
+2026-02-02 12:48:25 | INFO     | workers.CorePipeline2_Mover    | info                 |     ✓ Generado: boleta_1.pdf
+2026-02-02 12:48:25 | INFO     | workers.CorePipeline2_Mover    | info                 |     ✓ Generado: boleta_2.pdf
+2026-02-02 12:48:25 | INFO     | workers.CorePipeline2_Mover    | info                 |     ✓ Generado: boleta_3.pdf
+2026-02-02 12:48:25 | INFO     | workers.CorePipeline2_Mover    | info                 |   ✓ Completado: 3 páginas generadas
+2026-02-02 12:48:25 | INFO     | workers.CorePipelineStep2Worker | info                 |       ✅ 3 páginas generadas
+2026-02-02 12:48:25 | INFO     | workers.CorePipelineStep2Worker | info                 |    📄 2_Afp: Cert Afp.pdf
+2026-02-02 12:48:25 | INFO     | workers.CorePipeline2_Mover    | info                 |   Procesando 2 página(s)...
+2026-02-02 12:48:25 | INFO     | workers.CorePipeline2_Mover    | info                 |     ✓ Generado: afp_1.pdf
+2026-02-02 12:48:25 | INFO     | workers.CorePipeline2_Mover    | info                 |     ✓ Generado: afp_2.pdf
+2026-02-02 12:48:25 | INFO     | workers.CorePipeline2_Mover    | info                 |   ✓ Completado: 2 páginas generadas
+2026-02-02 12:48:25 | INFO     | workers.CorePipelineStep2Worker | info                 |       ✅ 2 páginas generadas
+2026-02-02 12:48:25 | INFO     | workers.CorePipelineStep2Worker | info                 |    📄 3_5ta: Cert Quinta.pdf
+2026-02-02 12:48:25 | INFO     | workers.CorePipeline2_Mover    | info                 |   Procesando 2 página(s)...
+2026-02-02 12:48:25 | INFO     | workers.CorePipeline2_Mover    | info                 |     ✓ Generado: quinta_1.pdf
+2026-02-02 12:48:25 | INFO     | workers.CorePipeline2_Mover    | info                 |     ✓ Generado: quinta_2.pdf
+2026-02-02 12:48:25 | INFO     | workers.CorePipeline2_Mover    | info                 |   ✓ Completado: 2 páginas generadas
+2026-02-02 12:48:25 | INFO     | workers.CorePipelineStep2Worker | info                 |       ✅ 2 páginas generadas
+2026-02-02 12:48:25 | INFO     | workers.CorePipelineStep2Worker | info                 |    📄 4_Convocatoria: Convocatoria.pdf
+2026-02-02 12:48:25 | INFO     | workers.CorePipeline2_Mover    | info                 |   Procesando 4 página(s)...
+2026-02-02 12:48:25 | INFO     | workers.CorePipeline2_Mover    | info                 |     ✓ Generado: convocatoria_1.pdf
+2026-02-02 12:48:25 | INFO     | workers.CorePipeline2_Mover    | info                 |     ✓ Generado: convocatoria_2.pdf
+2026-02-02 12:48:25 | INFO     | workers.CorePipeline2_Mover    | info                 |     ✓ Generado: convocatoria_3.pdf
+2026-02-02 12:48:25 | INFO     | workers.CorePipeline2_Mover    | info                 |     ✓ Generado: convocatoria_4.pdf
+2026-02-02 12:48:25 | INFO     | workers.CorePipeline2_Mover    | info                 |   ✓ Completado: 4 páginas generadas
+2026-02-02 12:48:25 | INFO     | workers.CorePipelineStep2Worker | info                 |       ✅ 4 páginas generadas
+2026-02-02 12:48:25 | INFO     | workers.CorePipelineStep2Worker | info                 |    📄 5_CertificadosTrabajo: CERTIFICADO DE TRABAJO.pdf
+2026-02-02 12:48:25 | INFO     | workers.CorePipeline2_Mover    | info                 |   Procesando 3 página(s)...
+2026-02-02 12:48:25 | INFO     | workers.CorePipeline2_Mover    | info                 |     ✓ Generado: certif_trabajo_1.pdf
+2026-02-02 12:48:25 | INFO     | workers.CorePipeline2_Mover    | info                 |     ✓ Generado: certif_trabajo_2.pdf
+2026-02-02 12:48:25 | INFO     | workers.CorePipeline2_Mover    | info                 |     ✓ Generado: certif_trabajo_3.pdf
+2026-02-02 12:48:25 | INFO     | workers.CorePipeline2_Mover    | info                 |   ✓ Completado: 3 páginas generadas
+2026-02-02 12:48:25 | INFO     | workers.CorePipelineStep2Worker | info                 |       ✅ 3 páginas generadas
+2026-02-02 12:48:25 | INFO     | workers.CorePipelineStep2Worker | info                 | ==================================================
+2026-02-02 12:48:25 | INFO     | workers.CorePipelineStep2Worker | info                 | 📊 RESUMEN FINAL
+2026-02-02 12:48:25 | INFO     | workers.CorePipelineStep2Worker | info                 | ✅ PDFs procesados: 5
+2026-02-02 12:48:25 | INFO     | workers.CorePipelineStep2Worker | info                 | 📄 Total páginas: 14
+2026-02-02 12:48:25 | INFO     | workers.CorePipelineStep2Worker | info                 | ⏱️ Tiempo total: 00:00:00
+2026-02-02 12:48:25 | INFO     | workers.CorePipelineStep2Worker | info                 | ==================================================
+2026-02-02 12:48:25 | INFO     | workers.CorePipelineStep2Worker | info                 | 🎉 ¡Proceso completado exitosamente!
+2026-02-02 12:48:31 | INFO     | workers.CorePipelineStep3Worker | info                 | 🚀 Worker: Iniciando diagnóstico optimizado
+2026-02-02 12:49:31 | INFO     | workers.CorePipelineStep3Worker | info                 | 📂 Total: 14 archivos en 5 carpetas
+2026-02-02 12:49:31 | INFO     | workers.CorePipeline3_Diagnostico | info                 | ============================================================
+2026-02-02 12:49:40 | INFO     | workers.CorePipeline3_Diagnostico | info                 | 🚀 DIAGNÓSTICO OPTIMIZADO - MODO PARALELO
+2026-02-02 12:49:40 | INFO     | workers.CorePipeline3_Diagnostico | info                 | ============================================================
+2026-02-02 12:49:40 | INFO     | workers.CorePipeline3_Diagnostico | info                 | 🚀 Iniciando procesamiento paralelo de 5 carpetas
+2026-02-02 12:49:42 | INFO     | workers.CorePipeline3_Diagnostico | info                 | 📂 Procesando: 5_CertificadosTrabajo
+2026-02-02 12:49:42 | INFO     | workers.CorePipeline3_Diagnostico | info                 |    Tipo: CERTIFICADO_TRABAJO | PDFs: 3
+2026-02-02 12:49:42 | INFO     | workers.CorePipeline3_Diagnostico | info                 |    💾 Parquet: diagnostico_consolidado_02.02.2026_12.49.31_5_CertificadosTrabajo.parquet
+2026-02-02 12:49:42 | INFO     | workers.CorePipeline3_Diagnostico | info                 |    ✅ 3 registros en 0m 0s
+2026-02-02 12:49:42 | INFO     | workers.CorePipelineStep3Worker | info                 | 📊 Progreso: 1/5 carpetas | 00:01:11
+2026-02-02 12:49:42 | INFO     | workers.CorePipeline3_Diagnostico | info                 | 📊 Progreso: 1/5 carpetas
+2026-02-02 12:49:42 | INFO     | workers.CorePipeline3_Diagnostico | info                 | 📂 Procesando: 2_Afp
+2026-02-02 12:49:42 | INFO     | workers.CorePipeline3_Diagnostico | info                 |    Tipo: AFP | PDFs: 2
+2026-02-02 12:49:42 | INFO     | workers.CorePipeline3_Diagnostico | info                 |    ⚠️ Fallo extracción: afp_2.pdf → DNI no encontrado — identificador detectado: CUSPP
+2026-02-02 12:49:42 | INFO     | workers.CorePipeline3_Diagnostico | info                 |    📊 Resumen: 1 exitosos, 1 fallidos de 2 PDFs
+2026-02-02 12:49:42 | INFO     | workers.CorePipeline3_Diagnostico | info                 |    💾 Parquet: diagnostico_consolidado_02.02.2026_12.49.31_2_Afp.parquet
+2026-02-02 12:49:42 | INFO     | workers.CorePipeline3_Diagnostico | info                 |    ✅ 2 registros en 0m 1s
+2026-02-02 12:49:42 | INFO     | workers.CorePipelineStep3Worker | info                 | 📊 Progreso: 2/5 carpetas | 00:01:11
+2026-02-02 12:49:42 | INFO     | workers.CorePipeline3_Diagnostico | info                 | 📊 Progreso: 2/5 carpetas
+2026-02-02 12:49:42 | INFO     | workers.CorePipeline3_Diagnostico | info                 | 📂 Procesando: 1_Boletas
+2026-02-02 12:49:42 | INFO     | workers.CorePipeline3_Diagnostico | info                 |    Tipo: BOLETA | PDFs: 3
+2026-02-02 12:49:42 | INFO     | workers.CorePipeline3_Diagnostico | info                 |    📊 Resumen: 3 exitosos, 0 fallidos de 3 PDFs
+2026-02-02 12:49:42 | INFO     | workers.CorePipeline3_Diagnostico | info                 |    💾 Parquet: diagnostico_consolidado_02.02.2026_12.49.31_1_Boletas.parquet
+2026-02-02 12:49:42 | INFO     | workers.CorePipeline3_Diagnostico | info                 |    ✅ 3 registros en 0m 1s
+2026-02-02 12:49:42 | INFO     | workers.CorePipelineStep3Worker | info                 | 📊 Progreso: 3/5 carpetas | 00:01:11
+2026-02-02 12:49:42 | INFO     | workers.CorePipeline3_Diagnostico | info                 | 📊 Progreso: 3/5 carpetas
+2026-02-02 12:49:42 | INFO     | workers.CorePipeline3_Diagnostico | info                 | 📂 Procesando: 3_5ta
+2026-02-02 12:49:42 | INFO     | workers.CorePipeline3_Diagnostico | info                 |    Tipo: QUINTA | PDFs: 2
+2026-02-02 12:49:42 | INFO     | workers.CorePipeline3_Diagnostico | info                 |    📊 Resumen: 2 exitosos, 0 fallidos de 2 PDFs
+2026-02-02 12:49:42 | INFO     | workers.CorePipeline3_Diagnostico | info                 |    💾 Parquet: diagnostico_consolidado_02.02.2026_12.49.31_3_5ta.parquet
+2026-02-02 12:49:42 | INFO     | workers.CorePipeline3_Diagnostico | info                 |    ✅ 2 registros en 0m 0s
+2026-02-02 12:49:42 | INFO     | workers.CorePipelineStep3Worker | info                 | 📊 Progreso: 4/5 carpetas | 00:01:11
+2026-02-02 12:49:42 | INFO     | workers.CorePipeline3_Diagnostico | info                 | 📊 Progreso: 4/5 carpetas
+2026-02-02 12:49:42 | INFO     | workers.CorePipeline3_Diagnostico | info                 | 📂 Procesando: 4_Convocatoria
+2026-02-02 12:49:42 | INFO     | workers.CorePipeline3_Diagnostico | info                 |    Tipo: CONVOCATORIA | PDFs: 4
+2026-02-02 12:49:42 | INFO     | workers.CorePipeline3_Diagnostico | info                 |    💾 Parquet: diagnostico_consolidado_02.02.2026_12.49.31_4_Convocatoria.parquet
+2026-02-02 12:49:42 | INFO     | workers.CorePipeline3_Diagnostico | info                 |    ✅ 4 registros en 0m 0s
+2026-02-02 12:49:42 | INFO     | workers.CorePipelineStep3Worker | info                 | 📊 Progreso: 5/5 carpetas | 00:01:11
+2026-02-02 12:49:42 | INFO     | workers.CorePipeline3_Diagnostico | info                 | 📊 Progreso: 5/5 carpetas
+2026-02-02 12:49:43 | INFO     | workers.CorePipeline3_Diagnostico | info                 | ✅ Procesamiento paralelo completado en 0m 2s
+2026-02-02 12:49:43 | INFO     | workers.CorePipeline3_Diagnostico | info                 | 📊 Generando Excel en modo streaming...
+2026-02-02 12:49:43 | INFO     | workers.CorePipeline3_Diagnostico | info                 |    ✅ Hoja 'CTRA' escrita (3 registros)
+2026-02-02 12:49:43 | INFO     | workers.CorePipeline3_Diagnostico | info                 |    ✅ Hoja '2_Afp' escrita (2 registros)
+2026-02-02 12:49:43 | INFO     | workers.CorePipeline3_Diagnostico | info                 |    ✅ Hoja '1_Boletas' escrita (3 registros)
+2026-02-02 12:49:43 | INFO     | workers.CorePipeline3_Diagnostico | info                 |    ✅ Hoja '3_5ta' escrita (2 registros)
+2026-02-02 12:49:43 | INFO     | workers.CorePipeline3_Diagnostico | info                 |    ✅ Hoja '1ERA' escrita (4 registros)
+2026-02-02 12:49:43 | INFO     | workers.CorePipeline3_Diagnostico | info                 | ✅ Excel generado en 0s
+2026-02-02 12:49:43 | INFO     | workers.CorePipeline3_Diagnostico | info                 | ✅ Proceso completado
+2026-02-02 12:49:43 | INFO     | workers.CorePipeline3_Diagnostico | info                 | 📁 Archivos .parquet mantenidos en carpeta de trabajo (política empresarial)
+2026-02-02 12:49:43 | INFO     | workers.CorePipelineStep3Worker | info                 | ✅ Worker completado en 00:01:11
+2026-02-02 12:49:57 | INFO     | ui.main_window                 | closeEvent           | Usuario solicitó cerrar la aplicación
+2026-02-02 12:49:57 | INFO     | ui.main_window                 | closeEvent           | Cerrando ventana principal...
+2026-02-02 12:49:57 | INFO     | main                           | main                 | --------------------------------------------------------------------------------
+2026-02-02 12:49:57 | INFO     | main                           | main                 | Aplicación cerrada con código: 0
+2026-02-02 12:49:57 | INFO     | main                           | main                 | ================================================================================

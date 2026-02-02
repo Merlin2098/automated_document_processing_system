@@ -114,7 +114,9 @@ def procesar_carpeta_mp(args: Tuple[str, str, str, str]) -> Tuple[str, str, floa
             if idx % BATCH_SIZE == 0:
                 logs.append(f"   Listados: {idx}/{len(archivos_pdf)}")
     else:
-        # Procesar con extractor
+        # Procesar con extractor + validación post-extracción
+        exitos = 0
+        fallos = 0
         for idx, archivo in enumerate(archivos_pdf, 1):
             ruta_completa = os.path.join(ruta_carpeta, archivo)
             resultado = extractor(ruta_completa)
@@ -129,10 +131,22 @@ def procesar_carpeta_mp(args: Tuple[str, str, str, str]) -> Tuple[str, str, floa
             if "fecha" in resultado and resultado["fecha"]:
                 registro["fecha_extraida"] = resultado["fecha"]
 
+            # Validación post-extracción: detectar fallos diagnósticamente
+            if not resultado.get("exito", False):
+                fallos += 1
+                obs = resultado.get("observaciones", "Sin detalle")
+                registro["observaciones"] = obs
+                logs.append(f"   ⚠️ Fallo extracción: {archivo} → {obs}")
+            else:
+                exitos += 1
+
             registros.append(registro)
 
             if idx % BATCH_SIZE == 0:
                 logs.append(f"   Procesados: {idx}/{len(archivos_pdf)}")
+
+        # Resumen de validación por carpeta
+        logs.append(f"   📊 Resumen: {exitos} exitosos, {fallos} fallidos de {len(archivos_pdf)} PDFs")
 
     # Escribir Parquet inmediatamente
     try:
@@ -204,13 +218,13 @@ def procesar_carpetas_paralelo(ruta_carpeta_trabajo: str, nombre_base_excel: str
             for log_line in logs:
                 logger.info(log_line)
                 print(log_line)
-            
+
             rutas_parquet[nombre_carpeta] = ruta_parquet
             carpetas_completadas += 1
-            
-            # Reportar progreso global
+
+            # Reportar progreso global (incluir logs para que el worker los surfacee)
             if progress_callback:
-                progress_callback(carpetas_completadas, total_carpetas, tiempo_carpeta)
+                progress_callback(carpetas_completadas, total_carpetas, tiempo_carpeta, logs)
             
             print(f"\n📊 Progreso global: {carpetas_completadas}/{total_carpetas} carpetas completadas")
             logger.info(f"📊 Progreso: {carpetas_completadas}/{total_carpetas} carpetas")
@@ -255,6 +269,8 @@ def generar_excel_streaming(rutas_parquet: Dict[str, str], ruta_excel: str) -> b
             
             # Leer con DuckDB (más rápido que pandas)
             df = duckdb.read_parquet(ruta_parquet).df()
+            # Convertir pd.NA → None (openpyxl no soporta pd.NA)
+            df = df.where(df.notna(), None)
             
             if df.empty:
                 logger.warning(f"⚠️ DataFrame vacío para {nombre_carpeta}")

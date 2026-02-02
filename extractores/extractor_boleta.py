@@ -96,41 +96,41 @@ def extraer_datos_boleta(ruta_pdf: str, logger=None) -> Dict:
         
         # Caracteres válidos para nombres
         CARACTERES_NOMBRE = r'[A-ZÑÁÉÍÓÚÜ\s\-\']'
-        
-        # Extraer DNI
-        match_dni = re.search(r'CÓDIGO\s*(\d{8})', texto)
-        if match_dni:
-            resultado["dni"] = match_dni.group(1).strip()
-        
-        # Extraer Nombre (3 variantes)
-        match_nombre = re.search(
-            rf'APELLIDOS Y NOMBRES\s*({CARACTERES_NOMBRE}+)(?=\s*FECHA ING|\s*CÓDIGO CORP|\s*\d{{2,}}|\s*SUELDO)',
-            texto,
-            re.DOTALL
-        )
-        
-        if not match_nombre:
-            match_nombre = re.search(
-                rf'({CARACTERES_NOMBRE}+)\s*FECHA ING\s*\d{{2}}/\d{{2}}/\d{{4}}',
-                texto,
-                re.DOTALL
-            )
-        
-        if not match_nombre:
-            match_nombre = re.search(
-                rf'CÓDIGO CORP\s*APELLIDOS Y NOMBRES\s*({CARACTERES_NOMBRE}+)\s*ESSALUD',
-                texto,
-                re.DOTALL
-            )
-        
-        if match_nombre:
-            nombre_raw = match_nombre.group(1).strip()
-            resultado["nombre"] = limpiar_nombre(nombre_raw)
-        
+
+        # Extraer DNI (múltiples patrones, nuevo formato primero)
+        patrones_dni = [
+            r'CÓDIGO\s*(?P<dni>\d{8})',                              # Original: CÓDIGO seguido de 8 dígitos
+            r'DOC\s+IDENTIDAD\s*\n?\s*DNI\s*[-:.]?\s*(?P<dni>\d{8})',  # Nuevo: DOC IDENTIDAD\nDNI - 12345678
+            r'DNI\s*[-:.]?\s*(?P<dni>\d{8})',                        # Fallback: DNI - 12345678
+        ]
+        for patron in patrones_dni:
+            match_dni = re.search(patron, texto)
+            if match_dni:
+                resultado["dni"] = match_dni.group("dni").strip()
+                break
+
+        # Extraer Nombre (múltiples patrones, orden de prioridad)
+        patrones_nombre = [
+            # Original: APELLIDOS Y NOMBRES seguido de nombre hasta delimitador
+            rf'APELLIDOS Y NOMBRES\s*(?P<nombre>{CARACTERES_NOMBRE}+)(?=\s*FECHA ING|\s*CÓDIGO CORP|\s*\d{{2,}}|\s*SUELDO)',
+            # Fallback: nombre entre el texto antes de FECHA ING
+            rf'(?P<nombre>{CARACTERES_NOMBRE}+)\s*FECHA ING\s*\d{{2}}/\d{{2}}/\d{{4}}',
+            # Fallback: nombre entre CÓDIGO CORP + APELLIDOS Y NOMBRES ... ESSALUD
+            rf'CÓDIGO CORP\s*APELLIDOS Y NOMBRES\s*(?P<nombre>{CARACTERES_NOMBRE}+)\s*ESSALUD',
+            # Nuevo fallback: extracción por fila de tabla (código 8dig + nombre + fecha)
+            rf'(?:\d{{8}})\s+(?:[\w\s]*?)\s*(?P<nombre>[A-ZÁÉÍÓÚÑ\s]{{5,}}?)\s+\d{{2}}/\d{{2}}/\d{{4}}',
+        ]
+        for patron in patrones_nombre:
+            match_nombre = re.search(patron, texto, re.DOTALL)
+            if match_nombre:
+                nombre_raw = match_nombre.group("nombre").strip()
+                resultado["nombre"] = limpiar_nombre(nombre_raw)
+                break
+
         # Extraer Fecha de Ingreso
-        match_fecha = re.search(r'FECHA ING\s*(\d{2}/\d{2}/\d{4})', texto)
+        match_fecha = re.search(r'FECHA ING\s*(?P<fecha>\d{2}/\d{2}/\d{4})', texto)
         if match_fecha:
-            fecha_raw = match_fecha.group(1).strip()
+            fecha_raw = match_fecha.group("fecha").strip()
             resultado["fecha"] = fecha_raw.replace('/', '-')  # dd-mm-yyyy
         
         # Determinar éxito y observaciones
