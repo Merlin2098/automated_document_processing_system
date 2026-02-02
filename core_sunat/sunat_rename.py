@@ -5,7 +5,6 @@ import sys
 from tkinter import Tk, filedialog, messagebox
 import time
 import json
-import traceback
 
 from utils.logger import Logger
 
@@ -428,9 +427,5 @@ if __name__ == "__main__":
             sys.exit(1)
             
     except Exception as e:
-        print(f"❌ Error crítico: {e}")
-        logger.error(f"❌ Error crítico: {e}")
-        logger.error(traceback.format_exc())
-        import traceback
-        traceback.print_exc()
+        logger.exception(f"Error critico: {e}")
         sys.exit(1)

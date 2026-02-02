@@ -6,7 +6,7 @@ from PySide6.QtCore import QThread, Signal
 import os
 
 # Importar sistema de logging
-from utils.logger import get_logger, log_start, log_end, log_exception
+from utils.logger import get_logger, log_exception
 
 # Obtener logger para este worker
 logger = get_logger('workers.core_pipeline_step1')
@@ -41,7 +41,7 @@ class CorePipelineStep1Worker(QThread):
     def run(self):
         """Ejecuta el proceso de creación de estructura"""
         try:
-            log_start(logger, "Creación de Estructura (Step 1)", carpeta_base=self.folder_path)
+            logger.info("Iniciando: Creacion de Estructura (Step 1) - carpeta_base=%s", self.folder_path)
             
             self.log_signal.emit("info", "🚀 Iniciando creación de estructura")
             self.log_signal.emit("info", f"📂 Carpeta base: {self.folder_path}")
@@ -110,12 +110,10 @@ class CorePipelineStep1Worker(QThread):
             self.stats_signal.emit(stats)
             
             # Log final
-            log_end(
-                logger,
-                "Creación de Estructura (Step 1)",
-                success=(len(errores) == 0),
-                **stats
-            )
+            if len(errores) == 0:
+                logger.info("Completado: Creacion de Estructura (Step 1) - %s", stats)
+            else:
+                logger.warning("Completado con errores: Creacion de Estructura (Step 1) - %s", stats)
             
             # Emitir resultado final
             resultado = {

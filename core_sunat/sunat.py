@@ -364,8 +364,5 @@ if __name__ == "__main__":
         logger.info("✅ Proceso completado exitosamente")
         sys.exit(0)
     except Exception as e:
-        print(f"❌ Error crítico: {e}")
-        logger.error(f"❌ Error crítico: {e}")
-        logger.error(traceback.format_exc())
-        traceback.print_exc()
+        logger.exception(f"Error critico: {e}")
         sys.exit(1)

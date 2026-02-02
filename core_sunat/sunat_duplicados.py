@@ -4,7 +4,6 @@ from typing import Optional, Dict, List, Tuple
 from collections import defaultdict
 from tkinter import Tk, filedialog
 import time
-import traceback
 import sys
 
 from utils.logger import Logger
@@ -406,9 +405,5 @@ if __name__ == "__main__":
             sys.exit(1)
             
     except Exception as e:
-        print(f"❌ Error crítico: {e}")
-        logger.error(f"❌ Error crítico: {e}")
-        logger.error(traceback.format_exc())
-        import traceback
-        traceback.print_exc()
+        logger.exception(f"Error critico: {e}")
         sys.exit(1)

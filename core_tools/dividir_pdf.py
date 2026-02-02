@@ -1,8 +1,6 @@
 import os
 import sys
 from PyPDF2 import PdfReader, PdfWriter
-import traceback
-
 # Importar logger
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from utils.logger import Logger
@@ -29,8 +27,7 @@ def obtener_parametros(ruta_pdf=None, hojas_por_pdf=None):
 
     if not os.path.isfile(ruta_pdf):
         error_msg = f"No se encontró ningún archivo en la ruta: {ruta_pdf}"
-        logger.error(f"❌ {error_msg}")
-        print(f"⚠️ {error_msg}")
+        logger.error(error_msg)
         return None, None
 
     # hojas
@@ -50,12 +47,10 @@ def obtener_parametros(ruta_pdf=None, hojas_por_pdf=None):
         try:
             hojas = int(hojas_por_pdf)
             if hojas <= 0:
-                logger.error("❌ La cantidad de hojas debe ser positiva")
-                print("⚠️ Error: La cantidad de hojas debe ser un número entero positivo.")
+                logger.error("La cantidad de hojas debe ser positiva")
                 return None, None
         except Exception:
-            logger.error("❌ El parámetro 'hojas_por_pdf' no es válido")
-            print("⚠️ Error: el parámetro 'hojas_por_pdf' no es un número válido.")
+            logger.error("El parametro 'hojas_por_pdf' no es valido")
             return None, None
 
     logger.info(f"✅ PDF: {os.path.basename(ruta_pdf)}")
@@ -86,8 +81,7 @@ def validar_division(ruta_pdf: str, hojas_por_pdf: int):
         logger.info(f"   Páginas por archivo: {hojas_por_pdf}")
 
         if total_hojas == 0:
-            logger.error("❌ El PDF no contiene páginas")
-            print("❌ Error: El PDF no contiene páginas.")
+            logger.error("El PDF no contiene paginas")
             return None
 
         if total_hojas % hojas_por_pdf == 0:
@@ -96,19 +90,14 @@ def validar_division(ruta_pdf: str, hojas_por_pdf: int):
             return num_pdfs_a_generar
         else:
             residuo = total_hojas % hojas_por_pdf
-            logger.error(f"❌ División inexacta: residuo de {residuo} páginas")
-            print(f"❌ Error: El total de hojas ({total_hojas}) no es divisible exactamente por la cantidad deseada ({hojas_por_pdf}).")
-            print(f"   El residuo es: {residuo}. El proceso ha sido abortado.")
+            logger.error(f"Division inexacta: total={total_hojas}, por_pdf={hojas_por_pdf}, residuo={residuo}")
             return None
 
     except FileNotFoundError:
-        logger.error(f"❌ Archivo no encontrado: {ruta_pdf}")
-        print(f"❌ Error: El archivo en la ruta '{ruta_pdf}' no fue encontrado. Verifique la ruta.")
+        logger.error(f"Archivo no encontrado: {ruta_pdf}")
         return None
     except Exception as e:
-        logger.error(f"❌ Error al leer PDF: {e}")
-        logger.error(traceback.format_exc())
-        print(f"❌ Error al intentar leer el PDF: {e}")
+        logger.exception(f"Error al leer PDF: {e}")
         return None
 
 # --- 3. Dividir y Guardar el PDF ---
@@ -178,8 +167,7 @@ def dividir_pdf(ruta_pdf: str, hojas_por_pdf: int, num_pdfs_a_generar: int, prog
                         progress_callback(pdfs_generados, num_pdfs_a_generar)
                         
                 except Exception as e:
-                    logger.error(f"⚠️ Error generando {nombre_archivo}: {e}")
-                    print(f"⚠️ Error generando {nombre_archivo}: {e}")
+                    logger.error(f"Error generando {nombre_archivo}: {e}")
                     errores += 1
 
         logger.info(f"✅ División completada: {pdfs_generados} archivos generados")
@@ -194,9 +182,7 @@ def dividir_pdf(ruta_pdf: str, hojas_por_pdf: int, num_pdfs_a_generar: int, prog
         }
 
     except Exception as e:
-        logger.error(f"❌ Error durante la división: {e}")
-        logger.error(traceback.format_exc())
-        print(f"❌ Error durante el proceso de división: {e}")
+        logger.exception(f"Error durante la division: {e}")
         return {
             'success': False,
             'pdfs_generados': pdfs_generados,
@@ -275,5 +261,4 @@ if __name__ == "__main__":
         procesar_pdfs()
         logger.info("✅ Proceso completado exitosamente")
     except Exception as e:
-        logger.error(f"❌ Error crítico: {e}")
-        logger.error(traceback.format_exc())
+        logger.exception(f"Error critico: {e}")

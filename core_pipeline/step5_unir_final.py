@@ -944,6 +944,4 @@ if __name__ == "__main__":
     except KeyboardInterrupt:
         print("\n\n⚠ Proceso interrumpido por el usuario.")
     except Exception as e:
-        print(f"\n✗ Error inesperado: {e}")
-        import traceback
-        traceback.print_exc()
+        logger.exception(f"Error inesperado: {e}")
