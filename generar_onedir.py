@@ -10,12 +10,12 @@ Migrado a PySide6 con arquitectura modular
 
 import os
 import sys
-import pkg_resources
 import subprocess
 import shutil
 from pathlib import Path
 import time
 import threading
+from importlib.metadata import distributions
 
 # ==========================================================
 # CONFIGURACIÓN
@@ -54,16 +54,17 @@ def validar_entorno_virtual():
 
     print(f"✅ Entorno virtual detectado: {sys.prefix}\n")
 
-    # Nota: pkg_resources puede lanzar advertencias si no está instalado, 
-    # pero es estándar en venv.
     try:
-        paquetes = sorted([(pkg.key, pkg.version) for pkg in pkg_resources.working_set])
+        paquetes = sorted(
+            [(d.metadata["Name"].lower(), d.metadata["Version"]) for d in distributions()],
+            key=lambda x: x[0]
+        )
         print(f"📦 Librerías instaladas ({len(paquetes)}):")
         for nombre, version in paquetes:
             flag = "🧹 (excluir)" if nombre in EXCLUSIONES else "✅"
             print(f"   {flag} {nombre:<25} {version}")
     except Exception:
-        print("⚠️ No se pudo listar paquetes con pkg_resources (no crítico).")
+        print("⚠️ No se pudo listar paquetes (no crítico).")
     print("\n")
 
 # ==========================================================
@@ -106,6 +107,8 @@ def limpiar_builds():
 def construir_comando():
     """Construye el comando completo de PyInstaller"""
     base_dir = Path.cwd()
+    # Separador de --add-data: ';' en Windows, ':' en Linux/macOS
+    sep = ";" if sys.platform.startswith("win") else ":"
 
     comando = [
         sys.executable, "-m", "PyInstaller",
@@ -159,14 +162,6 @@ def construir_comando():
         "multiprocessing.managers",
         "multiprocessing.queues",
         
-        # Expresiones regulares y utilidades
-        "re",
-        "pathlib",
-        "json",
-        "datetime",
-        "shutil",
-        "logging",
-        
         # Sistema
         "psutil",
         
@@ -195,11 +190,30 @@ def construir_comando():
         "utils.logger_config",
         "utils.excel_converter",
         
-        # Core modules (para multiprocessing)
+        # Core pipeline (todos los pasos - workers los cargan dinámicamente)
+        "core_pipeline.step1_generar",
+        "core_pipeline.step2_mover",
         "core_pipeline.step3_generar_diagnostico",
+        "core_pipeline.step4_rename",
+        "core_pipeline.step5_unir_final",
+
+        # Core SUNAT
+        "core_sunat.sunat",
+        "core_sunat.sunat_duplicados",
+        "core_sunat.sunat_rename",
+
+        # Core tools
+        "core_tools.dividir_pdf",
+
+        # Extractores (todos)
         "extractores.extractor_afp",
         "extractores.extractor_boleta",
         "extractores.extractor_quinta",
+        "extractores.extractor_sunat",
+        "extractores.contract_number_extractor",
+
+        # Utils (path_helper crítico para resolución de recursos en frozen)
+        "utils.path_helper",
     ]
     
     for imp in hidden_imports:
@@ -226,9 +240,11 @@ def construir_comando():
     # ======================================================
     print("\n🔧 Configurando runtime hooks...")
     
-    # Crear directorio hooks si no existe
     hooks_dir = base_dir / "hooks"
-    hooks_dir.mkdir(exist_ok=True)
+    if not hooks_dir.exists():
+        print(f"   ❌ ERROR: Directorio hooks/ no encontrado en {hooks_dir}")
+        print(f"      Este directorio debe existir con el runtime hook de multiprocessing.")
+        sys.exit(1)
     
     # Verificar si existe el hook de multiprocessing
     hook_mp_path = hooks_dir / "pyi_rth_multiprocessing.py"
@@ -253,7 +269,7 @@ def construir_comando():
     # 1. CONFIG: config.json
     config_json = base_dir / "resources" / "config.json"
     if config_json.exists():
-        comando += ["--add-data", f"{config_json};resources"]
+        comando += ["--add-data", f"{config_json}{sep}resources"]
         print(f"   ✅ config.json")
     else:
         print(f"   ⚠️  No se encontró resources/config.json")
@@ -262,14 +278,15 @@ def construir_comando():
     themes_dir = base_dir / "resources" / "themes"
     if themes_dir.exists():
         for theme_file in themes_dir.glob("*.json"):
-            comando += ["--add-data", f"{theme_file};resources/themes"]
+            comando += ["--add-data", f"{theme_file}{sep}resources/themes"]
             print(f"   ✅ {theme_file.name}")
     else:
         print(f"   ⚠️  No se encontró carpeta resources/themes")
 
-    # 3. ICONO: también incluido en bundle (además de --icon)
+    # 3. ICONO: incluido en bundle vía --add-data para que path_helper pueda
+    #    resolverlo en runtime (el --icon solo lo embebe en el header PE del exe)
     if ico_path.exists():
-        comando += ["--add-data", f"{ico_path};resources"]
+        comando += ["--add-data", f"{ico_path}{sep}resources"]
         print(f"   ✅ app.ico (bundle)")
 
     # ======================================================
@@ -297,99 +314,63 @@ def generar_exe():
     print(" ".join(cmd))
     print("─" * 60 + "\n")
     
-    # Ejecutar PyInstaller con captura de salida en tiempo real
     print("🔨 Ejecutando PyInstaller...\n")
-    
-    # Fases estimadas del proceso
-    fases = [
-        ("📦 Analizando dependencias", 0, 15),
-        ("🔍 Detectando módulos", 15, 30),
-        ("📚 Recopilando archivos", 30, 50),
-        ("⚙️  Compilando ejecutable", 50, 75),
-        ("📁 Empaquetando recursos", 75, 90),
-        ("✨ Finalizando bundle", 90, 100),
-    ]
-    
-    # Variable para controlar el progreso
-    progreso_actual = [0]
+
     proceso_completado = [False]
-    
-    def mostrar_progreso():
-        """Muestra una barra de progreso animada"""
+
+    def mostrar_spinner():
+        """Muestra un spinner simple mientras PyInstaller ejecuta"""
         simbolos = ['⣾', '⣽', '⣻', '⢿', '⡿', '⣟', '⣯', '⣷']
         idx = 0
-        fase_actual = 0
-        
         while not proceso_completado[0]:
-            # Determinar fase actual basada en progreso
-            for i, (nombre, inicio, fin) in enumerate(fases):
-                if inicio <= progreso_actual[0] < fin:
-                    fase_actual = i
-                    break
-            
-            fase_nombre = fases[fase_actual][0]
-            porcentaje = progreso_actual[0]
-            
-            # Construir barra
-            barra_len = 40
-            lleno = int(barra_len * porcentaje / 100)
-            vacio = barra_len - lleno
-            barra = "█" * lleno + "░" * vacio
-            
-            # Mostrar con animación
-            print(f"\r{simbolos[idx]} {fase_nombre:<35} [{barra}] {porcentaje:3d}%", end="", flush=True)
-            
+            print(f"\r{simbolos[idx]} Generando ejecutable...", end="", flush=True)
             idx = (idx + 1) % len(simbolos)
-            time.sleep(0.1)
-        
-        # Barra completa al finalizar
-        print(f"\r✅ Generación completada          [{'█' * 40}] 100%")
-    
-    def actualizar_progreso():
-        """Simula el progreso basado en tiempo estimado"""
-        tiempo_total = 60  # Reducido a 1 min para no bloquear visualmente
-        intervalos = 100
-        tiempo_por_intervalo = tiempo_total / intervalos
-        
-        for i in range(intervalos + 1):
-            if proceso_completado[0]:
-                break
-            progreso_actual[0] = i
-            time.sleep(tiempo_por_intervalo)
-    
-    # Iniciar thread de progreso
-    thread_progreso = threading.Thread(target=mostrar_progreso, daemon=True)
-    thread_actualizar = threading.Thread(target=actualizar_progreso, daemon=True)
-    
-    thread_progreso.start()
-    thread_actualizar.start()
-    
-    # Ejecutar PyInstaller
-    # Importante: para debug, a veces es util quitar stdout=PIPE si falla,
-    # pero aqui mantenemos la logica original
+            time.sleep(0.15)
+        print("\r✅ Generación completada.          ")
+
+    thread_spinner = threading.Thread(target=mostrar_spinner, daemon=True)
+    thread_spinner.start()
+
     result = subprocess.run(
         cmd,
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
         text=True
     )
-    
-    # Marcar como completado
+
     proceso_completado[0] = True
-    progreso_actual[0] = 100
-    
-    # Esperar a que termine la animación
-    time.sleep(0.5)
+    time.sleep(0.3)
     
     print("\n\n" + "=" * 60)
     if result.returncode == 0:
         carpeta_exe = Path(DIST_PATH) / NOMBRE_EXE.replace(".exe", "")
-        print(f"✅ GENERACIÓN COMPLETADA CORRECTAMENTE")
+        exe_path = carpeta_exe / NOMBRE_EXE
+        internal_dir = carpeta_exe / "_internal"
+
+        # Verificación post-build
+        errores_post = []
+        if not exe_path.exists():
+            errores_post.append(f"Ejecutable no encontrado: {exe_path}")
+        if not internal_dir.exists():
+            errores_post.append(f"Carpeta _internal/ no encontrada en {carpeta_exe}")
+        else:
+            for recurso in ["resources/config.json", "resources/themes/theme_dark.json", "resources/themes/theme_light.json"]:
+                if not (internal_dir / recurso).exists():
+                    errores_post.append(f"Recurso faltante en _internal/: {recurso}")
+
+        if errores_post:
+            print("⚠️  GENERACIÓN COMPLETADA CON ADVERTENCIAS")
+            print("=" * 60)
+            for err in errores_post:
+                print(f"   ⚠️  {err}")
+        else:
+            print(f"✅ GENERACIÓN COMPLETADA CORRECTAMENTE")
+
         print("=" * 60)
         print(f"\n📂 Carpeta de salida:")
         print(f"   {carpeta_exe.absolute()}")
         print(f"\n📦 Ejecutable principal:")
-        print(f"   {(carpeta_exe / NOMBRE_EXE).absolute()}")
+        print(f"   {exe_path.absolute()}")
         print(f"\n💡 IMPORTANTE:")
         print(f"   - Distribuye toda la carpeta '{NOMBRE_EXE.replace('.exe', '')}/'")
         print(f"   - No separar el .exe de la carpeta _internal/")
