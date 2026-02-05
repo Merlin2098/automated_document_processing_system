@@ -29,6 +29,7 @@ logger = Logger("ContractNumberExtractor")
 # ============================================================
 
 # Patrones precompilados para mejor performance
+PATTERN_BEFORE_SPACE = re.compile(r'^(\w+)\s')
 PATTERN_STANDARD = re.compile(r'(\d{4,10})', re.IGNORECASE)
 PATTERN_WITH_PREFIX = re.compile(r'(?:CONTRATO|CONTRACT|CT|C)[-_\s]*(\d{4,10})', re.IGNORECASE)
 PATTERN_NUMERIC_ONLY = re.compile(r'^(\d{4,10})$')
@@ -68,15 +69,23 @@ def extract_from_filename(filename: str) -> Optional[str]:
     # Remover extensión para análisis
     nombre_base = os.path.splitext(filename)[0]
     
-    # Estrategia 1: Buscar patrón con prefijo explícito
+    # Estrategia 1: Extraer número antes del primer espacio (formato: "54 NOMBRE_DOC.pdf")
+    match_space = PATTERN_BEFORE_SPACE.search(nombre_base)
+    if match_space:
+        numero = match_space.group(1)
+        if validate_contract_number(numero):
+            logger.debug(f"✓ Extraído antes de espacio: {numero} desde {filename}")
+            return numero
+
+    # Estrategia 2: Buscar patrón con prefijo explícito
     match_prefix = PATTERN_WITH_PREFIX.search(nombre_base)
     if match_prefix:
         numero = match_prefix.group(1)
         if validate_contract_number(numero):
             logger.debug(f"✓ Extraído con prefijo: {numero} desde {filename}")
             return numero
-    
-    # Estrategia 2: Buscar secuencia numérica estándar
+
+    # Estrategia 3: Buscar secuencia numérica estándar (4-10 dígitos)
     match_standard = PATTERN_STANDARD.search(nombre_base)
     if match_standard:
         numero = match_standard.group(1)
@@ -168,12 +177,12 @@ def validate_contract_number(number: str) -> bool:
     if not number or not isinstance(number, str):
         return False
     
-    # Verificar que sea solo dígitos
-    if not number.isdigit():
+    # Verificar que sea alfanumérico (dígitos o letras+dígitos como 1A, 11B)
+    if not number.isalnum():
         return False
     
     # Verificar longitud
-    if len(number) < 4 or len(number) > 10:
+    if len(number) < 1 or len(number) > 10:
         return False
     
     # Rechazar números triviales (solo ceros)
