@@ -31,11 +31,23 @@ The Agent Executor is responsible for **safely implementing** changes defined by
 ### 1.3 Core Principles
 
 1. **Adherencia al Plan** : Ejecutar SOLO lo especificado en planes validados
-2. **Reversibilidad** : Use `git restore` for any necessary change reversals
+2. **Reversibilidad** : Crear puntos de restauración antes de cualquier modificación
 3. **Huella Mínima** : Tocar solo archivos explícitamente listados
 4. **Transparencia** : Reportar todas las acciones con logs detallados
-5. **Fail-Safe** : Detener ante cualquier error inesperado
+5. **Fail-Safe** : Detener y revertir ante cualquier error inesperado
 6. **Workspace Autonomy** : Gestionar libremente archivos en `agent/agent_outputs/` y `agent/temp/`
+
+### 1.4 Skills Reference
+
+This agent operates using the following skills:
+
+| Skill | Purpose |
+|-------|---------|
+| `governance/protected_file_validation` | Validates targets against blacklist |
+| `governance/path_traversal_prevention` | Prevents directory traversal attacks |
+| `execution/git_rollback_strategy` | Uses git revert for rollback |
+| `execution/plan_archive_protocol` | Archives plans before new execution |
+| `execution/execution_flow_orchestration` | Orchestrates execution workflow |
 
 ---
 
@@ -47,6 +59,7 @@ The Agent Executor is responsible for **safely implementing** changes defined by
 | ----------------------------- | ----------------------------------------------------- | -------- |
 | **Action Execution**    | Perform actions defined in inspector plans            | Critical |
 | **Safe Implementation** | Implement changes with minimal footprint              | Critical |
+| **Rollback Management** | Generate and maintain rollback checkpoints            | Critical |
 | **Status Reporting**    | Produce detailed execution and error reports          | High     |
 | **Scope Enforcement**   | Operate only on explicitly listed files               | High     |
 | **Report Persistence**  | Write all reports to `agent/agent_outputs/reports/` | High     |
@@ -57,11 +70,11 @@ The executor CAN perform the following operations:
 
 | Operation         | Description                 | Reversibility               |
 | ----------------- | --------------------------- | --------------------------- |
-| `FILE_CREATE`   | Create new files            | Use `git restore`           |
-| `FILE_MODIFY`   | Modify existing files       | Use `git restore`           |
-| `FILE_DELETE`   | Delete files                | Use `git restore`           |
-| `FILE_RENAME`   | Rename files             | Use `git restore`           |
-| `SCHEMA_UPDATE` | Update JSON/YAML schemas | Use `git restore`           |
+| `FILE_CREATE`   | Create new files            | Reversible (delete)         |
+| `FILE_MODIFY`   | Modify existing files       | Reversible (restore backup) |
+| `FILE_DELETE`   | Delete files                | Reversible (restore backup) |
+| `FILE_RENAME`   | Rename files             | Reversible (rename back)    |
+| `SCHEMA_UPDATE` | Update JSON/YAML schemas | Reversible (restore backup) |
 
 ### 2.3 Operation Boundaries
 
@@ -204,7 +217,8 @@ def archive_active_plans():
       "reason": "Dependency failed"
     }
   ],
-
+  "rollback_performed": false,
+  "rollback_manifest_id": "uuid (if rollback available)"
 }
 ```
 
@@ -251,7 +265,37 @@ def archive_active_plans():
 }
 ```
 
-### 4.3 Tertiary Output: Executor Input Prompt (TXT)
+### 4.3 Tertiary Output: Rollback Manifest (JSON)
+
+**Location:** `agent/agent_outputs/reports/{timestamp}_{task_id}/rollback_manifest.json`
+
+**Required Structure:**
+
+```json
+{
+  "manifest_id": "uuid-v4",
+  "plan_id": "uuid (reference)",
+  "created_at": "ISO-8601",
+  "expires_at": "ISO-8601 (optional TTL)",
+  "status": "ACTIVE|EXECUTED|EXPIRED",
+  "checkpoints": [
+    {
+      "checkpoint_id": "uuid",
+      "file_path": "relative/path/to/file",
+      "backup_location": "agent/agent_outputs/reports/{id}/backups/{filename}.bak",
+      "original_hash": "sha256",
+      "original_size": 1234,
+      "operation_to_reverse": "MODIFY",
+      "restore_command": "Description of how to restore"
+    }
+  ],
+  "rollback_order": ["checkpoint_id_1", "checkpoint_id_2"],
+  "auto_rollback_script": "Path to generated rollback script",
+  "notes": "Any special instructions for manual rollback"
+}
+```
+
+### 4.4 Quaternary Output: Executor Input Prompt (TXT)
 
 **Location:** `agent/agent_outputs/reports/{timestamp}_{task_id}/executor_prompt.txt`
 
@@ -353,7 +397,12 @@ Think like a deterministic executor, not an auditor or designer.
 │     └─► Check file permissions                                   │
 │     └─► CHECK PROTECTED FILES BLACKLIST (CRITICAL)               │
 │                                                                  │
-│  3. BUILD EXECUTION GRAPH                                        │
+│  3. CREATE ROLLBACK CHECKPOINT                                   │
+│     └─► Backup all files to be modified/deleted                  │
+│     └─► Generate rollback manifest                               │
+│     └─► Store in agent/agent_outputs/reports/{id}/backups/       │
+│                                                                  │
+│  4. BUILD EXECUTION GRAPH                                        │
 │     └─► Parse action dependencies                                │
 │     └─► Create directed acyclic graph (DAG)                      │
 │     └─► Topological sort for execution order                     │
@@ -374,11 +423,13 @@ Think like a deterministic executor, not an auditor or designer.
 │  7. PERSIST REPORTS (MANDATORY)                                  │
 │     └─► Write execution_report.json                              │
 │     └─► Write change_log.json                                    │
+│     └─► Write rollback_manifest.json                             │
 │     └─► Write executor_prompt.txt                                │
 │     └─► Store in agent/agent_outputs/reports/{id}/               │
 │                                                                  │
 │  8. ERROR HANDLING (if any)                                      │
 │     └─► If stop_on_error: halt execution                         │
+│     └─► If rollback_on_failure: execute rollback                 │
 │     └─► Generate error report                                    │
 │     └─► Update execution status                                  │
 │                                                                  │
@@ -400,17 +451,26 @@ def execute_action(action, context):
     if is_protected_file(action.target):
         return ActionResult(status=REJECTED, reason="Protected file")
   
-    # 3. Execute operation
+    # 3. Create backup if modifying/deleting
+    if action.action_type in [FILE_MODIFY, FILE_DELETE]:
+        backup_path = create_backup(action.target)
+        context.register_backup(action.action_id, backup_path)
+  
+    # 4. Execute operation
     try:
         result = execute_operation(action.operation, action.target)
     except Exception as e:
+        if action.reversible and context.rollback_on_failure:
+            restore_backup(action.action_id)
         return ActionResult(status=FAILED, error=e)
   
-    # 4. Validate post-conditions
+    # 5. Validate post-conditions
     if not validate_postconditions(action, result):
+        if action.reversible and context.rollback_on_failure:
+            restore_backup(action.action_id)
         return ActionResult(status=FAILED, reason="Postconditions not met")
   
-    # 5. Record change
+    # 6. Record change
     context.change_log.append(
         ChangeRecord(
             action_id=action.action_id,
@@ -424,11 +484,36 @@ def execute_action(action, context):
     return ActionResult(status=SUCCESS, output=result)
 ```
 
+### 5.3 Rollback Strategy
+
+Rollback is handled via **git revert**, not custom backup files.
+
+See: `agent/skills/execution/git_rollback_strategy.md`
+
+**Trigger Conditions:**
+- `stop_on_error=true` AND action failed
+- `rollback_on_failure=true` AND critical error
+- User manually requests rollback
+
+**Rollback Process:**
+1. Identify the commit(s) to revert
+2. Execute `git revert` for the relevant commit(s)
+3. Log the revert operation
+4. Update execution status to `ROLLED_BACK`
+
 ---
 
-## 6. Reversibility
+## 6. Reversibility Matrix
 
-If any changes need to be reversed, use `git restore` to restore files to their previous state.
+| Operation      | Reversibility | Method                   |
+| -------------- | ------------- | ------------------------ |
+| File created   | Full          | git revert               |
+| File modified  | Full          | git revert               |
+| File deleted   | Full          | git revert               |
+| File renamed   | Full          | git revert               |
+| Schema updated | Full          | git revert               |
+| SQL executed   | Partial       | Only if reversible query |
+| Pipeline run   | No            | External side effects    |
 
 ---
 
@@ -441,6 +526,7 @@ If any changes need to be reversed, use `git restore` to restore files to their 
 | **PLAN_ONLY**             | Execute only actions from validated plans | Protocol validation      |
 | **FILE_WHITELIST**        | Modify only files listed in plan          | Path matching            |
 | **PROTECTED_FILES_CHECK** | NEVER modify files in blacklist           | Pre-execution validation |
+| **CHECKPOINT_FIRST**      | Create rollback before any modification   | Pre-execution hook       |
 | **REPORT_ALL**            | Report all actions including failures     | Post-execution hook      |
 | **NO_INTERPRETATION**     | Do not extend or interpret instructions   | Literal execution        |
 
@@ -449,6 +535,7 @@ If any changes need to be reversed, use `git restore` to restore files to their 
 | Constraint               | Default  | Override Condition       |
 | ------------------------ | -------- | ------------------------ |
 | `stop_on_error`        | `true` | Plan specifies `false` |
+| `rollback_on_failure`  | `true` | Plan specifies `false` |
 | `preserve_permissions` | `true` | Explicitly disabled      |
 | `verify_hashes`        | `true` | Performance critical     |
 
@@ -458,10 +545,12 @@ The executor MUST NOT:
 
 * Modify files not listed in the task plan
 * Execute actions without protocol validation
+* Skip rollback checkpoint creation
 * Interpret or extend plan instructions
 * Access network resources (except for approved tools)
 * Execute arbitrary shell commands
 * **Modify protected files in the blacklist (see section 9.1)**
+* Delete rollback manifests prematurely
 
 ---
 
@@ -472,7 +561,7 @@ The executor MUST NOT:
 | Category                       | Code Range | Response                  |
 | ------------------------------ | ---------- | ------------------------- |
 | **Validation Error**     | 1000-1999  | Reject, return error      |
-| **File System Error**    | 2000-2999  | Log, skip action          |
+| **File System Error**    | 2000-2999  | Log, attempt rollback     |
 | **Permission Error**     | 3000-3999  | Log, skip action          |
 | **Protected File Error** | 3100-3199  | Reject immediately, alert |
 | **Dependency Error**     | 4000-4999  | Skip dependent actions    |
@@ -504,10 +593,10 @@ The executor MUST NOT:
 | File not found (MODIFY)            | Skip action           | Mark as failed       |
 | Permission denied                  | Skip action           | Mark as failed       |
 | **Protected file violation** | **Reject plan** | **Alert user** |
-| Disk full                          | Stop execution        | Use git restore      |
-| Hash mismatch                      | Stop execution        | Use git restore      |
+| Disk full                          | Stop execution        | Rollback             |
+| Hash mismatch                      | Stop execution        | Rollback             |
 | Dependency failed                  | Skip dependents       | Continue             |
-| Unknown error                      | Stop execution        | Escalate             |
+| Unknown error                      | Stop execution        | Rollback + Escalate  |
 
 ---
 
@@ -533,7 +622,7 @@ protected_files:
     - .pre-commit-config.yaml
 
   agent_system_documentation:
-    - agent/agent_rules.md
+    - agent/rules/agent_rules.md
     - agent/architecture_proposal.md
     - agent/agent_inspector/agent_inspector.md
     - agent/agent_executor/agent_executor.md
@@ -562,7 +651,7 @@ def is_protected_file(file_path: str) -> bool:
         "pyproject.toml",
         "setup.py",
         ".pre-commit-config.yaml",
-        "agent/agent_rules.md",
+        "agent/rules/agent_rules.md",
         "agent/architecture_proposal.md",
         "agent/agent_inspector/agent_inspector.md",
         "agent/agent_executor/agent_executor.md",
@@ -767,6 +856,29 @@ Inspector ──► Protocol ──► Executor
 }
 ```
 
+### 12.3 Example: Failed Execution with Rollback
+
+ **Scenario** : Second action fails, triggering rollback
+
+**Execution Report:**
+
+```json
+{
+  "report_id": "report-003",
+  "status": "ROLLED_BACK",
+  "actions_summary": {"total": 3, "completed": 1, "failed": 1, "skipped": 1},
+  "actions_failed": [
+    {
+      "action_id": "a002",
+      "error_code": 2001,
+      "error_message": "File not found"
+    }
+  ],
+  "rollback_performed": true,
+  "rollback_manifest_id": "manifest-003"
+}
+```
+
 ---
 
 ## Appendix A: Handler Specifications
@@ -804,20 +916,17 @@ Inspector ──► Protocol ──► Executor
 | ------- | ---------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
 | 1.0.0   | 2026-02-03 | Initial specification                                                                                                                                                                                                                                                          |
 | 2.0.0   | 2026-02-03 | Refactored for Workspace Autonomous model: Updated protected files blacklist with explicit agent documentation, corrected output paths with `agent/`prefix, added protected file validation logic, clarified workspace write permissions, added mandatory report persistence |
-| 2.0.1   | 2026-02-05 | Removed rollback mechanism and simplified reversibility to use `git restore`                                                                                                                                                                                                    |
 
 ---
 
 ## Appendix C: Migration Notes (v1.0 → v2.0)
 
-| Aspect                             | v1.0                  | v2.0                                                                                 | v2.0.1                                                        |
-| ---------------------------------- | --------------------- | ------------------------------------------------------------------------------------ | ------------------------------------------------------------ |
-| **Protected Files**          | Generic list          | Explicit blacklist with agent documentation                                          | No changes                                                   |
-| **Output Paths**             | `agent_outputs/...` | `agent/agent_outputs/...`                                                          | No changes                                                   |
-| **Workspace Write**          | Not specified         | Explicitly allowed in `agent/agent_outputs/`,`agent/temp/` | No changes                                                   |
-| **Protection Enforcement**   | Soft                  | Hard rejection with error code 3100                                                  | No changes                                                   |
-| **Language**                 | English               | English                                                                              | English                                                      |
-| **Report Persistence**       | Optional              | Mandatory                                                                            | No changes                                                   |
-| **Documentation Protection** | Implicit              | Explicit with validation logic                                                       | No changes                                                   |
-| **Reversibility**            | Complex rollback      | Backup-based rollback                                                                | Simplified to use `git restore`                              |
-| **Rollback Manifest**        | Yes                   | Yes                                                                                  | Removed - not required                                       |
+| Aspect                             | v1.0                  | v2.0                                                                                 |
+| ---------------------------------- | --------------------- | ------------------------------------------------------------------------------------ |
+| **Protected Files**          | Generic list          | Explicit blacklist with agent documentation                                          |
+| **Output Paths**             | `agent_outputs/...` | `agent/agent_outputs/...`                                                          |
+| **Workspace Write**          | Not specified         | Explicitly allowed in `agent/agent_outputs/`,`agent/temp/` |
+| **Protection Enforcement**   | Soft                  | Hard rejection with error code 3100                                                  |
+| **Language**                 | English               | English                                                                              |
+| **Report Persistence**       | Optional              | Mandatory                                                                            |
+| **Documentation Protection** | Implicit              | Explicit with validation logic                                                       |

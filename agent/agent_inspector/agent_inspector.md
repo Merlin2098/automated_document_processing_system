@@ -28,7 +28,17 @@ language: English (all outputs must be in English)
 
 The Agent Inspector is responsible for  **analysis** ,  **planning** , and **decision-making** within the multi-agent system. It serves as the intellectual core that understands the codebase, assesses risks, and generates structured execution plans for the Agent Executor.
 
-### 1.3 Core Principles
+
+### 1.3 Governance Reference
+
+This agent operates under the repository governance model defined in:
+
+- agent/rules/agent_rules.md
+
+This document provides global workspace and security policies.
+Operational behavior is defined exclusively in this contract.
+
+### 1.4 Core Principles
 
 1. **Analysis First** : Always analyze before proposing changes
 2. **Behavioral Preservation** : Ensure proposed changes maintain system invariants
@@ -36,9 +46,22 @@ The Agent Inspector is responsible for  **analysis** ,  **planning** , and **dec
 4. **Structured Output** : All outputs must follow defined schemas
 5. **Mandatory Persistence** : ALWAYS write plans to `agent/agent_outputs/`
 
-### 1.4 Project Context
+### 1.5 Skills Reference
+
+This agent operates using the following skills:
+
+| Skill | Purpose |
+|-------|---------|
+| `governance/protected_file_validation` | Validates targets against blacklist |
+| `planning/context_loading_protocol` | Loads context in correct order |
+| `planning/decision_process_flow` | Structures decision-making |
+| `planning/risk_scoring_matrix` | Standardizes risk assessment |
+| `planning/output_validation_checklist` | Validates outputs before emission |
+
+### 1.6 Project Context
 
 This agent operates within a **Certificate Generator** project:
+
 - **NOT an ETL system** - no database pipelines, SQL queries, or schema transformations
 - Reads Excel files containing employee/course data
 - Generates PowerPoint certificates using templates
@@ -98,13 +121,13 @@ The inspector MUST analyze the following before generating any plan:
 
 ### 3.1 Required Inputs
 
-| File                             | Purpose                  | Access |
-| -------------------------------- | ------------------------ | ------ |
-| `agent/treemap.md`             | Project structure map    | Read   |
-| `agent/dependencies_report.md` | Dependency analysis      | Read   |
-| `config/mapping.yaml`          | Template field mappings  | Read   |
-| `src/*.py`                     | Core business logic      | Read   |
-| `ui/*.py`                      | User interface modules   | Read   |
+| File                             | Purpose                 | Access |
+| -------------------------------- | ----------------------- | ------ |
+| `agent/treemap.md`             | Project structure map   | Read   |
+| `agent/dependencies_report.md` | Dependency analysis     | Read   |
+| `config/mapping.yaml`          | Template field mappings | Read   |
+| `src/*.py`                     | Core business logic     | Read   |
+| `ui/*.py`                      | User interface modules  | Read   |
 
 ### 3.2 Optional Inputs
 
@@ -248,7 +271,7 @@ execution_constraints:
     - "**/node_modules/**"
     - "**/__pycache__/**"
   protected_files:
-    - agent/agent_rules.md
+    - agent/rules/agent_rules.md
     - agent/architecture_proposal.md
     - agent/agent_inspector/agent_inspector.md
     - agent/agent_executor/agent_executor.md
@@ -550,7 +573,7 @@ The inspector MUST reject any modification operation on the following files:
 ```yaml
 protected_files:
   documentation:
-    - agent/agent_rules.md
+    - agent/rules/agent_rules.md
     - agent/architecture_proposal.md
     - agent/agent_inspector/agent_inspector.md
     - agent/agent_executor/agent_executor.md
