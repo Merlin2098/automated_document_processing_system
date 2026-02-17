@@ -320,3 +320,62 @@ properties:
               default: warn
               description: "Action on failure"
         description: "Custom validation commands"
+
+  pipeline_data_contract:
+    type: object
+    description: "Optional pipeline data governance contract (recommended for ETL/pipeline tasks)"
+    additionalProperties: false
+    properties:
+      environment:
+        type: string
+        enum: [dev, test, prod]
+        description: "Runtime environment for data path policy"
+
+      source_root:
+        type: string
+        minLength: 1
+        description: "Root directory for immutable source inputs"
+
+      output_root:
+        type: string
+        minLength: 1
+        description: "Root directory for generated artifacts"
+
+      require_external_data_root_in_prod:
+        type: boolean
+        default: true
+        description: "If true, production source/output roots must be outside project_root"
+
+      require_source_output_separation:
+        type: boolean
+        default: true
+        description: "If true, source_root and output_root must differ"
+
+      require_stage_materialization:
+        type: boolean
+        default: true
+        description: "If true, each pipeline stage must write artifacts to disk"
+
+      require_final_layer_from_materialized_inputs:
+        type: boolean
+        default: true
+        description: "If true, final reports must consume persisted artifacts from previous stages"
+
+      output_artifact_formats:
+        type: array
+        description: "Per-artifact format declaration (format is use-case dependent)"
+        items:
+          type: object
+          required: [artifact_id, format]
+          additionalProperties: false
+          properties:
+            artifact_id:
+              type: string
+              minLength: 1
+            format:
+              type: string
+              minLength: 1
+              description: "Examples: parquet, csv, json, xlsx"
+            justification:
+              type: string
+              description: "Reason for chosen format"

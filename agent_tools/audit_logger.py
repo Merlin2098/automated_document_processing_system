@@ -29,6 +29,11 @@ from pathlib import Path
 from typing import Any
 from uuid import uuid4
 
+try:
+    from agent_tools._repo_root import find_project_root
+except ImportError:
+    from _repo_root import find_project_root  # type: ignore
+
 
 # Event types
 EVENT_TYPES = [
@@ -89,12 +94,7 @@ class AuditEntry:
 
 def get_project_root() -> Path:
     """Get the project root directory."""
-    current = Path(__file__).resolve().parent
-    while current != current.parent:
-        if (current / "agent").exists():
-            return current
-        current = current.parent
-    return Path(__file__).resolve().parent.parent
+    return find_project_root(Path(__file__).resolve().parent)
 
 
 def get_log_dir() -> Path:

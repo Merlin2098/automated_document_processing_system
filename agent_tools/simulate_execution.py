@@ -29,6 +29,11 @@ from datetime import datetime
 from pathlib import Path
 from typing import Any
 
+try:
+    from agent_tools._repo_root import find_project_root
+except ImportError:
+    from _repo_root import find_project_root  # type: ignore
+
 
 @dataclass
 class SimulationResult:
@@ -91,17 +96,13 @@ class SimulationReport:
 
 def get_project_root() -> Path:
     """Get the project root directory."""
-    current = Path(__file__).resolve().parent
-    while current != current.parent:
-        if (current / "agent").exists():
-            return current
-        current = current.parent
-    return Path(__file__).resolve().parent.parent
+    return find_project_root(Path(__file__).resolve().parent)
 
 
 def load_task_plan(plan_path: Path) -> dict[str, Any]:
     """Load a task plan from JSON file."""
-    with open(plan_path, encoding="utf-8") as f:
+    # utf-8-sig tolerates BOM produced by some Windows editors.
+    with open(plan_path, encoding="utf-8-sig") as f:
         return json.load(f)
 
 

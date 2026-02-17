@@ -1,46 +1,24 @@
-# Virtual environments
-.venv/
-venv/
-.vscode/
-
-# Build and distribution
-build/
-dist/
-spec/
-
-# Logs
-logs/
-*.log
-
-# Specific files
-ignorar/
-diagnostico.py
-validar_esquema.py
-config/path_cache.json
-.claude/
-
-# Invoker agent framework (portable — not part of host project)
+﻿# ============================================================================
+# Host Project Gitignore Template - Tinker Framework
+# ============================================================================
+# Add these entries to the HOST project's .gitignore when deploying Tinker.
+# Core framework footprint
 agent/
 agent_tools/
+instructions/
 .clinerules
 agent_framework_config.yaml
-
-# __pycache__ and Python temp files
-__pycache__/
-*.pyc
-*.pyo
-*.pyd
-
-# Tool cache
-*.egg-info/
-.eggs/
-.cache/
-.mypy_cache/
-.pytest_cache/
-
-# PyInstaller configuration
-*.spec
-
-# Operating systems
-.DS_Store
-Thumbs.db
+# Framework bootstrap docs/prompts
+instructions/claude/trigger_vscode.md
+instructions/claude/trigger_antigravity.md
+instructions/chat/trigger_chat.md
+instructions/chat/command_glossary_chat.md
+instructions/model_agnostic/trigger_generic.md
+instructions/model_agnostic/PORTABLE_DEPLOYMENT.md
+instructions/model_agnostic/kernel_profiles.md
+instructions/model_agnostic/.gitignore.host
+instructions/model_agnostic/instructions_dummies.md
+agent/agent_outputs/runtime/
+# Optional framework metadata files at host root
+AGENTS.md
+agent.md

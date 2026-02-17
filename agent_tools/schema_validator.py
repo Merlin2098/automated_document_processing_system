@@ -25,72 +25,33 @@ from pathlib import Path
 from typing import Any
 
 try:
-    import jsonschema
-    from jsonschema import Draft202012Validator, ValidationError
-
-    HAS_JSONSCHEMA = True
-except ImportError:
-    HAS_JSONSCHEMA = False
+    import yaml
+except Exception:  # pragma: no cover
+    yaml = None  # type: ignore[assignment]
 
 try:
-    import yaml
-
-    HAS_YAML = True
+    from agent_tools._schema_utils import (
+        HAS_JSONSCHEMA,
+        SCHEMA_TYPE_ALIASES,
+        SCHEMA_FILES,
+        get_builtin_schema_path,
+        iter_validation_errors,
+        load_data_file,
+    )
 except ImportError:
-    HAS_YAML = False
+    from _schema_utils import (  # type: ignore
+        HAS_JSONSCHEMA,
+        SCHEMA_TYPE_ALIASES,
+        SCHEMA_FILES,
+        get_builtin_schema_path,
+        iter_validation_errors,
+        load_data_file,
+    )
 
-
-# Built-in schema types
-SCHEMA_TYPES = {
-    "envelope": "task_envelope.schema.json",
-    "task_plan": "task_plan.schema.json",
-    "report": "execution_report.schema.json",
-    "system_config": "system_config.schema.yaml",
-}
-
-
-def get_project_root() -> Path:
-    """Get the project root directory."""
-    current = Path(__file__).resolve().parent
-    while current != current.parent:
-        if (current / "agent").exists():
-            return current
-        current = current.parent
-    return Path(__file__).resolve().parent.parent
-
-
-def load_json(file_path: Path) -> dict[str, Any]:
-    """Load JSON file."""
-    with open(file_path, encoding="utf-8") as f:
-        return json.load(f)
-
-
-def load_yaml(file_path: Path) -> dict[str, Any]:
-    """Load YAML file."""
-    if not HAS_YAML:
-        raise ImportError("PyYAML required. Install with: pip install pyyaml")
-    with open(file_path, encoding="utf-8") as f:
-        return yaml.safe_load(f)
-
-
-def load_file(file_path: Path) -> dict[str, Any]:
-    """Load JSON or YAML file based on extension."""
-    suffix = file_path.suffix.lower()
-    if suffix in (".yaml", ".yml"):
-        return load_yaml(file_path)
-    else:
-        return load_json(file_path)
-
-
-def get_builtin_schema_path(schema_type: str) -> Path:
-    """Get path to built-in schema."""
-    if schema_type not in SCHEMA_TYPES:
-        valid_types = ", ".join(SCHEMA_TYPES.keys())
-        raise ValueError(f"Unknown schema type: {schema_type}. Valid types: {valid_types}")
-
-    project_root = get_project_root()
-    schema_file = SCHEMA_TYPES[schema_type]
-    return project_root / "agent" / "agent_protocol" / "schemas" / schema_file
+try:
+    from jsonschema import ValidationError
+except Exception:  # pragma: no cover
+    ValidationError = Exception  # type: ignore[assignment]
 
 
 def format_error(error: ValidationError, include_context: bool = True) -> str:
@@ -144,20 +105,20 @@ def validate_file(
 
     # Load data file
     try:
-        data = load_file(file_path)
+        data = load_data_file(file_path)
     except json.JSONDecodeError as e:
         errors.append(f"JSON parse error: {e}")
         return False, errors, warnings
-    except yaml.YAMLError as e:
-        errors.append(f"YAML parse error: {e}")
-        return False, errors, warnings
     except Exception as e:
+        if yaml and isinstance(e, yaml.YAMLError):
+            errors.append(f"YAML parse error: {e}")
+            return False, errors, warnings
         errors.append(f"Failed to load file: {e}")
         return False, errors, warnings
 
     # Load schema
     try:
-        schema = load_file(schema_path)
+        schema = load_data_file(schema_path)
     except Exception as e:
         errors.append(f"Failed to load schema: {e}")
         return False, errors, warnings
@@ -169,8 +130,7 @@ def validate_file(
         return True, errors, warnings
 
     try:
-        validator = Draft202012Validator(schema)
-        validation_errors = list(validator.iter_errors(data))
+        validation_errors = iter_validation_errors(data, schema)
 
         for error in validation_errors:
             formatted = format_error(error, include_context=verbose)
@@ -179,9 +139,6 @@ def validate_file(
             fix = get_suggested_fix(error)
             if fix and verbose:
                 errors.append(f"    Suggestion: {fix}")
-
-    except jsonschema.SchemaError as e:
-        errors.append(f"Schema error: {e.message}")
     except Exception as e:
         errors.append(f"Validation error: {e}")
 
@@ -193,17 +150,18 @@ def validate_syntax_only(file_path: Path) -> tuple[bool, list[str]]:
     errors: list[str] = []
 
     try:
-        load_file(file_path)
+        load_data_file(file_path)
         return True, errors
     except json.JSONDecodeError as e:
         errors.append(f"JSON syntax error at line {e.lineno}, column {e.colno}: {e.msg}")
-    except yaml.YAMLError as e:
-        if hasattr(e, "problem_mark"):
-            mark = e.problem_mark
-            errors.append(f"YAML syntax error at line {mark.line + 1}, column {mark.column + 1}")
-        else:
-            errors.append(f"YAML syntax error: {e}")
     except Exception as e:
+        if yaml and isinstance(e, yaml.YAMLError):
+            if hasattr(e, "problem_mark"):
+                mark = e.problem_mark
+                errors.append(f"YAML syntax error at line {mark.line + 1}, column {mark.column + 1}")
+            else:
+                errors.append(f"YAML syntax error: {e}")
+            return False, errors
         errors.append(f"Parse error: {e}")
 
     return False, errors
@@ -254,6 +212,7 @@ Schema Types:
   task_plan     - Inspector task plans
   report        - Executor execution reports
   system_config - System configuration files
+  user_task     - User task contract (minimal + compatibility fields)
 
 Examples:
   %(prog)s task.json --type task_plan
@@ -270,7 +229,7 @@ Examples:
     )
     parser.add_argument(
         "--type",
-        choices=list(SCHEMA_TYPES.keys()),
+        choices=sorted(set(list(SCHEMA_FILES.keys()) + list(SCHEMA_TYPE_ALIASES.keys()))),
         help="Built-in schema type",
     )
     parser.add_argument(

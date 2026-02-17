@@ -24,3 +24,15 @@ setuptools
 wheel
 PySide6
 tqdm
+
+# Added by Tinker installer (missing deps)
+numpy
+polars
+fastexcel
+xlsxwriter
+jsonschema
+pydantic
+pyyaml
+hypothesis
+pytest
+python-dateutil

@@ -6,7 +6,7 @@ Validates inter-agent messages against defined JSON schemas.
 
 Usage:
     python validate_message.py <message_file> [--schema <schema_file>]
-    python validate_message.py <message_file> --type <envelope|plan|report|config>
+    python validate_message.py <message_file> --type <envelope|plan|report|config|user_task>
 
 Examples:
     python validate_message.py task_envelope.json --type envelope
@@ -28,77 +28,28 @@ from pathlib import Path
 from typing import Any
 
 try:
-    import jsonschema
-    from jsonschema import Draft202012Validator, ValidationError
-
-    HAS_JSONSCHEMA = True
+    from agent_tools._schema_utils import (
+        HAS_JSONSCHEMA,
+        canonical_schema_type,
+        detect_schema_type,
+        get_builtin_schema_path,
+        iter_validation_errors,
+        load_data_file,
+    )
 except ImportError:
-    HAS_JSONSCHEMA = False
+    from _schema_utils import (  # type: ignore
+        HAS_JSONSCHEMA,
+        canonical_schema_type,
+        detect_schema_type,
+        get_builtin_schema_path,
+        iter_validation_errors,
+        load_data_file,
+    )
 
 try:
-    import yaml
-
-    HAS_YAML = True
-except ImportError:
-    HAS_YAML = False
-
-
-# Schema type mapping
-SCHEMA_TYPES = {
-    "envelope": "task_envelope.schema.json",
-    "plan": "task_plan.schema.json",
-    "report": "execution_report.schema.json",
-    "config": "system_config.schema.yaml",
-}
-
-
-def get_project_root() -> Path:
-    """Get the project root directory."""
-    current = Path(__file__).resolve().parent
-    while current != current.parent:
-        if (current / "agent").exists():
-            return current
-        current = current.parent
-    return Path(__file__).resolve().parent.parent
-
-
-def load_json_file(file_path: Path) -> dict[str, Any]:
-    """Load and parse a JSON file."""
-    with open(file_path, encoding="utf-8") as f:
-        return json.load(f)
-
-
-def load_yaml_file(file_path: Path) -> dict[str, Any]:
-    """Load and parse a YAML file."""
-    if not HAS_YAML:
-        raise ImportError("PyYAML is required for YAML files. Install with: pip install pyyaml")
-    with open(file_path, encoding="utf-8") as f:
-        return yaml.safe_load(f)
-
-
-def load_file(file_path: Path) -> dict[str, Any]:
-    """Load a JSON or YAML file based on extension."""
-    suffix = file_path.suffix.lower()
-    if suffix in (".json",):
-        return load_json_file(file_path)
-    elif suffix in (".yaml", ".yml"):
-        return load_yaml_file(file_path)
-    else:
-        # Try JSON first, then YAML
-        try:
-            return load_json_file(file_path)
-        except json.JSONDecodeError:
-            return load_yaml_file(file_path)
-
-
-def get_schema_path(schema_type: str) -> Path:
-    """Get the path to a built-in schema."""
-    if schema_type not in SCHEMA_TYPES:
-        raise ValueError(f"Unknown schema type: {schema_type}. Valid types: {list(SCHEMA_TYPES.keys())}")
-
-    project_root = get_project_root()
-    schema_file = SCHEMA_TYPES[schema_type]
-    return project_root / "agent" / "agent_protocol" / "schemas" / schema_file
+    from jsonschema import ValidationError
+except Exception:  # pragma: no cover
+    ValidationError = Exception  # type: ignore[assignment]
 
 
 def calculate_checksum(payload: dict[str, Any]) -> str:
@@ -217,7 +168,7 @@ def validate_message(
 
     # Load message
     try:
-        message = load_file(message_path)
+        message = load_data_file(message_path)
         report["checks_performed"].append("File loaded successfully")
     except Exception as e:
         report["errors"].append(f"Failed to load message file: {e}")
@@ -225,28 +176,23 @@ def validate_message(
 
     # Determine schema
     if schema_path is None and schema_type is None:
-        # Try to auto-detect based on content
-        if "envelope" in message and "payload" in message:
-            schema_type = "envelope"
-        elif "action_plan" in message and "risk_assessment" in message:
-            schema_type = "plan"
-        elif "actions_summary" in message and "status" in message:
-            schema_type = "report"
-        elif "system_definitions" in message and "workflow_configuration" in message:
-            schema_type = "config"
-        else:
+        detected = detect_schema_type(message)
+        if not detected:
             report["errors"].append("Cannot auto-detect schema type. Please specify --type or --schema")
             return False, report
+        schema_type = detected
+    elif schema_type is not None:
+        schema_type = canonical_schema_type(schema_type)
 
     if schema_path is None:
-        schema_path = get_schema_path(schema_type)
+        schema_path = get_builtin_schema_path(schema_type)
 
     report["schema"] = str(schema_path)
     report["schema_type"] = schema_type
 
     # Load schema
     try:
-        schema = load_file(schema_path)
+        schema = load_data_file(schema_path)
         report["checks_performed"].append("Schema loaded successfully")
     except Exception as e:
         report["errors"].append(f"Failed to load schema: {e}")
@@ -255,8 +201,7 @@ def validate_message(
     # JSON Schema validation
     if HAS_JSONSCHEMA:
         try:
-            validator = Draft202012Validator(schema)
-            errors = list(validator.iter_errors(message))
+            errors = iter_validation_errors(message, schema)
 
             if errors:
                 report["errors"].extend(format_validation_error(e) for e in errors)
@@ -277,6 +222,9 @@ def validate_message(
 
     # Reference validation (for plans)
     if schema_type == "plan":
+        # Backward compatibility for existing validate_message semantics.
+        schema_type = "task_plan"
+    if schema_type == "task_plan":
         ref_warnings = validate_references(message)
         report["warnings"].extend(ref_warnings)
         if not ref_warnings:
@@ -343,7 +291,7 @@ Examples:
     )
     parser.add_argument(
         "--type",
-        choices=list(SCHEMA_TYPES.keys()),
+        choices=sorted(set(["envelope", "plan", "report", "config", "user_task", "task_plan", "system_config"])),
         help="Built-in schema type to use",
     )
     parser.add_argument(

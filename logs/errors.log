@@ -1,0 +1,3 @@
+2026-02-05 17:46:54 | ERROR    | CorePipelineStep5Worker        | error                | c:\Users\ricuculm\OneDrive - Metso\Documents\VS Code\7. Matrix_Rework\utils\logger.py:45 | No se encontraron contratos válidos para procesar
+2026-02-06 22:44:02 | ERROR    | utils.theme_manager            | set_theme            | c:\Users\ricuculm\OneDrive - Metso\Documents\VS Code\7. Matrix_Rework\utils\theme_manager.py:247 | ❌ Tema 'light' no encontrado
+2026-02-06 22:44:15 | ERROR    | utils.theme_manager            | set_theme            | c:\Users\ricuculm\OneDrive - Metso\Documents\VS Code\7. Matrix_Rework\utils\theme_manager.py:247 | ❌ Tema 'light' no encontrado

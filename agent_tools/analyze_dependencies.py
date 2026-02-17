@@ -1,15 +1,21 @@
-import os
+﻿import os
 import sys
 import ast
 import re
+import argparse
 from pathlib import Path
 from collections import defaultdict
 
 try:
+    from agent_tools._repo_root import find_project_root
+except ImportError:
+    from _repo_root import find_project_root  # type: ignore
+
+try:
     import pathspec
 except ImportError:
-    print("Error: pathspec no está instalado")
-    print("Ejecuta: pip install pathspec")
+    print("Error: pathspec is not installed")
+    print("Install with: pip install pathspec")
     sys.exit(1)
 
 
@@ -56,8 +62,8 @@ def obtener_archivos_python(raiz, gitignore_spec=None):
 def analizar_imports(archivo, raiz_proyecto):
     """
     Analiza los imports de un archivo Python y retorna:
-    - imports locales (módulos del proyecto)
-    - imports de librerías externas
+    - imports locales (mÃ³dulos del proyecto)
+    - imports de librerÃ­as externas
     """
     imports_locales = []
     imports_externos = []
@@ -82,7 +88,7 @@ def analizar_imports(archivo, raiz_proyecto):
                     if node.level > 0:
                         imports_locales.append(modulo if modulo else ".")
                     else:
-                        # Verificar si el módulo existe en el proyecto
+                        # Verificar si el mÃ³dulo existe en el proyecto
                         posible_archivo = raiz_proyecto / f"{modulo}.py"
                         posible_paquete = raiz_proyecto / modulo / "__init__.py"
                         
@@ -100,12 +106,12 @@ def analizar_imports(archivo, raiz_proyecto):
 
 def analizar_archivos_configuracion(archivo):
     """
-    Analiza si el archivo Python accede a archivos de configuración.
+    Analiza si el archivo Python accede a archivos de configuraciÃ³n.
     Busca patrones como: open(), json.load(), yaml.load(), pd.read_csv(), etc.
     """
     archivos_config = []
     
-    # Extensiones de configuración comunes
+    # Extensiones de configuraciÃ³n comunes
     extensiones_config = {'.json', '.yaml', '.yml', '.sql', '.txt', '.csv', '.ini', '.toml', '.env'}
     
     try:
@@ -113,7 +119,7 @@ def analizar_archivos_configuracion(archivo):
             contenido = f.read()
         
         # Buscar patrones de acceso a archivos
-        # Patrón: open("archivo.ext"), Path("archivo.ext"), "archivo.ext"
+        # PatrÃ³n: open("archivo.ext"), Path("archivo.ext"), "archivo.ext"
         patrones = [
             r'open\s*\(\s*["\']([^"\']+)["\']',
             r'Path\s*\(\s*["\']([^"\']+)["\']',
@@ -125,7 +131,7 @@ def analizar_archivos_configuracion(archivo):
         for patron in patrones:
             coincidencias = re.findall(patron, contenido, re.IGNORECASE)
             for coincidencia in coincidencias:
-                # Filtrar solo archivos con extensiones de configuración
+                # Filtrar solo archivos con extensiones de configuraciÃ³n
                 if any(coincidencia.endswith(ext) for ext in extensiones_config):
                     # Normalizar ruta
                     archivo_normalizado = coincidencia.replace('\\', '/').split('/')[-1]
@@ -172,7 +178,7 @@ def construir_grafo_dependencias(raiz_proyecto, gitignore_spec=None):
 
 def generar_arbol_ascii(grafo, modulo, nivel=0, visitados=None, prefijo="", mostrar_externos=False):
     """
-    Genera un árbol ASCII de las dependencias de un módulo específico.
+    Genera un Ã¡rbol ASCII de las dependencias de un mÃ³dulo especÃ­fico.
     """
     if visitados is None:
         visitados = set()
@@ -188,7 +194,7 @@ def generar_arbol_ascii(grafo, modulo, nivel=0, visitados=None, prefijo="", most
     
     deps = grafo[modulo]
     
-    # Dependencias locales (otros módulos)
+    # Dependencias locales (otros mÃ³dulos)
     imports_locales = deps['imports_locales']
     archivos_config = deps['archivos_config']
     imports_externos = deps['imports_externos'] if mostrar_externos else []
@@ -199,7 +205,7 @@ def generar_arbol_ascii(grafo, modulo, nivel=0, visitados=None, prefijo="", most
     for imp in imports_locales:
         elementos.append(('modulo', imp))
     
-    # Agregar archivos de configuración
+    # Agregar archivos de configuraciÃ³n
     for archivo in archivos_config:
         elementos.append(('config', archivo))
     
@@ -209,18 +215,18 @@ def generar_arbol_ascii(grafo, modulo, nivel=0, visitados=None, prefijo="", most
     
     for i, (tipo, nombre) in enumerate(elementos):
         es_ultimo = i == len(elementos) - 1
-        conector = "└── " if es_ultimo else "├── "
+        conector = "â””â”€â”€ " if es_ultimo else "â”œâ”€â”€ "
         
         if tipo == 'modulo':
-            lineas.append(f"{prefijo}{conector}📦 {nombre}")
-            extension = "    " if es_ultimo else "│   "
+            lineas.append(f"{prefijo}{conector}ðŸ“¦ {nombre}")
+            extension = "    " if es_ultimo else "â”‚   "
             lineas.extend(generar_arbol_ascii(grafo, nombre, nivel + 1, visitados, prefijo + extension, mostrar_externos))
         
         elif tipo == 'config':
-            lineas.append(f"{prefijo}{conector}📄 {nombre}")
+            lineas.append(f"{prefijo}{conector}ðŸ“„ {nombre}")
         
         elif tipo == 'externo':
-            lineas.append(f"{prefijo}{conector}🔗 {nombre}")
+            lineas.append(f"{prefijo}{conector}ðŸ”— {nombre}")
     
     return lineas
 
@@ -291,9 +297,9 @@ def generar_reporte_markdown(grafo, raiz_proyecto, archivo_salida="dependencies_
     contenido.append("## 2. Full Dependency Map\n\n")
     contenido.append("This tree shows **all recursive dependencies** for each entry point:\n\n")
     contenido.append("**Legend**:\n")
-    contenido.append("- 📦 Project Python Module\n")
-    contenido.append("- 📄 Configuration File (JSON, YAML, SQL, etc.)\n")
-    contenido.append("- 🔗 External Library (installed via pip)\n\n")
+    contenido.append("- ðŸ“¦ Project Python Module\n")
+    contenido.append("- ðŸ“„ Configuration File (JSON, YAML, SQL, etc.)\n")
+    contenido.append("- ðŸ”— External Library (installed via pip)\n\n")
     
     for modulo in modulos_raiz:
         contenido.append(f"### {modulo}\n\n")
@@ -335,7 +341,7 @@ def generar_reporte_markdown(grafo, raiz_proyecto, archivo_salida="dependencies_
         
         for archivo in sorted(archivos_config_totales):
             modulos_que_usan = [mod for mod, deps in grafo.items() if archivo in deps['archivos_config']]
-            contenido.append(f"- **`{archivo}`** → Used by: {', '.join([f'`{m}`' for m in modulos_que_usan])}\n")
+            contenido.append(f"- **`{archivo}`** â†’ Used by: {', '.join([f'`{m}`' for m in modulos_que_usan])}\n")
         
         contenido.append("\n")
     
@@ -358,35 +364,37 @@ def generar_reporte_markdown(grafo, raiz_proyecto, archivo_salida="dependencies_
         return False
 
 def main():
-    raiz = Path(__file__).resolve().parent.parent
-    
-    print("Analizando estructura del proyecto...")
-    
-    # Cargar .gitignore
+    parser = argparse.ArgumentParser(description="Analyze Python dependencies and generate markdown report")
+    parser.add_argument("--project-root", help="Optional project root override")
+    parser.add_argument("--output", help="Optional report output path")
+    args = parser.parse_args()
+
+    raiz = Path(args.project_root).resolve() if args.project_root else find_project_root(Path(__file__).resolve().parent)
+
+    print("Analyzing project structure...")
+
     gitignore_spec = cargar_gitignore(raiz)
     if gitignore_spec:
-        print("Patrones de .gitignore cargados correctamente")
+        print(".gitignore patterns loaded")
     else:
-        print("Advertencia: No se encontró .gitignore")
-    
-    # Construir grafo de dependencias
+        print("Warning: .gitignore not found")
+
     grafo = construir_grafo_dependencias(raiz, gitignore_spec)
-    
     if not grafo:
-        print("No se encontraron módulos Python en el proyecto")
+        print("No Python modules found in project")
         return 1
-    
-    print(f"Se analizaron {len(grafo)} módulos Python")
-    
-    # Generar reporte
+
+    print(f"Analyzed {len(grafo)} Python modules")
+
     agent_dir = raiz / "agent"
     analysis_dir = agent_dir / "analysis"
     analysis_dir.mkdir(exist_ok=True)
-    archivo_salida = analysis_dir / "dependencies_report.md"
+    archivo_salida = Path(args.output).resolve() if args.output else analysis_dir / "dependencies_report.md"
     exito = generar_reporte_markdown(grafo, raiz, str(archivo_salida))
-    
+
     return 0 if exito else 1
 
 
 if __name__ == "__main__":
     sys.exit(main())
+
