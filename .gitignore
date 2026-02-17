@@ -8,6 +8,7 @@ agent_tools/
 instructions/
 .clinerules
 agent_framework_config.yaml
+.claude/
 # Framework bootstrap docs/prompts
 instructions/claude/trigger_vscode.md
 instructions/claude/trigger_antigravity.md
