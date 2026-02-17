@@ -80,7 +80,9 @@ def extraer_datos_afp(ruta_pdf: str, logger=None) -> Dict:
         
         # Patrones con nombre + DNI (orden: nuevo formato primero, luego legacy)
         patrones_con_dni = [
-            # Nuevo formato: "identificado(a) con DNI - 12345678"
+            # Nuevo formato: "identificado(a) con CUSPP N° XXXXX y con DNI 12345678"
+            r"Que\s+a\s+don\s+\(doña\)\s+(?P<nombre>[A-ZÁÉÍÓÚÑ0-9\s\-]+?)\s+identificado\(a\)\s+con\s+CUSPP\s+N[°ºo]\s*[A-Z0-9]+\s+y\s+con\s+DNI\s*(?P<dni>\d{8})",
+            # Formato: "identificado(a) con DNI - 12345678"
             r"Que\s+a\s+don\s+\(doña\)\s+(?P<nombre>[A-ZÁÉÍÓÚÑ\s]+?)\s+identificado\(a\)\s+con\s+DNI\s*[-:.]?\s*(?P<dni>\d{8})",
             # Legacy: "NOMBRE, CON DNI 12345678"
             r"Que\s+a\s+don\s+\(doña\)\s+(?P<nombre>[A-ZÁÉÍÓÚÑ\s]+),\s*CON\s+DNI\s+(?P<dni>\d{8})",

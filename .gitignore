@@ -22,3 +22,13 @@ agent/agent_outputs/runtime/
 # Optional framework metadata files at host root
 AGENTS.md
 agent.md
+
+.venv/
+__pycache__/
+.DS_Store
+*.log
+logs/
+build/
+dist/
+spec/
+test/
