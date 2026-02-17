@@ -26,6 +26,8 @@ agent.md
 
 .venv/
 __pycache__/
+**/__pycache__/
+**/*pycache*/
 .DS_Store
 *.log
 logs/
@@ -33,3 +35,4 @@ build/
 dist/
 spec/
 test/
+*pycache/
