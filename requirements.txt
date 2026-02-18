@@ -1,38 +1,70 @@
-altgraph
-cffi
-charset-normalizer
-cryptography
-duckdb
-et_xmlfile
-openpyxl
-packaging
+# ============================================================
+# Core Data Handling (Excel, tabular processing)
+# ============================================================
 pandas
-pdfminer.six
-pdfplumber
-pefile
-psutil
-pathspec
-pre-commit
+openpyxl
+
+
+# ============================================================
+# Local Analytics Database / Lakehouse Engine
+# ============================================================
+duckdb
+
+
+# ============================================================
+# Arrow Ecosystem (Parquet, columnar memory)
+# ============================================================
 pyarrow
-pycparser
-pyinstaller
-pyinstaller-hooks-contrib
+
+
+# ============================================================
+# PDF Processing (reading, preview, extraction)
+# ============================================================
 PyPDF2
 pypdfium2
-pywin32-ctypes
-setuptools
-wheel
-PySide6
-tqdm
+pdfminer.six
+pdfplumber
 
-# Added by Tinker installer (missing deps)
-numpy
-polars
-fastexcel
-xlsxwriter
+
+# ============================================================
+# Frontend (Desktop UI)
+# ============================================================
+pyside6
+
+
+# ============================================================
+# Validation, Schemas, Configuration
+# ============================================================
 jsonschema
 pydantic
 pyyaml
-hypothesis
-pytest
 python-dateutil
+
+
+# ============================================================
+# Testing and Reliability (optional but recommended)
+# ============================================================
+pytest
+hypothesis
+
+
+# ============================================================
+# Packaging and Distribution (EXE builds)
+# ============================================================
+pyinstaller
+pyinstaller-hooks-contrib
+packaging
+
+
+# ============================================================
+# Tooling / Project Hygiene (developer workflow)
+# ============================================================
+pre-commit
+pathspec
+
+
+# ============================================================
+# Build System Foundations (pip ecosystem)
+# ============================================================
+setuptools
+wheel
