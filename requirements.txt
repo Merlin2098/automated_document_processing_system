@@ -68,3 +68,8 @@ pathspec
 # ============================================================
 setuptools
 wheel
+
+# Added by Tinker installer (missing deps)
+polars
+fastexcel
+xlsxwriter

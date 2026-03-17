@@ -1,4 +1,0 @@
-2026-02-05 17:37:31 | ERROR    | CorePipelineStep5Worker        | error                | utils\logger.py:45 | No se encontraron contratos válidos para procesar
-2026-02-05 17:37:53 | ERROR    | CorePipelineStep5Worker        | error                | utils\logger.py:45 | No se encontraron contratos válidos para procesar
-2026-02-05 17:38:29 | ERROR    | CorePipelineStep5Worker        | error                | utils\logger.py:45 | No se encontraron contratos válidos para procesar
-2026-02-05 17:40:09 | ERROR    | CorePipelineStep5Worker        | error                | utils\logger.py:45 | No se encontraron contratos válidos para procesar
