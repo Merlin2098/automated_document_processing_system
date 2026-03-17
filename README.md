@@ -1,35 +1,45 @@
-# README.md
-
 # DocFlow
-DocFlow es una aplicación de escritorio en Python que elimina el trabajo manual en áreas administrativas, contables y de RR.HH. Automatiza la manipulación de PDFs (dividir, renombrar, organizar) con alto rendimiento y una interfaz moderna.
 
-## Propuesta de valor
-Reduce tiempos operativos, minimiza errores humanos y entrega resultados consistentes en procesos documentales masivos.
+## Overview
 
-## Características clave
-- Renombrado automático de documentos.
-- División de PDFs por reglas predefinidas.
-- Eliminación de duplicados.
-- Procesamiento en paralelo para grandes volúmenes.
+DocFlow is a Python-based desktop system for high-volume PDF processing. It automates document splitting, renaming, deduplication, and grouping for administrative, accounting, and HR workflows, reducing manual effort and improving output consistency.
 
-## Interfaz de usuario
-- Modo **Profesional** (Light).
-- Modo **DarkBlue** (Dark).
+## Architecture
 
-## Distribución
-- Ejecutable standalone para Windows (`.exe`).
-- No requiere instalación de Python en el equipo del usuario final.
+DocFlow follows a rule-driven document processing architecture:
 
-## Validación y logging
-- Registro de eventos y errores en logs para trazabilidad.
-- Validación de conteos de archivos y consistencia de salidas.
-- Reportes automáticos para control de calidad del procesamiento.
+`Input PDFs -> Validation/Cleaning -> Text Extraction -> Rule-Based Splitting -> JSON-Driven Renaming -> Grouping/Consolidation -> Validation and Logs`
 
-## Stack principal
+At a high level, the system combines a desktop UI, extractor modules for PDF parsing, and a batch-style processing pipeline focused on traceability and performance.
+
+## Tech Stack
+
 - Python
-- PySide6 (interfaz)
-- PyPDF2, pdfplumber, pdfminer.six, pypdfium2 (extracción de datos y patrones regex)
+- PySide6
+- PyPDF2
+- pdfplumber
+- pdfminer.six
+- pypdfium2
+- JSON-based mapping rules
+- Windows standalone packaging (`.exe`)
 
-## Nota sobre renombrado y macros
-- El **renombrado** se realiza mediante **mapeos JSON** generados en etapas previas.
-- Existe un procesamiento intermedio mediante **macros** para normalización y negocio, pero **no se incluye** en este repositorio por confidencialidad.
+## How It Works
+
+1. Input files are validated and cleaned before processing starts.
+2. PDF content is parsed to extract text and detect relevant patterns.
+3. Business rules determine how documents should be split.
+4. Pre-generated JSON mappings drive the renaming stage.
+5. Processed files are grouped and consolidated into final outputs.
+6. Logs, file counts, and output checks are generated for validation and traceability.
+
+## Example / Output
+
+Typical outputs include:
+
+- Split PDF files based on document rules
+- Renamed files following structured business mappings
+- Grouped final document batches
+- Processing logs for auditing
+- Validation reports for quality control
+
+Note: the full business workflow includes an intermediate macro-based normalization layer that is not included in this repository due to confidentiality constraints.
