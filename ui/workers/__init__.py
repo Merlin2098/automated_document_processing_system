@@ -10,6 +10,7 @@ from .core_pipeline_step2_worker import CorePipelineStep2Worker
 from .core_pipeline_step3_worker import CorePipelineStep3Worker
 from .core_pipeline_step4_worker import CorePipelineStep4Worker
 from .core_pipeline_step5_worker import CorePipelineStep5Worker
+from .rename_auxiliar_worker import RenameAuxiliarPreviewWorker, RenameAuxiliarApplyWorker
 
 __all__ = [
     'PdfSplitterWorker',
@@ -21,5 +22,7 @@ __all__ = [
     'CorePipelineStep2Worker',
     'CorePipelineStep3Worker',
     'CorePipelineStep4Worker',
-    'CorePipelineStep5Worker'
+    'CorePipelineStep5Worker',
+    'RenameAuxiliarPreviewWorker',
+    'RenameAuxiliarApplyWorker',
 ]

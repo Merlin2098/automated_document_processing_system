@@ -128,6 +128,7 @@ class MainWindow(QMainWindow):
         try:
             # Importar tabs solo cuando se necesitan
             from ui.tabs.tab_quick_tools import TabQuickTools
+            from ui.tabs.tab_rename_auxiliar import TabRenameAuxiliar
             from ui.tabs.tab_pipeline_core import TabPipelineCore
             from ui.tabs.tab_pipeline_sunat import TabPipelineSunat
             from ui.tabs.tab_settings import TabSettings
@@ -137,6 +138,9 @@ class MainWindow(QMainWindow):
             # Crear tabs
             logger.debug("Creando tab: Herramientas Rápidas...")
             self.tab_quick_tools = TabQuickTools(self.theme_manager)
+
+            logger.debug("Creando tab: Rename Auxiliar...")
+            self.tab_rename_auxiliar = TabRenameAuxiliar(self.theme_manager)
             
             logger.debug("Creando tab: Pipeline Core...")
             self.tab_pipeline_core = TabPipelineCore(self.theme_manager)
@@ -149,6 +153,7 @@ class MainWindow(QMainWindow):
             
             # Agregar tabs
             self.tab_widget.addTab(self.tab_quick_tools, "📄 Herramientas")
+            self.tab_widget.addTab(self.tab_rename_auxiliar, "🗂️ Rename Auxiliar")
             self.tab_widget.addTab(self.tab_pipeline_core, "📋 Boletas")
             self.tab_widget.addTab(self.tab_pipeline_sunat, "💼 SUNAT")
             self.tab_widget.addTab(self.tab_settings, "⚙️ Configuración")
@@ -196,16 +201,19 @@ class MainWindow(QMainWindow):
             
             # Conectar tabs con consola
             self.tab_quick_tools.log_message.connect(self.console_widget.append_log)
+            self.tab_rename_auxiliar.log_message.connect(self.console_widget.append_log)
             self.tab_pipeline_core.log_message.connect(self.console_widget.append_log)
             self.tab_pipeline_sunat.log_message.connect(self.console_widget.append_log)
             logger.debug("✅ Señales de consola conectadas")
             
             # Conectar tabs con monitoring panel
             self.tab_quick_tools.progress_updated.connect(self.monitoring_panel.update_progress)
+            self.tab_rename_auxiliar.progress_updated.connect(self.monitoring_panel.update_progress)
             self.tab_pipeline_core.progress_updated.connect(self.monitoring_panel.update_progress)
             self.tab_pipeline_sunat.progress_updated.connect(self.monitoring_panel.update_progress)
             
             self.tab_quick_tools.stats_updated.connect(self.monitoring_panel.update_stats)
+            self.tab_rename_auxiliar.stats_updated.connect(self.monitoring_panel.update_stats)
             self.tab_pipeline_core.stats_updated.connect(self.monitoring_panel.update_stats)
             self.tab_pipeline_sunat.stats_updated.connect(self.monitoring_panel.update_stats)
             logger.debug("✅ Señales de monitoring conectadas")
