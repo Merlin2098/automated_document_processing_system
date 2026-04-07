@@ -171,6 +171,7 @@ def construir_comando():
         "ui.tabs.tab_pipeline_core",
         "ui.tabs.tab_pipeline_sunat",
         "ui.tabs.tab_quick_tools",
+        "ui.tabs.tab_rename_auxiliar",
         "ui.tabs.tab_settings",
         "ui.widgets.console_widget",
         "ui.widgets.file_selector",
@@ -182,6 +183,7 @@ def construir_comando():
         "ui.workers.core_pipeline_step4_worker",
         "ui.workers.core_pipeline_step5_worker",
         "ui.workers.pdf_splitter_worker",
+        "ui.workers.rename_auxiliar_worker",
         "ui.workers.sunat_diagnostic_worker",
         "ui.workers.sunat_duplicates_worker",
         "ui.workers.sunat_rename_worker",
@@ -196,6 +198,7 @@ def construir_comando():
         "core_pipeline.step3_generar_diagnostico",
         "core_pipeline.step4_rename",
         "core_pipeline.step5_unir_final",
+        "core_pipeline.rename_auxiliar",
 
         # Core SUNAT
         "core_sunat.sunat",
