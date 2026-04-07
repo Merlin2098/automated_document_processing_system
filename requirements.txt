@@ -39,6 +39,7 @@ jsonschema
 pydantic
 pyyaml
 python-dateutil
+psutil
 
 
 # ============================================================

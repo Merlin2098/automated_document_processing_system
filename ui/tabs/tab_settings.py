@@ -4,7 +4,6 @@ Tab Settings - Tab de configuración y preferencias
 import datetime
 import json
 import os
-import psutil
 from pathlib import Path
 from PySide6.QtWidgets import (
     QWidget, QVBoxLayout, QHBoxLayout, QLabel, 
@@ -13,6 +12,11 @@ from PySide6.QtWidgets import (
 )
 from PySide6.QtCore import Signal, Slot, Qt
 from PySide6.QtGui import QColor
+
+try:
+    import psutil
+except ImportError:
+    psutil = None
 
 # Importar helper de rutas
 from utils.path_helper import get_resource_path
@@ -215,15 +219,17 @@ Todos los derechos reservados.
         """Detecta las capacidades del hardware del sistema"""
         try:
             cpu_count = os.cpu_count() or 4
+            if psutil is None:
+                raise RuntimeError("psutil no disponible")
+
             cpu_percent = psutil.cpu_percent(interval=0.1)
             
-            # Memoria
             memory = psutil.virtual_memory()
             memory_total_gb = memory.total / (1024**3)
             memory_available_gb = memory.available / (1024**3)
             
-            # Discos
-            disk = psutil.disk_usage('/')
+            disk_path = Path.cwd().anchor or str(Path.cwd())
+            disk = psutil.disk_usage(disk_path)
             disk_total_gb = disk.total / (1024**3)
             disk_free_gb = disk.free / (1024**3)
             
@@ -303,6 +309,8 @@ Todos los derechos reservados.
         <b>Intervalo de consola:</b> {optimal['console_interval']} segundos<br>
         <b>Tamaño de lote:</b> {optimal['batch_size']} documentos
         """
+        if psutil is None:
+            perf_text += "<br><small><i>psutil no está instalado; se usan valores seguros por defecto.</i></small>"
         self.performance_info_label.setText(perf_text)
         
         # Guardar valores calculados para usar al guardar
