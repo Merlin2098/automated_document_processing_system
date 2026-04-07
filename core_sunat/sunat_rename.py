@@ -71,6 +71,73 @@ class FileRenamer:
 class JSONReader:
     """Clase para leer el archivo JSON de renombrado."""
     
+    def load_json_data(self, json_path):
+        """
+        Lee el JSON en crudo respetando varias codificaciones.
+        
+        Args:
+            json_path (str): Ruta del archivo JSON
+        
+        Returns:
+            object: Contenido del JSON ya decodificado
+        """
+        logger.info(f"📖 Leyendo JSON: {os.path.basename(json_path)}")
+        
+        encodings = ['utf-8', 'latin-1', 'iso-8859-1', 'cp1252', 'utf-16']
+        
+        data = None
+        for encoding in encodings:
+            try:
+                with open(json_path, 'r', encoding=encoding) as f:
+                    data = json.load(f)
+                break
+            except (UnicodeDecodeError, UnicodeError):
+                continue
+            except Exception as e:
+                raise Exception(f"Error al leer JSON: {str(e)}")
+        
+        if data is None:
+            error_msg = "No se pudo decodificar el archivo JSON con ninguna codificación conocida"
+            logger.error(error_msg)
+            raise Exception(error_msg)
+        
+        return data
+    
+    def build_rename_mapping(self, data):
+        """
+        Convierte el contenido del JSON a un mapeo archivo->nuevo nombre.
+        
+        Args:
+            data (object): Contenido ya cargado del JSON
+            
+        Returns:
+            dict: Diccionario con archivo original como clave y nuevo nombre como valor
+        """
+        rename_data = {}
+        
+        if not isinstance(data, list):
+            error_msg = f"Estructura JSON inválida: se esperaba una lista y se recibió {type(data).__name__}"
+            logger.error(error_msg)
+            raise Exception(error_msg)
+        
+        try:
+            for entry in data:
+                if not isinstance(entry, dict):
+                    continue
+                
+                original = entry.get('ARCHIVO ORIGINAL')
+                nuevo = entry.get('NUEVO NOMBRE')
+                
+                if original and nuevo:
+                    rename_data[original] = nuevo
+            
+            logger.info(f"✅ JSON cargado: {len(rename_data)} registros")
+            return rename_data
+        except Exception as e:
+            error_msg = f"Error al procesar datos del JSON: {str(e)}"
+            logger.error(error_msg)
+            raise Exception(error_msg)
+    
     def read_rename_json(self, json_path):
         """
         Lee el archivo JSON y extrae la información de renombrado.
@@ -81,51 +148,30 @@ class JSONReader:
         Returns:
             dict: Diccionario con archivo original como clave y nuevo nombre como valor
         """
-        rename_data = {}
-        
-        # AGREGAR logging
-        logger.info(f"📖 Leyendo JSON: {os.path.basename(json_path)}")
-        
-        # Lista de codificaciones a probar
-        encodings = ['utf-8', 'latin-1', 'iso-8859-1', 'cp1252', 'utf-16']
-        
-        data = None
-        for encoding in encodings:
-            try:
-                with open(json_path, 'r', encoding=encoding) as f:
-                    data = json.load(f)
-                break  # Si funciona, salir del loop
-            except (UnicodeDecodeError, UnicodeError):
-                continue
-            except Exception as e:
-                raise Exception(f"Error al leer JSON: {str(e)}")
-        
-        if data is None:
-            error_msg = "No se pudo decodificar el archivo JSON con ninguna codificación conocida"
-            logger.error(error_msg)  # AGREGAR logging
-            raise Exception(error_msg)
-        
-        try:
-            # Procesar cada entrada del JSON
-            for entry in data:
-                original = entry.get('ARCHIVO ORIGINAL')
-                nuevo = entry.get('NUEVO NOMBRE')
-                
-                if original and nuevo:
-                    rename_data[original] = nuevo
-            
-            # AGREGAR logging
-            logger.info(f"✅ JSON cargado: {len(rename_data)} registros")
-            return rename_data
-            
-        except Exception as e:
-            error_msg = f"Error al procesar datos del JSON: {str(e)}"
-            logger.error(error_msg)  # AGREGAR logging
-            raise Exception(error_msg)
+        data = self.load_json_data(json_path)
+        return self.build_rename_mapping(data)
 
 
 class FolderScanner:
     """Clase para escanear carpetas y localizar archivos."""
+    
+    def get_rename_json_candidates(self, folder_path):
+        """
+        Devuelve la lista de JSON candidatos para renombrado SUNAT.
+        
+        Args:
+            folder_path (str): Ruta de la carpeta
+            
+        Returns:
+            list: Lista de nombres de archivo JSON
+        """
+        return sorted(
+            [
+                f for f in os.listdir(folder_path)
+                if f.endswith('.json') and 'rename' in f.lower()
+            ],
+            reverse=True,
+        )
     
     def find_json_file(self, folder_path):
         """
@@ -137,8 +183,7 @@ class FolderScanner:
         Returns:
             str: Ruta del archivo JSON encontrado o None
         """
-        json_files = [f for f in os.listdir(folder_path) 
-                     if f.endswith('.json') and 'rename' in f.lower()]
+        json_files = self.get_rename_json_candidates(folder_path)
         
         if not json_files:
             # AGREGAR logging
@@ -169,6 +214,118 @@ class FolderScanner:
         logger.info(f"📄 PDFs encontrados: {len(pdf_files)}")
         
         return pdf_files
+
+
+def validar_preflight_renombrado_sunat(folder_path):
+    """
+    Valida que la carpeta SUNAT esté lista antes del renombrado desde la UI.
+    
+    Reglas:
+    - Debe existir la carpeta.
+    - Debe contener PDFs.
+    - Debe existir exactamente un JSON candidato.
+    - El JSON debe ser válido y producir un mapeo útil.
+    - Todos los PDFs deben existir como claves en el JSON.
+    
+    Args:
+        folder_path (str): Ruta de la carpeta a validar.
+        
+    Returns:
+        dict: Reporte estructurado del preflight.
+    """
+    scanner = FolderScanner()
+    reader = JSONReader()
+    
+    report = {
+        'success': False,
+        'preflight_ok': False,
+        'folder_path': folder_path,
+        'folder_exists': False,
+        'pdf_files': [],
+        'pdf_count': 0,
+        'json_files_found': [],
+        'selected_json_path': None,
+        'mapping_count': 0,
+        'missing_pdf_entries': [],
+        'status': None,
+        'message': "",
+    }
+    
+    if not os.path.isdir(folder_path):
+        report['status'] = 'folder_missing'
+        report['message'] = "La carpeta seleccionada no existe o no es válida."
+        return report
+    
+    report['folder_exists'] = True
+    pdf_files = sorted(scanner.get_pdf_files(folder_path))
+    report['pdf_files'] = pdf_files
+    report['pdf_count'] = len(pdf_files)
+    
+    if not pdf_files:
+        report['status'] = 'no_pdfs'
+        report['message'] = "No se encontraron archivos PDF en la carpeta seleccionada."
+        return report
+    
+    json_files = scanner.get_rename_json_candidates(folder_path)
+    report['json_files_found'] = json_files
+    
+    if not json_files:
+        report['status'] = 'missing_json'
+        report['message'] = "Falta el archivo JSON de renombrado."
+        return report
+    
+    if len(json_files) > 1:
+        report['status'] = 'multiple_json'
+        report['message'] = "Se encontraron múltiples archivos JSON de renombrado."
+        return report
+    
+    json_path = os.path.join(folder_path, json_files[0])
+    report['selected_json_path'] = json_path
+    
+    try:
+        raw_data = reader.load_json_data(json_path)
+    except Exception as e:
+        report['status'] = 'json_invalido'
+        report['message'] = f"El JSON no se pudo leer correctamente: {str(e)}"
+        return report
+    
+    if not isinstance(raw_data, list):
+        report['status'] = 'json_invalido'
+        report['message'] = "El JSON de renombrado debe contener una lista de registros."
+        return report
+    
+    if not raw_data:
+        report['status'] = 'json_vacio'
+        report['message'] = "El archivo JSON de renombrado está vacío."
+        return report
+    
+    try:
+        rename_data = reader.build_rename_mapping(raw_data)
+    except Exception as e:
+        report['status'] = 'json_invalido'
+        report['message'] = f"El JSON no se pudo procesar correctamente: {str(e)}"
+        return report
+    
+    report['mapping_count'] = len(rename_data)
+    
+    if not rename_data:
+        report['status'] = 'mapeo_vacio'
+        report['message'] = "El JSON no contiene registros útiles de renombrado."
+        return report
+    
+    missing_pdf_entries = [pdf for pdf in pdf_files if pdf not in rename_data]
+    report['missing_pdf_entries'] = missing_pdf_entries
+    
+    if missing_pdf_entries:
+        report['status'] = 'pdfs_missing_in_json'
+        report['message'] = "Hay PDFs en la carpeta que no están incluidos en el JSON."
+        return report
+    
+    report['status'] = 'ok'
+    report['message'] = "La carpeta está lista para renombrar."
+    report['success'] = True
+    report['preflight_ok'] = True
+    return report
 
 
 class SUNATRenameOrchestrator:

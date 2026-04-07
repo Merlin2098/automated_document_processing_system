@@ -13,7 +13,7 @@ parent_dir = os.path.dirname(os.path.dirname(current_dir))
 if parent_dir not in sys.path:
     sys.path.insert(0, parent_dir)
 
-from core_sunat.sunat_rename import SUNATRenameOrchestrator, FolderScanner
+from core_sunat.sunat_rename import SUNATRenameOrchestrator, validar_preflight_renombrado_sunat
 
 
 class SunatRenameWorker(QThread):
@@ -31,6 +31,7 @@ class SunatRenameWorker(QThread):
         self.folder_path = folder_path
         self.orchestrator = None
         self.logger = Logger("SunatRename")
+        self.preflight_report = None
     
     def run(self):
         """Ejecuta el proceso de renombrado"""
@@ -47,31 +48,20 @@ class SunatRenameWorker(QThread):
                 self.error_signal.emit(error_msg)
                 return
             
-            # Verificar existencia de JSON
-            scanner = FolderScanner()
-            json_path = scanner.find_json_file(self.folder_path)
+            self.log_signal.emit("info", "🔎 Ejecutando validación previa del renombrado SUNAT...")
+            self.logger.info("🔎 Ejecutando validación previa del renombrado SUNAT...")
+            self.preflight_report = validar_preflight_renombrado_sunat(self.folder_path)
             
-            if not json_path:
-                error_msg = (
-                    "No se encontró archivo JSON de renombrado.\n"
-                    "El archivo debe contener 'rename' en su nombre."
-                )
-                self.logger.error(error_msg)
-                self.error_signal.emit(error_msg)
+            if not self.preflight_report.get('preflight_ok'):
+                self._handle_preflight_failure(self.preflight_report)
                 return
             
-            msg = f"✅ JSON encontrado: {os.path.basename(json_path)}"
+            json_path = self.preflight_report.get('selected_json_path')
+            msg = f"✅ JSON validado: {os.path.basename(json_path)}"
             self.logger.info(msg)
             self.log_signal.emit("success", msg)
             
-            # Verificar PDFs
-            pdf_files = scanner.get_pdf_files(self.folder_path)
-            if not pdf_files:
-                error_msg = "No se encontraron archivos PDF en la carpeta"
-                self.logger.error(error_msg)
-                self.error_signal.emit(error_msg)
-                return
-            
+            pdf_files = self.preflight_report.get('pdf_files', [])
             msg = f"✅ Encontrados {len(pdf_files)} archivos PDF"
             self.logger.info(msg)
             self.log_signal.emit("success", msg)
@@ -90,7 +80,12 @@ class SunatRenameWorker(QThread):
             if stats:
                 self.logger.info("✅ Renombrado completado exitosamente")
                 self.log_signal.emit("success", "✅ Renombrado completado exitosamente")
-                self.finished_signal.emit(stats)
+                self.finished_signal.emit({
+                    'success': True,
+                    'preflight_ok': True,
+                    'preflight_report': self.preflight_report,
+                    'stats': stats,
+                })
             else:
                 error_msg = "El proceso de renombrado no se completó correctamente"
                 self.logger.error(error_msg)
@@ -111,6 +106,54 @@ class SunatRenameWorker(QThread):
     def _on_log(self, log_type: str, message: str):
         """Callback para logs"""
         self.log_signal.emit(log_type, message)
+    
+    def _handle_preflight_failure(self, preflight_report: dict):
+        """Bloquea el paso 2 si la carpeta SUNAT no está lista para renombrar."""
+        status = preflight_report.get('status')
+        message = preflight_report.get('message', "La carpeta no pasó la validación previa.")
+        
+        if status == 'missing_json':
+            error_msg = (
+                "Validación previa bloqueada.\n"
+                "Falta el archivo JSON de renombrado en la carpeta seleccionada."
+            )
+        elif status == 'multiple_json':
+            candidates = ", ".join(preflight_report.get('json_files_found', []))
+            error_msg = (
+                "Validación previa bloqueada.\n"
+                "Se encontró más de un JSON de renombrado.\n"
+                f"JSON detectados: {candidates}"
+            )
+        elif status == 'pdfs_missing_in_json':
+            missing_files = preflight_report.get('missing_pdf_entries', [])
+            visible_files = missing_files[:10]
+            listed = "\n".join(f"• {name}" for name in visible_files)
+            extra_count = max(0, len(missing_files) - len(visible_files))
+            extra_text = f"\n... y {extra_count} archivo(s) más." if extra_count else ""
+            error_msg = (
+                "Validación previa bloqueada.\n"
+                "El JSON no cubre todos los PDFs de la carpeta.\n"
+                "Archivos faltantes en el JSON:\n"
+                f"{listed}{extra_text}"
+            )
+        else:
+            error_msg = f"Validación previa bloqueada.\n{message}"
+        
+        self.logger.error(error_msg.replace("\n", " | "))
+        self.log_signal.emit("error", error_msg)
+        self.stats_signal.emit({
+            'preflight_ok': False,
+            'status': status,
+            'errors': 1,
+            'preflight_report': preflight_report,
+        })
+        self.error_signal.emit(error_msg)
+        self.finished_signal.emit({
+            'success': False,
+            'preflight_ok': False,
+            'preflight_report': preflight_report,
+            'stats': None,
+        })
 
 
 class SUNATRenameOrchestratorWithCallbacks(SUNATRenameOrchestrator):

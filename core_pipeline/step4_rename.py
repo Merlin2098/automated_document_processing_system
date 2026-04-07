@@ -7,6 +7,14 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from utils.logger import Logger
 logger = Logger("CorePipeline4_Rename")
 
+EXPECTED_RENAME_FOLDERS = [
+    '1_Boletas',
+    '2_Afp',
+    '3_5ta',
+    '4_Convocatoria',
+    '5_CertificadosTrabajo',
+]
+
 def seleccionar_carpeta_madre():
     """Abre un diálogo para seleccionar la carpeta madre usando PySide6."""
     # Verificar si ya existe una instancia de QApplication
@@ -44,6 +52,127 @@ def cargar_json(ruta_json):
     print(f"  ✗ No se pudo leer el JSON con ningún encoding estándar")
     logger.error("  ✗ No se pudo leer el JSON con ningún encoding estándar")
     return None
+
+
+def validar_preflight_renombrado(carpeta_madre, carpetas_a_procesar=None):
+    """
+    Valida que cada carpeta con PDFs tenga exactamente un JSON utilizable antes
+    de ejecutar el paso 4.
+
+    Args:
+        carpeta_madre: Ruta de la carpeta madre del pipeline.
+        carpetas_a_procesar: Lista opcional de carpetas esperadas.
+
+    Returns:
+        dict: Reporte estructurado del preflight.
+    """
+    carpetas = list(carpetas_a_procesar or EXPECTED_RENAME_FOLDERS)
+    details_by_folder = {}
+    folders_ready = []
+    blocking_issues = []
+
+    for nombre_carpeta in carpetas:
+        ruta_carpeta = os.path.join(carpeta_madre, nombre_carpeta)
+        detalle = {
+            'folder_name': nombre_carpeta,
+            'folder_path': ruta_carpeta,
+            'folder_exists': False,
+            'pdf_count': 0,
+            'json_files_found': [],
+            'selected_json_path': None,
+            'mapping_count': 0,
+            'status': None,
+            'message': "",
+        }
+
+        if not os.path.exists(ruta_carpeta) or not os.path.isdir(ruta_carpeta):
+            detalle['status'] = 'folder_missing'
+            detalle['message'] = "Carpeta no encontrada."
+            details_by_folder[nombre_carpeta] = detalle
+            continue
+
+        detalle['folder_exists'] = True
+
+        pdf_files = sorted(
+            [
+                archivo for archivo in os.listdir(ruta_carpeta)
+                if archivo.lower().endswith('.pdf')
+                and os.path.isfile(os.path.join(ruta_carpeta, archivo))
+            ]
+        )
+        detalle['pdf_count'] = len(pdf_files)
+
+        json_files = sorted(
+            [
+                archivo for archivo in os.listdir(ruta_carpeta)
+                if archivo.lower().endswith('.json')
+                and os.path.isfile(os.path.join(ruta_carpeta, archivo))
+            ]
+        )
+        detalle['json_files_found'] = json_files
+
+        if detalle['pdf_count'] == 0:
+            detalle['status'] = 'no_pdfs'
+            detalle['message'] = "La carpeta no contiene PDFs para renombrar."
+            details_by_folder[nombre_carpeta] = detalle
+            continue
+
+        if not json_files:
+            detalle['status'] = 'missing_json'
+            detalle['message'] = "La carpeta contiene PDFs pero no tiene JSON de renombrado."
+            blocking_issues.append(detalle.copy())
+            details_by_folder[nombre_carpeta] = detalle
+            continue
+
+        if len(json_files) > 1:
+            detalle['status'] = 'multiple_json'
+            detalle['message'] = "La carpeta contiene PDFs pero tiene múltiples JSON de renombrado."
+            blocking_issues.append(detalle.copy())
+            details_by_folder[nombre_carpeta] = detalle
+            continue
+
+        ruta_json = os.path.join(ruta_carpeta, json_files[0])
+        detalle['selected_json_path'] = ruta_json
+
+        datos_json = cargar_json(ruta_json)
+        if datos_json is None:
+            detalle['status'] = 'json_invalido'
+            detalle['message'] = "El JSON no se pudo leer o tiene una estructura inválida."
+            blocking_issues.append(detalle.copy())
+            details_by_folder[nombre_carpeta] = detalle
+            continue
+
+        if not datos_json:
+            detalle['status'] = 'json_vacio'
+            detalle['message'] = "El JSON de renombrado está vacío."
+            blocking_issues.append(detalle.copy())
+            details_by_folder[nombre_carpeta] = detalle
+            continue
+
+        mapeo = convertir_json_a_mapeo(datos_json)
+        detalle['mapping_count'] = len(mapeo)
+
+        if not mapeo:
+            detalle['status'] = 'mapeo_vacio'
+            detalle['message'] = "El JSON no produjo un mapeo válido de renombrado."
+            blocking_issues.append(detalle.copy())
+            details_by_folder[nombre_carpeta] = detalle
+            continue
+
+        detalle['status'] = 'ok'
+        detalle['message'] = "Carpeta lista para renombrar."
+        details_by_folder[nombre_carpeta] = detalle
+        folders_ready.append(detalle.copy())
+
+    preflight_ok = len(blocking_issues) == 0
+    return {
+        'success': preflight_ok,
+        'preflight_ok': preflight_ok,
+        'folders_checked': len(carpetas),
+        'folders_ready': folders_ready,
+        'blocking_issues': blocking_issues,
+        'details_by_folder': details_by_folder,
+    }
 
 def convertir_json_a_mapeo(datos_json):
     """

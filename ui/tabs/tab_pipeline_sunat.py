@@ -210,8 +210,10 @@ Se generará un archivo Excel con:
         # Info
         info = QLabel("""
 <b>Instrucciones:</b><br>
-El sistema buscará automáticamente el archivo JSON que contenga <b>"rename"</b> 
-en su nombre. Los archivos se renombrarán al formato: <b>NUMERO NOMBRE.pdf</b>
+La carpeta debe contener exactamente un archivo JSON de renombrado con <b>"rename"</b>
+en su nombre y ese JSON debe cubrir <b>todos</b> los PDFs presentes.<br><br>
+Si falta el JSON, hay más de uno, o algún PDF no aparece en el JSON, el Paso 2
+se bloqueará antes de renombrar.
         """)
         info.setProperty("labelStyle", "secondary")
         info.setWordWrap(True)
@@ -428,7 +430,7 @@ en su nombre. Los archivos se renombrarán al formato: <b>NUMERO NOMBRE.pdf</b>
         self.current_worker.finished.connect(self._on_worker_complete)
         
         # Iniciar worker
-        self.log_message.emit("info", "🔄 Iniciando renombrado de documentos...")
+        self.log_message.emit("info", "🔄 Iniciando validación y renombrado de documentos...")
         self.current_worker.start()
     
     def _preview_duplicates(self):
@@ -590,8 +592,13 @@ en su nombre. Los archivos se renombrarán al formato: <b>NUMERO NOMBRE.pdf</b>
         )
     
     @Slot(dict)
-    def _on_step2_finished(self, stats: dict):
+    def _on_step2_finished(self, result: dict):
         """Handler cuando termina el paso 2"""
+        if not result.get('preflight_ok', True):
+            self.log_message.emit("error", "❌ Paso 2 bloqueado por validación previa")
+            return
+        
+        stats = result.get('stats') or {}
         self.stepper.mark_step_completed(1)
         
         QMessageBox.information(
@@ -623,9 +630,10 @@ en su nombre. Los archivos se renombrarán al formato: <b>NUMERO NOMBRE.pdf</b>
     @Slot(str)
     def _on_worker_error(self, error_msg: str):
         """Handler para errores del worker"""
+        title = "Validación previa" if error_msg.startswith("Validación previa") else "Error en el proceso"
         QMessageBox.critical(
             self,
-            "Error en el proceso",
+            title,
             f"❌ {error_msg}"
         )
     

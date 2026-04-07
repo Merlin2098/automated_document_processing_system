@@ -225,10 +225,10 @@ Se generará un archivo Excel con múltiples hojas conteniendo:
         
         # Info
         info = QLabel("""
-<b>Requisito previo:</b> Coloque los archivos JSON de renombrado en cada subcarpeta 
-(1_Boletas, 2_Afp, 3_5ta, 4_Convocatoria, 5_CertificadosTrabajo).<br><br>
-El sistema buscará automáticamente los JSONs y renombrará los archivos según el mapeo 
-de "ARCHIVO ORIGINAL" → "NUEVO NOMBRE".
+<b>Requisito previo:</b> Cada subcarpeta que contenga PDFs debe tener exactamente un
+archivo JSON de renombrado válido.<br><br>
+Las carpetas vacías no bloquean el proceso, pero si una carpeta con PDFs no tiene JSON
+válido, el Paso 4 se detendrá antes de renombrar cualquier archivo.
         """)
         info.setProperty("labelStyle", "secondary")
         info.setWordWrap(True)
@@ -535,21 +535,6 @@ El sistema:
             self.log_message.emit("error", "❌ Debe seleccionar una carpeta madre")
             return
         
-        # Validar que existen las subcarpetas requeridas
-        carpetas_requeridas = ['1_Boletas', '2_Afp', '3_5ta', '4_Convocatoria', '5_CertificadosTrabajo']
-        carpetas_faltantes = []
-        
-        for carpeta in carpetas_requeridas:
-            ruta_carpeta = os.path.join(folder_path, carpeta)
-            if not os.path.exists(ruta_carpeta):
-                carpetas_faltantes.append(carpeta)
-        
-        if carpetas_faltantes:
-            self.log_message.emit(
-                "warning", 
-                f"⚠️ Carpetas faltantes: {', '.join(carpetas_faltantes)}. Se omitirán."
-            )
-        
         # Resetear labels de información
         self.step4_time_label.setText("⏱️ Tiempo: 00:00")
         self.step4_files_label.setText("📄 Archivos: 0 / 0")
@@ -726,25 +711,38 @@ El sistema:
         if btn:
             btn.setEnabled(True)
             btn.setText("▶️ Ejecutar Paso 4")
-        
-        # Limpiar label de carpeta
-        self.step4_folder_label.setText("📁 Carpeta: Completado")
-        
-        # Actualizar monitoring panel
+
         main_window = self.window()
+        preflight_ok = resultado.get('preflight_ok', True)
+
+        if not preflight_ok:
+            self.step4_folder_label.setText("📁 Carpeta: Validación fallida")
+
+            if hasattr(main_window, 'monitoring_panel'):
+                preflight_report = resultado.get('preflight_report', {})
+                blocking_issues = preflight_report.get('blocking_issues', [])
+                main_window.monitoring_panel.status_label.setText("❌ Validación fallida")
+                main_window.monitoring_panel.progress_bar.setValue(0)
+                main_window.monitoring_panel.errors_label.setText(f"⚠️ Errores: {len(blocking_issues)}")
+
+            self.log_message.emit("error", "❌ Paso 4 bloqueado por validación previa")
+            for issue in resultado.get('preflight_report', {}).get('blocking_issues', []):
+                self.log_message.emit("error", f"   • {issue['folder_name']}: {issue['message']}")
+            return
+
+        self.step4_folder_label.setText("📁 Carpeta: Completado")
+
         if hasattr(main_window, 'monitoring_panel'):
             main_window.monitoring_panel.status_label.setText("✅ Proceso completado")
             main_window.monitoring_panel.progress_bar.setValue(100)
-        
-        # Marcar paso como completado
+
         self.stepper.mark_step_completed(3)
-        
-        # Verificar si fue exitoso
+
         if resultado.get('success'):
             self.log_message.emit("success", "✅ Paso 4 completado. Puede continuar al Paso 5")
         else:
-            totales = resultado.get('totales', {})
-            if totales.get('exitosos', 0) > 0:
+            stats = resultado.get('stats', {})
+            if stats.get('total_exitosos', 0) > 0:
                 self.log_message.emit("warning", "⚠️ Paso 4 completado con algunos errores")
             else:
                 self.log_message.emit("warning", "⚠️ No se renombró ningún archivo")
