@@ -38,12 +38,7 @@ test/
 *pycache/
 
 # Tinker v2 framework (portable - not part of host project)
-agents2/engine/
-agents2/runtime/
-agents2/knowledge/
-agents2/tools/
-agents2/hooks/
-agents2/instructions/
+
 .githooks/
 .gitattributes
 # Tinker v2 generated runtime state
@@ -59,3 +54,7 @@ agents2/instructions/
 .tinker/skills_registry.json
 .tinker/treemap.md
 .tinker/generated_skill_wrappers/
+
+agents2/
+.pre-commit-config.yaml
+# Keep optional task/plan artifacts visible unless the host chooses otherwise.
