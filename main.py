@@ -2,10 +2,37 @@
 Matrix File Processor v3.0
 Aplicación principal - Punto de entrada
 """
+import os
 import sys
+
+
+_DEVNULL_STREAM = None
+
+
+def ensure_standard_streams():
+    """
+    Garantiza que stdout/stderr existan en bundles windowed.
+    Evita fallos secundarios durante bootstrap de multiprocessing.
+    """
+    global _DEVNULL_STREAM
+
+    if sys.stdout is not None and sys.stderr is not None:
+        return
+
+    if _DEVNULL_STREAM is None:
+        _DEVNULL_STREAM = open(os.devnull, "w", encoding="utf-8")
+
+    if sys.stdout is None:
+        sys.stdout = _DEVNULL_STREAM
+    if sys.stderr is None:
+        sys.stderr = _DEVNULL_STREAM
+
+
+ensure_standard_streams()
+
 import multiprocessing
-from PySide6.QtWidgets import QApplication
 from PySide6.QtCore import Qt
+from PySide6.QtWidgets import QApplication
 
 # Importar sistema de logging
 from utils.logger import initialize_logging_system, get_logger
@@ -119,6 +146,8 @@ def main():
 
 
 if __name__ == "__main__":
+    ensure_standard_streams()
+
     # CRÍTICO: freeze_support() DEBE estar antes de cualquier código
     # Esto previene bucles infinitos cuando multiprocessing crea subprocesos
     # en aplicaciones empaquetadas con PyInstaller

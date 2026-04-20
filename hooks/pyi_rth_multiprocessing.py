@@ -9,8 +9,27 @@ Ubicación sugerida: hooks/pyi_rth_multiprocessing.py
 import sys
 import os
 
+_DEVNULL_STREAM = None
+
+
+def _ensure_standard_streams():
+    """Evita que stdout/stderr nulos rompan el bootstrap de multiprocessing."""
+    global _DEVNULL_STREAM
+
+    if sys.stdout is not None and sys.stderr is not None:
+        return
+
+    if _DEVNULL_STREAM is None:
+        _DEVNULL_STREAM = open(os.devnull, "w", encoding="utf-8")
+
+    if sys.stdout is None:
+        sys.stdout = _DEVNULL_STREAM
+    if sys.stderr is None:
+        sys.stderr = _DEVNULL_STREAM
+
 # Solo ejecutar este hook si estamos en entorno frozen (PyInstaller)
 if getattr(sys, 'frozen', False):
+    _ensure_standard_streams()
     import multiprocessing
     import multiprocessing.spawn
     

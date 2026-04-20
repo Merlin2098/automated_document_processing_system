@@ -32,6 +32,11 @@ class TabPipelineCore(QWidget):
         
         # Worker actual
         self.current_worker = None
+
+        # Estado de ejecución del pipeline
+        self.pipeline_busy = False
+        self.active_execution_step = None
+        self.completed_steps = {step: False for step in range(5)}
         
         # Última carpeta procesada (para propagar entre pasos)
         self.last_folder_path = None
@@ -358,9 +363,57 @@ El sistema:
             self._execute_step4()
         elif step_index == 4:
             self._execute_step5()
+
+    def _can_start_step(self, step_index: int) -> bool:
+        """Valida si se puede iniciar un paso del pipeline."""
+        if self.pipeline_busy or (self.current_worker is not None and self.current_worker.isRunning()):
+            self.log_message.emit(
+                "warning",
+                "⚠️ Debe esperar a que termine el paso actual antes de continuar.",
+            )
+            return False
+
+        if step_index == 2 and not self.completed_steps.get(1, False):
+            self.log_message.emit(
+                "error",
+                "❌ Debe completar correctamente el Paso 2 antes de ejecutar el Paso 3.",
+            )
+            return False
+
+        return True
+
+    def _set_pipeline_busy(self, step_index: int):
+        """Bloquea todos los botones de ejecución mientras un worker está corriendo."""
+        self.pipeline_busy = True
+        self.active_execution_step = step_index
+
+        for idx in range(5):
+            btn = self.findChild(QPushButton, f"btn_execute_step{idx}")
+            if btn:
+                btn.setEnabled(False)
+                btn.setText("⏳ Procesando..." if idx == step_index else f"⏸️ Paso {idx + 1} bloqueado")
+
+    def _clear_pipeline_busy(self):
+        """Restaura el estado de los botones de ejecución."""
+        self.pipeline_busy = False
+        self.active_execution_step = None
+
+        for idx in range(5):
+            btn = self.findChild(QPushButton, f"btn_execute_step{idx}")
+            if btn:
+                btn.setEnabled(True)
+                btn.setText(f"▶️ Ejecutar Paso {idx + 1}")
+
+    def _reset_completion_from(self, step_index: int):
+        """Resetea el estado de pasos posteriores cuando un paso se vuelve a ejecutar."""
+        for idx in range(step_index, 5):
+            self.completed_steps[idx] = False
     
     def _execute_step1(self):
         """Ejecuta el Paso 1: Generar Estructura"""
+        if not self._can_start_step(0):
+            return
+
         # Resetear contadores
         main_window = self.window()
         if hasattr(main_window, 'monitoring_panel'):
@@ -371,12 +424,9 @@ El sistema:
         if not folder_path:
             self.log_message.emit("error", "❌ Debe seleccionar una carpeta de trabajo")
             return
-        
-        # Deshabilitar botón
-        btn = self.findChild(QPushButton, "btn_execute_step0")
-        if btn:
-            btn.setEnabled(False)
-            btn.setText("⏳ Procesando...")
+
+        self._reset_completion_from(0)
+        self._set_pipeline_busy(0)
         
         # Crear y configurar worker
         self.current_worker = CorePipelineStep1Worker(folder_path)
@@ -394,7 +444,10 @@ El sistema:
     def _execute_step2(self):
         """Ejecuta el Paso 2: Dividir y Clasificar"""
         from PySide6.QtWidgets import QMessageBox
-        
+
+        if not self._can_start_step(1):
+            return
+
         # Resetear contadores
         main_window = self.window()
         if hasattr(main_window, 'monitoring_panel'):
@@ -457,12 +510,9 @@ El sistema:
             self.log_message.emit("info", f"🗑️ Se eliminarán {total_archivos} archivos existentes")
         else:
             sobrescribir = False
-        
-        # Deshabilitar botón
-        btn = self.findChild(QPushButton, "btn_execute_step1")
-        if btn:
-            btn.setEnabled(False)
-            btn.setText("⏳ Procesando...")
+
+        self._reset_completion_from(1)
+        self._set_pipeline_busy(1)
         
         # Crear y configurar worker CON parámetro sobrescribir
         self.current_worker = CorePipelineStep2Worker(folder_path, sobrescribir=sobrescribir)
@@ -479,6 +529,9 @@ El sistema:
     
     def _execute_step3(self):
         """Ejecuta el Paso 3: Generar Diagnóstico"""
+        if not self._can_start_step(2):
+            return
+
         # Resetear contadores
         main_window = self.window()
         if hasattr(main_window, 'monitoring_panel'):
@@ -502,12 +555,9 @@ El sistema:
         if not carpetas_existentes:
             self.log_message.emit("error", "❌ No se encontraron subcarpetas con datos para procesar")
             return
-        
-        # Deshabilitar botón
-        btn = self.findChild(QPushButton, "btn_execute_step2")
-        if btn:
-            btn.setEnabled(False)
-            btn.setText("⏳ Procesando...")
+
+        self._reset_completion_from(2)
+        self._set_pipeline_busy(2)
         
         # Crear y configurar worker
         self.current_worker = CorePipelineStep3Worker(folder_path)
@@ -524,6 +574,9 @@ El sistema:
     
     def _execute_step4(self):
         """Ejecuta el Paso 4: Renombrar"""
+        if not self._can_start_step(3):
+            return
+
         # Resetear contadores
         main_window = self.window()
         if hasattr(main_window, 'monitoring_panel'):
@@ -539,12 +592,9 @@ El sistema:
         self.step4_time_label.setText("⏱️ Tiempo: 00:00")
         self.step4_files_label.setText("📄 Archivos: 0 / 0")
         self.step4_folder_label.setText("📁 Carpeta: Escaneando...")
-        
-        # Deshabilitar botón
-        btn = self.findChild(QPushButton, "btn_execute_step3")
-        if btn:
-            btn.setEnabled(False)
-            btn.setText("⏳ Procesando...")
+
+        self._reset_completion_from(3)
+        self._set_pipeline_busy(3)
         
         # Crear y configurar worker
         self.current_worker = CorePipelineStep4Worker(folder_path)
@@ -598,6 +648,9 @@ El sistema:
     
     def _execute_step5(self):
         """Ejecuta el Paso 5: Unir PDFs"""
+        if not self._can_start_step(4):
+            return
+
         # Resetear contadores
         main_window = self.window()
         if hasattr(main_window, 'monitoring_panel'):
@@ -621,12 +674,9 @@ El sistema:
         if not carpetas_existentes:
             self.log_message.emit("error", "❌ No se encontraron las subcarpetas necesarias")
             return
-        
-        # Deshabilitar botón
-        btn = self.findChild(QPushButton, "btn_execute_step4")
-        if btn:
-            btn.setEnabled(False)
-            btn.setText("⏳ Procesando...")
+
+        self._reset_completion_from(4)
+        self._set_pipeline_busy(4)
         
         # Crear y configurar worker
         self.current_worker = CorePipelineStep5Worker(folder_path)
@@ -644,74 +694,53 @@ El sistema:
     @Slot(dict)
     def _on_step1_completed(self, resultado: dict):
         """Handler cuando se completa el Paso 1"""
-        # Re-habilitar botón
-        btn = self.findChild(QPushButton, "btn_execute_step0")
-        if btn:
-            btn.setEnabled(True)
-            btn.setText("▶️ Ejecutar Paso 1")
-        
-        # Marcar paso como completado
-        self.stepper.mark_step_completed(0)
-        
-        # Guardar ruta para próximos pasos
         if resultado.get('success'):
+            self.completed_steps[0] = True
+            self.stepper.mark_step_completed(0)
+
             self.last_folder_path = resultado.get('folder_path')
-            
+
             # Auto-completar campos de pasos siguientes
             if self.last_folder_path:
                 self.step2_folder.set_path(self.last_folder_path)
                 self.step3_folder.set_path(self.last_folder_path)
                 self.step4_folder.set_path(self.last_folder_path)
                 self.step5_folder.set_path(self.last_folder_path)
-            
+
             self.log_message.emit("success", "✅ Paso 1 completado. Puede continuar al Paso 2")
+
+        self._clear_pipeline_busy()
     
     @Slot(dict)
     def _on_step2_completed(self, resultado: dict):
         """Handler cuando se completa el Paso 2"""
-        # Re-habilitar botón
-        btn = self.findChild(QPushButton, "btn_execute_step1")
-        if btn:
-            btn.setEnabled(True)
-            btn.setText("▶️ Ejecutar Paso 2")
-        
-        # Marcar paso como completado
-        self.stepper.mark_step_completed(1)
-        
         if resultado.get('success'):
+            self.completed_steps[1] = True
+            self.stepper.mark_step_completed(1)
             self.log_message.emit("success", "✅ Paso 2 completado. Puede continuar al Paso 3")
         else:
             resumen = resultado.get('resumen', {})
             if resumen.get('pdfs_procesados', 0) > 0:
                 self.log_message.emit("warning", "⚠️ Paso 2 completado con algunos errores")
+
+        self._clear_pipeline_busy()
     
     @Slot(dict)
     def _on_step3_completed(self, resultado: dict):
         """Handler cuando se completa el Paso 3"""
-        # Re-habilitar botón
-        btn = self.findChild(QPushButton, "btn_execute_step2")
-        if btn:
-            btn.setEnabled(True)
-            btn.setText("▶️ Ejecutar Paso 3")
-        
-        # Marcar paso como completado
-        self.stepper.mark_step_completed(2)
-        
         if resultado.get('success'):
+            self.completed_steps[2] = True
+            self.stepper.mark_step_completed(2)
             excel_path = resultado.get('excel_path')
             if excel_path:
                 self.log_message.emit("success", f"✅ Paso 3 completado. Excel: {os.path.basename(excel_path)}")
                 self.log_message.emit("info", "📋 Puede editar el Excel y continuar al Paso 4")
+
+        self._clear_pipeline_busy()
     
     @Slot(dict)
     def _on_step4_completed(self, resultado: dict):
         """Handler cuando se completa el Paso 4"""
-        # Re-habilitar botón
-        btn = self.findChild(QPushButton, "btn_execute_step3")
-        if btn:
-            btn.setEnabled(True)
-            btn.setText("▶️ Ejecutar Paso 4")
-
         main_window = self.window()
         preflight_ok = resultado.get('preflight_ok', True)
 
@@ -728,6 +757,7 @@ El sistema:
             self.log_message.emit("error", "❌ Paso 4 bloqueado por validación previa")
             for issue in resultado.get('preflight_report', {}).get('blocking_issues', []):
                 self.log_message.emit("error", f"   • {issue['folder_name']}: {issue['message']}")
+            self._clear_pipeline_busy()
             return
 
         self.step4_folder_label.setText("📁 Carpeta: Completado")
@@ -737,6 +767,7 @@ El sistema:
             main_window.monitoring_panel.progress_bar.setValue(100)
 
         self.stepper.mark_step_completed(3)
+        self.completed_steps[3] = True
 
         if resultado.get('success'):
             self.log_message.emit("success", "✅ Paso 4 completado. Puede continuar al Paso 5")
@@ -746,6 +777,8 @@ El sistema:
                 self.log_message.emit("warning", "⚠️ Paso 4 completado con algunos errores")
             else:
                 self.log_message.emit("warning", "⚠️ No se renombró ningún archivo")
+
+        self._clear_pipeline_busy()
     
     @Slot(float)
     def _on_step4_time_update(self, elapsed_seconds: float):
@@ -773,16 +806,9 @@ El sistema:
     @Slot(dict)
     def _on_step5_completed(self, resultado: dict):
         """Handler cuando se completa el Paso 5"""
-        # Re-habilitar botón
-        btn = self.findChild(QPushButton, "btn_execute_step4")
-        if btn:
-            btn.setEnabled(True)
-            btn.setText("▶️ Ejecutar Paso 5")
-        
-        # Marcar paso como completado
-        self.stepper.mark_step_completed(4)
-        
         if resultado.get('success'):
+            self.completed_steps[4] = True
+            self.stepper.mark_step_completed(4)
             ruta_enviar = resultado.get('ruta_enviar')
             if ruta_enviar:
                 self.log_message.emit("success", f"✅ Paso 5 completado. Packs en: {os.path.basename(ruta_enviar)}")
@@ -798,14 +824,11 @@ El sistema:
             main_window = self.window()
             if hasattr(main_window, 'flash_window'):
                 main_window.flash_window(5)
+
+        self._clear_pipeline_busy()
     
     @Slot(str)
     def _on_step_error(self, error_msg: str):
         """Handler cuando ocurre un error"""
-        # Re-habilitar botón del paso actual
-        btn = self.findChild(QPushButton, f"btn_execute_step{self.current_step}")
-        if btn:
-            btn.setEnabled(True)
-            btn.setText(f"▶️ Ejecutar Paso {self.current_step + 1}")
-        
         self.log_message.emit("error", f"❌ Error: {error_msg}")
+        self._clear_pipeline_busy()
