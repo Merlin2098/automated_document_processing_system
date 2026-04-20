@@ -1,16 +1,27 @@
-# DocFlow
+# DocFlow Eventuales
 
 ## Overview
 
-DocFlow is a Python-based desktop system for high-volume PDF processing. It automates document splitting, renaming, deduplication, and grouping for administrative, accounting, and HR workflows, reducing manual effort and improving output consistency.
+DocFlow Eventuales is a Windows desktop application for high-volume PDF processing. It automates splitting, renaming, deduplication, diagnostics, grouping, and auxiliary document utilities used in administrative, accounting, and HR-oriented workflows.
 
-## Architecture
+The repository is organized as a practical PySide6 application with a modular UI, extractor modules for PDF/text parsing, and a step-based processing pipeline focused on auditability, repeatability, and packaging as a distributable Windows app.
 
-DocFlow follows a rule-driven document processing architecture:
+## Processing Flow
 
-`Input PDFs -> Validation/Cleaning -> Text Extraction -> Rule-Based Splitting -> JSON-Driven Renaming -> Grouping/Consolidation -> Validation and Logs`
+`Input PDFs -> Validation/Cleaning -> Text Extraction -> Rule-Based Splitting -> JSON-Driven Renaming -> Diagnostics -> Grouping/Consolidation -> Validation and Logs`
 
-At a high level, the system combines a desktop UI, extractor modules for PDF parsing, and a batch-style processing pipeline focused on traceability and performance.
+## Project Structure
+
+- `main.py`: desktop application entrypoint
+- `ui/`: main window, tabs, widgets, splash screen, and worker threads
+- `core_pipeline/`: main multi-step processing pipeline
+- `core_sunat/`: SUNAT-focused processing and duplicate handling
+- `core_tools/`: auxiliary processing tools
+- `extractores/`: domain extractors and text parsing helpers
+- `utils/`: logging, themes, path resolution, and utility helpers
+- `resources/`: app icon, config, and light/dark themes
+- `hooks/`: runtime hooks required by packaging
+- `docs/`: architecture notes and developer guidance
 
 ## Tech Stack
 
@@ -20,26 +31,67 @@ At a high level, the system combines a desktop UI, extractor modules for PDF par
 - pdfplumber
 - pdfminer.six
 - pypdfium2
-- JSON-based mapping rules
-- Windows standalone packaging (`.exe`)
+- pandas
+- duckdb
+- JSON-driven processing rules
+- PyInstaller for Windows `onedir` builds
 
-## How It Works
+## Local Development
 
-1. Input files are validated and cleaned before processing starts.
-2. PDF content is parsed to extract text and detect relevant patterns.
-3. Business rules determine how documents should be split.
-4. Pre-generated JSON mappings drive the renaming stage.
-5. Processed files are grouped and consolidated into final outputs.
-6. Logs, file counts, and output checks are generated for validation and traceability.
+### 1. Create and activate the virtual environment
 
-## Example / Output
+Windows:
 
-Typical outputs include:
+```powershell
+py -3 -m venv .venv
+.venv\Scripts\Activate.ps1
+```
 
-- Split PDF files based on document rules
-- Renamed files following structured business mappings
-- Grouped final document batches
-- Processing logs for auditing
-- Validation reports for quality control
+### 2. Install dependencies
 
-Note: the full business workflow includes an intermediate macro-based normalization layer that is not included in this repository due to confidentiality constraints.
+```powershell
+.venv\Scripts\python.exe -m pip install -r requirements.txt
+```
+
+### 3. Run the application
+
+```powershell
+.venv\Scripts\python.exe main.py
+```
+
+## Windows Build
+
+The repository includes [`generar_onedir.py`](./generar_onedir.py), which packages the application as a Windows distributable folder using PyInstaller.
+
+Run it from the project root with the project virtual environment active:
+
+```powershell
+.venv\Scripts\python.exe generar_onedir.py
+```
+
+Expected output folders:
+
+- `dist/`
+- `build/`
+- `spec/`
+
+The final app is generated as a folder-based distribution. You should distribute the full generated directory, not only the `.exe`.
+
+## Main Functional Areas
+
+- Core pipeline tab for staged batch processing
+- SUNAT tools for diagnosis, rename, and duplicate analysis
+- Quick tools for focused document operations
+- Auxiliary rename flow driven by JSON mappings
+- Theme-aware desktop UI with integrated logging and worker execution
+
+## Additional Documentation
+
+- [Project Init Guide](docs/project_init.md)
+- [Architecture Notes](docs/architect.md)
+- [Maintenance Notes](docs/dev_suggestions.md)
+
+## Notes
+
+- This repository contains the application runtime, but not every external business asset used in the full internal workflow.
+- Some domain-specific macro or normalization steps are intentionally excluded for confidentiality reasons.
